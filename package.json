@@ -1,0 +1,71 @@
+{
+  "name": "@dom-transform/monorepo",
+  "version": "1.0.0",
+  "description": "",
+  "author": "xy",
+  "license": "MIT",
+  "scripts": {
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
+    "docs:dev": "pnpm run -C docs docs:dev",
+    "docs:build": "pnpm run -C docs docs:build",
+    "examples:dev": "pnpm run -C examples dev",
+    "examples:build": "pnpm run -C examples build",
+    "tool:release": "pnpm run -C packages/core tool:release",
+    "tool:build": "pnpm run -C packages/core tool:build",
+    "tool:publish": "pnpm run -C packages/core tool:publish",
+    "lint:style": "stylelint \"./**/*.{css,less,vue,html}\" --fix",
+    "prepare": "husky",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0"
+  },
+  "dependencies": {
+    "@vueuse/core": "^13.7.0",
+    "dom-transform-tool": "workspace:*"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^3.16.0",
+    "@types/node": "^24.3.0",
+    "@unocss/eslint-plugin": "66.4.2",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.8.1",
+    "bumpp": "^10.2.3",
+    "eslint": "^9.33.0",
+    "eslint-plugin-format": "^1.0.1",
+    "happy-dom": "^18.0.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
+    "postcss": "^8.5.6",
+    "postcss-html": "^1.8.0",
+    "postcss-scss": "^4.0.9",
+    "sass": "^1.90.0",
+    "stylelint": "^16.23.1",
+    "stylelint-config-recess-order": "^7.2.0",
+    "stylelint-config-recommended-scss": "^16.0.0",
+    "stylelint-config-recommended-vue": "^1.6.1",
+    "stylelint-config-standard": "^39.0.0",
+    "stylelint-order": "^7.0.0",
+    "stylelint-scss": "^6.12.1",
+    "typescript": "^5.9.2",
+    "unocss": "^66.4.2",
+    "vite": "^7.1.3",
+    "vitest": "^3.2.4",
+    "vue": "^3.5.18",
+    "vue-tsc": "^3.0.5"
+  },
+  "pnpm": {
+    "overrides": {
+      "glob@^7.2.3": "^10.4.5"
+    }
+  },
+  "lint-staged": {
+    "*.{vue,js,ts,tsx,jsx}": [
+      "eslint . --fix"
+    ]
+  }
+}

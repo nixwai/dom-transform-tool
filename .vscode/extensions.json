@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "Vue.volar",
+    "antfu.unocss",
+    "dbaeumer.vscode-eslint",
+    "stylelint.vscode-stylelint",
+    "christian-kohler.path-intellisense",
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-rename-tag"
+  ]
+}
