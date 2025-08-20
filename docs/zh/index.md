@@ -1,17 +1,19 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
-  name: "名称"
-  text: "介绍..."
-  tagline: 信息...
+  name: "Dom Transform Tool"
+  tagline: "提供了丰富的 API 来实现元素的大小调整、旋转、缩放等操作"
   actions:
     - theme: brand
-      text: 示例
-      link: /examples/install
+      text: 开始
+      link: /install
 
 features:
-  - title: 标签
-    details: 说明
+  - title: 按需引入
+    details: 支持按需引入所需的功能模块，有效减少项目打包大小。
+  - title: 无框架限制
+    details: 不依赖任何前端框架，可无缝集成到 React、Vue、Angular 等各类项目中使用。
+  - title: 开箱即用
+    details: 提供简单易用的 API 接口，安装后即可快速实现 DOM 元素的各种变换操作。
 ---

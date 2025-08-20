@@ -1,1 +1,1 @@
-export * from './formatKey';
+export * from './domResize';

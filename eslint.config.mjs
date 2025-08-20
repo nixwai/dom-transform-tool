@@ -27,6 +27,8 @@ export default antfu(
     rules: {
       'style/semi': ['error', 'always'], // 末尾带分号
       'object-curly-newline': ['error', { multiline: true }], // 花括号内换行规则
+      'curly': ['error', 'all'], // 循环/判断语句后必须使用花括号
+      'style/max-statements-per-line': ['error', { max: 2 }],
     },
   },
 );

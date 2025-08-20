@@ -5,15 +5,15 @@ import { vitepressDemoPlugin } from 'vitepress-demo-plugin';
 import { zh } from './zh';
 
 export default defineConfig({
-  title: 'Libs',
+  title: 'Dom Transform Tool',
   rewrites: { 'zh/:rest*': ':rest*' },
-  base: '/libs/',
+  base: '/dom-transform-tool/',
   outDir: resolve(__dirname, '../../../dist/docs'),
   vite: {
     plugins: [UnoCSS() as any],
     css: { preprocessorOptions: { scss: { api: 'modern-compiler' } } },
   },
-  themeConfig: { socialLinks: [{ icon: 'github', link: 'https://github.com/nixwai/create-libs' }] },
+  themeConfig: { socialLinks: [{ icon: 'github', link: 'https://github.com/nixwai/dom-transform' }] },
   markdown: {
     config(md) {
       md.use(vitepressDemoPlugin, { demoDir: resolve(__dirname, '../../examples') });
