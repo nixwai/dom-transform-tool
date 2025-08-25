@@ -2,7 +2,7 @@ import type { ResizeData, ResizingFn } from './core';
 import { resizeByDirection, updateResize } from './core';
 
 export function resizeByPointer(resizeData: ResizeData) {
-  if (!resizeData.options.event) {
+  if (!resizeData.options.pointer) {
     return;
   }
   resizeByDirection(resizeData, resizeHorizontal, resizeVertical, resizeHorizontalAndVertical);
@@ -100,12 +100,12 @@ function beginResizeContent(
 ) {
   const target = resizeData.targetRef.deref();
   if (!target) { return; }
-  if (!resizeData.options.event) { return; }
+  if (!resizeData.options.pointer) { return; }
   // 开始
-  const pointerId = resizeData.options.event.pointerId;
+  const pointerId = resizeData.options.pointer.pointerId;
   if (!resizePointerIdSet.has(pointerId)) {
     resizePointerIdSet.add(pointerId);
-    target.setPointerCapture(resizeData.options.event.pointerId);
+    target.setPointerCapture(resizeData.options.pointer.pointerId);
   }
   // 移动
   const moveHandler = getMoveHandler(resizeData, moveFn);
@@ -130,8 +130,8 @@ function getMoveHandler(
 ) {
   const { scaleX, scaleY, rotate } = resizeData.domAttrs.transform;
   // 计算起始点坐标
-  const clientX = resizeData.options.event!.clientX;
-  const clientY = resizeData.options.event!.clientY;
+  const clientX = resizeData.options.pointer!.clientX;
+  const clientY = resizeData.options.pointer!.clientY;
   if (rotate) {
     // 计算旋转角度（转换为弧度）
     const angleRad = -rotate * Math.PI / 180;

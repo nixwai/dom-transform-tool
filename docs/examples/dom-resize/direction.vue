@@ -33,6 +33,7 @@ function handleTargetResize(event: PointerEvent) {
   domResize({
     target: resizeTarget1.value,
     event,
+    distanceX: 100,
     offset: offset.value,
     lockAspectRatio: lockAspectRatio.value,
     direction: direction.value,

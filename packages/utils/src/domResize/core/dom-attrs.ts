@@ -216,13 +216,13 @@ export function getResizeDomAttrs(options: DomResizeOptions, dom?: HTMLDivElemen
   domAttrs.transform.originRelativeY = originY / domAttrs.height;
 
   // 获取点击在元素的哪个方向
-  if (options.event) {
+  if (options.pointer) {
     const rect = dom.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
     // 鼠标相对于元素中心的坐标
-    const pointerX = options.event.clientX - centerX;
-    const pointerY = options.event.clientY - centerY;
+    const pointerX = options.pointer.clientX - centerX;
+    const pointerY = options.pointer.clientY - centerY;
     // 旋转角度（转换为弧度）
     const angleRad = -domAttrs.transform.rotate * Math.PI / 180;
     // 应用逆时针旋转矩阵

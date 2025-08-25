@@ -14,11 +14,11 @@ export function createStyleUpdaters(
   const target = targetRef.deref();
 
   const changeTargetStyle = <T extends (...params: any[]) => DomResizeStyle>(fn: T): T => {
-    if (!target || options.customControl) {
-      // 获取不到实例或者自定义控制模式下，不进行样式设置
+    if (!target || options.disableUpdate) {
+      // 获取不到实例或者关闭更新模式下，不进行样式设置
       return fn;
     }
-    // 非自定义控制模式下，自动设置元素样式
+    // 自动设置元素样式
     return ((...params) => {
       const styles = fn(...params);
       for (const key in styles) {

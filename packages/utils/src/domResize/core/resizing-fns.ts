@@ -60,7 +60,7 @@ export function createResizingFns(options: DomResizeOptions, domAttrs: DomAttrs)
   let gridY = (options.grid?.[1] || DEFAULT_GRID) * (moveDistance.dirY ? 1 : 2);
   if (options.lockAspectRatio) {
     // 锁定宽高比时，固定的移动距离也会变化
-    if (options.event || options.distanceX) {
+    if (options.pointer || options.distanceX) {
       gridY = gridX / aspectRatio;
     }
     else {
