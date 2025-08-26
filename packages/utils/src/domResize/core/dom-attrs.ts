@@ -3,6 +3,14 @@ import type { DomResizeOptions } from '../types';
 export type Dir = 1 | -1;
 
 export interface DomAttrs {
+  /** 元素样式 */
+  styles?: CSSStyleDeclaration
+  /** 父级元素样式 */
+  parentStyles?: CSSStyleDeclaration
+  /** 父级宽度 */
+  parentWidth: number
+  /** 父级高度 */
+  parentHeight: number
   /** 宽 */
   width: number
   /** 高 */
@@ -49,22 +57,26 @@ export interface DomAttrs {
     /** 垂直方向，1: 前方，-1: 后方 */
     y: Dir
   }
+  /** 手动调整距离 */
+  manual: {
+    /** 横轴移动距离 */
+    distanceX: number
+    /** 纵轴移动距离 */
+    distanceY: number
+  }
 }
 
 const matrixValueReg = /(matrix3?d?)\((.+)\)/;
-function pxToNum(value?: string) {
-  if (!value) {
-    return 0;
-  }
-  if (value === 'none' || value === 'auto') {
-    return Infinity;
-  }
-  return Number(value.replace('px', ''));
+function toNum(value?: string) {
+  if (!value) { return 0; }
+  return Number.parseFloat(value) || 0;
 }
 
 /** 获取调整元素的属性信息 */
 export function getResizeDomAttrs(options: DomResizeOptions, dom?: HTMLDivElement): Readonly<DomAttrs> {
   const domAttrs: DomAttrs = {
+    parentWidth: 0,
+    parentHeight: 0,
     width: 0,
     height: 0,
     aspectRatio: 0,
@@ -89,9 +101,17 @@ export function getResizeDomAttrs(options: DomResizeOptions, dom?: HTMLDivElemen
       x: 1,
       y: 1,
     },
+    manual: {
+      distanceX: 0,
+      distanceY: 0,
+    },
   };
   if (!dom) { return domAttrs; }
   const domStyles = window.getComputedStyle(dom, null);
+  const parentStyles = window.getComputedStyle(dom.parentNode as HTMLDivElement, null);
+  domAttrs.styles = domStyles;
+  domAttrs.parentStyles = parentStyles;
+
   // 获取transform相关matrix信息
   const matchValue = domStyles.transform.match(matrixValueReg);
   domAttrs.transform.name = matchValue?.[1] || 'matrix'; // matrix3d || matrix
@@ -131,11 +151,11 @@ export function getResizeDomAttrs(options: DomResizeOptions, dom?: HTMLDivElemen
     domAttrs.transform.rotate = transformValuePrecision((Math.atan2(b, a) * 180 / Math.PI + 360) % 360);
   }
 
-  // 设置偏移
+  // 获取偏移
   if (options.offset === 'position') {
     // 使用position
-    domAttrs.offsetX = pxToNum(domStyles.left);
-    domAttrs.offsetY = pxToNum(domStyles.top);
+    domAttrs.offsetX = toNum(domStyles.left);
+    domAttrs.offsetY = toNum(domStyles.top);
   }
   else if (options.offset === 'translate') {
     // 使用translate
@@ -145,8 +165,8 @@ export function getResizeDomAttrs(options: DomResizeOptions, dom?: HTMLDivElemen
     }
     else {
       const translate = domStyles.translate.split(' ');
-      domAttrs.offsetX = pxToNum(translate[0]);
-      domAttrs.offsetY = pxToNum(translate[1]);
+      domAttrs.offsetX = toNum(translate[0]);
+      domAttrs.offsetY = toNum(translate[1]);
     }
   }
   else {
@@ -161,31 +181,26 @@ export function getResizeDomAttrs(options: DomResizeOptions, dom?: HTMLDivElemen
     }
   }
 
-  // 设置宽高
-  domAttrs.width = pxToNum(domStyles.width);
-  domAttrs.height = pxToNum(domStyles.height);
+  // 获取宽高
+  domAttrs.width = toNum(domStyles.width);
+  domAttrs.height = toNum(domStyles.height);
   domAttrs.aspectRatio = domAttrs.height !== 0 ? domAttrs.width / domAttrs.height : 1;
 
+  // 获取父级的宽高
+  domAttrs.parentWidth = toNum(parentStyles.width);
+  domAttrs.parentHeight = toNum(parentStyles.height);
+  if (parentStyles.boxSizing === 'border-box') {
+    domAttrs.parentWidth = domAttrs.parentWidth - toNum(parentStyles.paddingLeft) - toNum(parentStyles.paddingRight);
+    domAttrs.parentHeight = domAttrs.parentHeight - toNum(parentStyles.paddingTop) - toNum(parentStyles.paddingBottom);
+  }
+
   // 设置宽高限制
-  const limitKeys = ['maxWidth', 'maxHeight', 'minWidth', 'minHeight'] as const;
-  const limitList = limitKeys.map(key => domStyles[key]);
-  if (limitList.some(item => item.includes('%'))) {
-    // 宽高限制包含百分比，需要获取父级宽度和高度
-    const parentStyles = window.getComputedStyle(dom.parentNode as HTMLDivElement, null);
-    const parentWidthAndHeight = [parentStyles.width, parentStyles.height].map(pxToNum);
-    if (parentStyles.boxSizing === 'border-box') {
-      parentWidthAndHeight[0] = parentWidthAndHeight[0] - pxToNum(parentStyles.paddingLeft) - pxToNum(parentStyles.paddingRight);
-      parentWidthAndHeight[1] = parentWidthAndHeight[1] - pxToNum(parentStyles.paddingTop) - pxToNum(parentStyles.paddingBottom);
-    }
-    limitList.map((item, i) => {
-      return item.includes('%') ? parentWidthAndHeight[i % 2] * Number(item.replace('%', '')) / 100 : pxToNum(item);
-    }).forEach((item, i) => domAttrs[limitKeys[i]] = item);
-  }
-  else {
-    limitList.map(pxToNum).forEach((item, i) => domAttrs[limitKeys[i]] = item);
-  }
-  // 锁定纵横比时，最小宽高也会受限改变
+  domAttrs.maxWidth = domStyles.maxWidth.includes('%') ? domAttrs.parentWidth * toNum(domStyles.maxWidth) / 100 : toNum(domStyles.maxWidth) || Infinity;
+  domAttrs.maxHeight = domStyles.maxHeight.includes('%') ? domAttrs.parentHeight * toNum(domStyles.maxHeight) / 100 : toNum(domStyles.maxHeight) || Infinity;
+  domAttrs.minWidth = domStyles.minWidth.includes('%') ? domAttrs.parentWidth * toNum(domStyles.minWidth) / 100 : toNum(domStyles.minWidth);
+  domAttrs.minHeight = domStyles.minHeight.includes('%') ? domAttrs.parentHeight * toNum(domStyles.minHeight) / 100 : toNum(domStyles.minHeight);
   if (options.lockAspectRatio) {
+    // 锁定纵横比时，最小宽高也会受限改变
     const lockMinHeight = domAttrs.minHeight * domAttrs.aspectRatio;
     if (lockMinHeight > domAttrs.minWidth) {
       domAttrs.minWidth = lockMinHeight;
@@ -232,6 +247,18 @@ export function getResizeDomAttrs(options: DomResizeOptions, dom?: HTMLDivElemen
     domAttrs.pointerDir.x = rotatedX > 0 ? 1 : -1;
     domAttrs.pointerDir.y = rotatedY > 0 ? 1 : -1;
   }
+
+  // 获取手动调整的偏移量
+  if (options.manual?.width || options.manual?.height) {
+    const manualWidth = options.manual.width?.toString() || '0';
+    const manualHeight = options.manual.height?.toString() || '0';
+    domAttrs.manual.distanceX = manualWidth.includes('%') ? toNum(manualWidth) / 100 * domAttrs.parentWidth : toNum(manualWidth);
+    domAttrs.manual.distanceY = manualHeight.includes('%') ? toNum(manualHeight) / 100 * domAttrs.parentHeight : toNum(manualHeight);
+    if (options.manual.type === 'size') {
+      domAttrs.manual.distanceX = domAttrs.manual.distanceX - domAttrs.width;
+      domAttrs.manual.distanceY = domAttrs.manual.distanceY - domAttrs.height;
+    }
+  }
   return domAttrs;
 }
 
@@ -241,10 +268,10 @@ function parseTransformOriginValue(isAbsolute: boolean | undefined, domValue: st
     return 0;
   }
   if (isAbsolute === false) {
-    return pxToNum(domValue);
+    return toNum(domValue);
   }
   if (!styleValue || styleValue.includes('%') || styleValue.includes('center') || hasKeyword) {
-    return pxToNum(domValue);
+    return toNum(domValue);
   }
   return 0;
 }

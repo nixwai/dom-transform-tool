@@ -32,8 +32,7 @@ const crossAxis = ref(false);
 function handleTargetResize(event: PointerEvent) {
   domResize({
     target: resizeTarget1.value,
-    event,
-    distanceX: 100,
+    pointer: event,
     offset: offset.value,
     lockAspectRatio: lockAspectRatio.value,
     direction: direction.value,
@@ -48,8 +47,10 @@ function changeTargetResize(dis: { x: number, y: number }) {
     offset: offset.value,
     lockAspectRatio: lockAspectRatio.value,
     direction: direction.value,
-    distanceX: dis.x,
-    distanceY: dis.y,
+    manual: {
+      width: dis.x,
+      height: dis.y,
+    },
     grid: grid.value,
   });
 }

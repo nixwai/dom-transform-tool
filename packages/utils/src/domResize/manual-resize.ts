@@ -2,7 +2,7 @@ import type { ResizeData, ResizingFn } from './core';
 import { resizeByDirection, updateResize } from './core';
 
 export function resizeByManual(resizeData: ResizeData) {
-  if (!resizeData.options.distanceX && !resizeData.options.distanceY) {
+  if (!resizeData.domAttrs.manual.distanceX && !resizeData.domAttrs.manual.distanceY) {
     return;
   }
   resizeByDirection(resizeData, resizeHorizontal, resizeVertical, resizeHorizontalAndVertical);
@@ -11,7 +11,7 @@ export function resizeByManual(resizeData: ResizeData) {
 /** 调整水平方向 */
 function resizeHorizontal(resizeData: ResizeData, resizingWidthFn: ResizingFn) {
   const { setStyleWidthOrHeight, setStyleOffset, moveDistance } = resizeData;
-  const { distanceX = 0 } = resizeData.options;
+  const { distanceX } = resizeData.domAttrs.manual;
   const { width: domWidth, offsetY: domOffsetY } = resizeData.domAttrs;
   const dir = resizingWidthFn === resizeData.resizingBackward ? -1 : 1;
   const { value: width, offset: offsetX, otherOffset: otherOffsetY } = resizingWidthFn(domWidth, domWidth + dir * distanceX, 'x');
@@ -25,7 +25,7 @@ function resizeHorizontal(resizeData: ResizeData, resizingWidthFn: ResizingFn) {
 /** 调整垂直方向 */
 function resizeVertical(resizeData: ResizeData, resizingHeightFn: ResizingFn) {
   const { setStyleWidthOrHeight, setStyleOffset, moveDistance } = resizeData;
-  const { distanceY = 0 } = resizeData.options;
+  const { distanceY } = resizeData.domAttrs.manual;
   const { height: domHeight, offsetX: domOffsetX } = resizeData.domAttrs;
   const dir = resizingHeightFn === resizeData.resizingBackward ? -1 : 1;
   const { value: height, offset: offsetY, otherOffset: otherOffsetX } = resizingHeightFn(domHeight, domHeight + dir * distanceY, 'y');
@@ -39,7 +39,7 @@ function resizeVertical(resizeData: ResizeData, resizingHeightFn: ResizingFn) {
 /** 调整水平与垂直方向 */
 function resizeHorizontalAndVertical(resizeData: ResizeData, resizingWidthFn: ResizingFn, resizingHeightFn: ResizingFn) {
   const { setStyleWidthOrHeight, setStyleOffset, moveDistance } = resizeData;
-  const { lockAspectRatio, distanceX = 0, distanceY = 0 } = resizeData.options;
+  const { lockAspectRatio } = resizeData.options;
   const { width: domWidth, height: domHeight, aspectRatio } = resizeData.domAttrs;
 
   const updateDom = (options: { distanceX: number, distanceY: number }) => {
@@ -59,6 +59,7 @@ function resizeHorizontalAndVertical(resizeData: ResizeData, resizingWidthFn: Re
     updateResize(resizeData, { width, height, offsetX, offsetY }, { ...widthStyle, ...heightStyle, ...offsetStyle });
   };
 
+  const { distanceX, distanceY } = resizeData.domAttrs.manual;
   if (lockAspectRatio) {
     if (distanceX) {
       let multiple = !moveDistance.dirX && moveDistance.dirY ? 2 : 1;

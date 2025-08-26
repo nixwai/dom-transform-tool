@@ -35,19 +35,26 @@ export interface DomResizeStyle {
 export type DomResizeOffsetType = 'position' | 'transform' | 'translate';
 
 /** 自定义样式类型 */
-// export type DomResizeCustomStyleType = 'px' | 'percent' | 'rem' | (() => string);
-export type DomResizeCustomStyleType = () => string;
+export type DomResizeCustomStyleFn = (
+  value: number,
+  options: {
+    parentWidth: number
+    parentHeight: number
+    parentStyles?: CSSStyleDeclaration
+    domStyles?: CSSStyleDeclaration
+  }
+) => string;
 
 /** 自定义样式 */
 export interface DomResizeCustomStyle {
   /** 宽度 */
-  width?: DomResizeCustomStyleType
+  width?: DomResizeCustomStyleFn
   /** 高度 */
-  height?: DomResizeCustomStyleType
+  height?: DomResizeCustomStyleFn
   /** 横轴的偏移，offset为transform时仅px可用 */
-  offsetX?: DomResizeCustomStyleType
+  offsetX?: DomResizeCustomStyleFn
   /** 纵轴的偏移，offset为transform时仅px可用 */
-  offsetY?: DomResizeCustomStyleType
+  offsetY?: DomResizeCustomStyleFn
 }
 
 /** 调整大小配置项 */
@@ -58,8 +65,8 @@ export interface DomResizeOptions {
   direction?: DomResizeDirection
   /** 手动调整控制 */
   manual?: {
-    /** 类型，默认distance，distance: 调整的宽高距离，fixed: 调整到固定宽高 */
-    type?: 'distance' | 'fixed'
+    /** 类型，默认distance，distance: 调整的宽高距离，size: 调整到对应宽高大小 */
+    type?: 'distance' | 'size'
     /** 宽度 */
     width?: number | string
     /** 高度 */
@@ -67,10 +74,6 @@ export interface DomResizeOptions {
   }
   /** 指针控制事件 */
   pointer?: PointerEvent
-  /** 手动控制水平移动距离 */
-  distanceX?: number
-  /** 手动控制垂直移动距离 */
-  distanceY?: number
   /** 使用transform/position/translate进行偏移 */
   offset?: DomResizeOffsetType
   /** 是否可跨轴调整，需要配置offset才生效 */
