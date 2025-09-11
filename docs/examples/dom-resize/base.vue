@@ -10,7 +10,7 @@ const resizeTarget4 = ref<HTMLDivElement>();
 function handleTarget1ResizeHeight(e: PointerEvent) {
   domResize({
     target: resizeTarget1.value,
-    event: e,
+    pointer: e,
     direction: 'bottom',
   });
 }
@@ -18,7 +18,7 @@ function handleTarget1ResizeHeight(e: PointerEvent) {
 function handleTarget2Resize(e: PointerEvent) {
   domResize({
     target: resizeTarget2.value,
-    event: e,
+    pointer: e,
     direction: 'right',
   });
   handleTarget1ResizeHeight(e);
@@ -27,7 +27,7 @@ function handleTarget2Resize(e: PointerEvent) {
 function handleTarget3Resize(e: PointerEvent) {
   domResize({
     target: resizeTarget3.value,
-    event: e,
+    pointer: e,
     direction: 'right',
   });
   handleTarget1ResizeHeight(e);
@@ -36,7 +36,7 @@ function handleTarget3Resize(e: PointerEvent) {
 function handleTarget4Resize(e: PointerEvent) {
   domResize({
     target: resizeTarget4.value,
-    event: e,
+    pointer: e,
     direction: 'right',
   });
   handleTarget1ResizeHeight(e);

@@ -35,7 +35,7 @@ export interface DomResizeStyle {
 export type DomResizeOffsetType = 'position' | 'transform' | 'translate';
 
 /** 自定义样式类型 */
-export type DomResizeCustomStyleFn = (
+export type DomResizeCustomRenderMethod = (
   value: number,
   options: {
     parentWidth: number
@@ -46,15 +46,15 @@ export type DomResizeCustomStyleFn = (
 ) => string;
 
 /** 自定义样式 */
-export interface DomResizeCustomStyle {
+export interface DomResizeCustomRender {
   /** 宽度 */
-  width?: DomResizeCustomStyleFn
+  width?: DomResizeCustomRenderMethod
   /** 高度 */
-  height?: DomResizeCustomStyleFn
+  height?: DomResizeCustomRenderMethod
   /** 横轴的偏移，offset为transform时仅px可用 */
-  offsetX?: DomResizeCustomStyleFn
+  offsetX?: DomResizeCustomRenderMethod
   /** 纵轴的偏移，offset为transform时仅px可用 */
-  offsetY?: DomResizeCustomStyleFn
+  offsetY?: DomResizeCustomRenderMethod
 }
 
 /** 调整大小配置项 */
@@ -82,14 +82,21 @@ export interface DomResizeOptions {
   grid?: number[]
   /** 锁定宽高比例，direction需要包含纵轴与横轴的方向，锁定后grid的配置也会根据当前元素比例发生改变 */
   lockAspectRatio?: boolean
-  /**
-   * transform-origin的是否为绝对定位（非百分比或offset-keyword），使用数组可以分别指定横轴和纵轴，默认根据内联样式决定
-   * @see https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-origin
-   * 由于函数仅会识别内联样式设置的transform-origin类型，其他情况需要通过主要设置判断是否为绝对定位，确保不会有异常的偏移
-   */
-  originIsAbsolute?: boolean | (boolean | undefined)[]
-  /** 自定义样式 */
-  customStyle?: DomResizeCustomStyle
+  /** 自定义渲染 */
+  customRender?: DomResizeCustomRender
+  /** 自定义样式，用于兼容一些无法通过当前节点获取的样式 */
+  customStyle?: {
+    /**
+     * transform-origin的是否为绝对定位（非百分比或offset-keyword），使用数组可以分别指定横轴和纵轴，默认根据内联样式决定
+     * @see https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-origin
+     * 由于函数仅会识别内联样式设置的transform-origin类型，其他情况需要通过主要设置判断是否为绝对定位，确保不会有异常的偏移
+     */
+    origin?: boolean | (boolean | undefined)[]
+    /** 旋转度数 */
+    rotate?: number | string
+    /** 缩放值，使用数组可以分别指定横轴和纵轴 */
+    scale?: number | string | (number | string | undefined)[]
+  }
   /** 关闭对target元素的更新，关闭后需通过callback方法手动给元素添加样式 */
   disableUpdate?: boolean
   /** 调整回调 */
