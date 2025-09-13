@@ -72,31 +72,41 @@ export class DomAttrs {
     this.updatePointerDirection();
   }
 
-  public hasUpdate = false;
+  /** 当前元素尺寸是否发生改变 */
+  public isSizeUpdate = false;
+  /** 当前元素偏移是否发生改变 */
+  public isOffsetUpdate = false;
+
   public updateDomAttrs(options: DomResizeOptions, target?: HTMLDivElement) {
-    this.hasUpdate = false;
+    this.isSizeUpdate = false;
+    this.isOffsetUpdate = false;
     const taskList: [unknown, () => void][] = [
       [
         target,
-        this.updateTargetAttrsInfo,
+        () => {
+          this.updateTargetAttrsInfo();
+          this.isSizeUpdate = true;
+        },
       ],
       [
         target || options.lockAspectRatio !== this.options.lockAspectRatio,
-        this.updateSizeConstraints,
+        () => {
+          this.updateSizeConstraints();
+          this.isSizeUpdate = true;
+        },
       ],
       [
         target || options.offset !== this.options.offset,
-        this.updateOffsetInfo,
+        () => {
+          this.updateOffsetInfo();
+          this.isOffsetUpdate = true;
+        },
       ],
     ];
     this.options = options;
     taskList.forEach(([condition, fn]) => {
-      if (condition) {
-        this.hasUpdate = true;
-        fn.call(this);
-      }
+      if (condition) { fn.call(this); }
     });
-
     this.updatePointerDirection();
   }
 
@@ -118,16 +128,16 @@ export class DomAttrs {
     // 获取宽高
     this.width = toNum(this.domStyles.width);
     this.height = toNum(this.domStyles.height);
-    this.aspectRatio = this.height !== 0 ? this.width / this.height : 1;
+    this.aspectRatio = this.height !== 0 && this.width !== 0 ? this.width / this.height : 1;
 
     if (!this.parentStyles) { return; }
 
     // 获取父级的宽高
     this.parentWidth = toNum(this.parentStyles.width);
     this.parentHeight = toNum(this.parentStyles.height);
-    if (this.domStyles.boxSizing === 'border-box') {
-      this.parentWidth = this.parentWidth - toNum(this.domStyles.paddingLeft) - toNum(this.domStyles.paddingRight);
-      this.parentHeight = this.parentHeight - toNum(this.domStyles.paddingTop) - toNum(this.domStyles.paddingBottom);
+    if (this.parentStyles.boxSizing === 'border-box') {
+      this.parentWidth = this.parentWidth - toNum(this.parentStyles.paddingLeft) - toNum(this.parentStyles.paddingRight);
+      this.parentHeight = this.parentHeight - toNum(this.parentStyles.paddingTop) - toNum(this.parentStyles.paddingBottom);
     }
 
     // 宽高限制

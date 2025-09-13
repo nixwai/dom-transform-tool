@@ -9,10 +9,10 @@ export function resizeByPointer(resizeApplication: ResizeApplication) {
 
 /** 调整水平方向 */
 function resizeHorizontal(resizeApplication: ResizeApplication, resizingWidthFn: ResizingFn) {
-  const { resizeDistance, styleUpdater, domAttrs } = resizeApplication;
+  const { resizeDistance, styleUpdater, domAttrs, axisParams } = resizeApplication;
   const { offsetY: domOffsetY, pointerDir } = domAttrs;
   // 延续之前的移动距离
-  const dir = resizeDistance.x.dir || 0.5 * pointerDir.x;
+  const dir = axisParams.x.dir || 0.5 * pointerDir.x;
   const distanceX = resizeDistance.x.total;
   beginResizeContent(resizeApplication, ({ startX, endX }) => {
     const { value: width, offset: offsetX, otherOffset: otherOffsetY } = resizingWidthFn(startX, endX + dir * distanceX, 'x', pointerDir.x);
@@ -26,10 +26,10 @@ function resizeHorizontal(resizeApplication: ResizeApplication, resizingWidthFn:
 
 /** 调整垂直方向 */
 function resizeVertical(resizeApplication: ResizeApplication, resizingHeightFn: ResizingFn) {
-  const { resizeDistance, styleUpdater, domAttrs } = resizeApplication;
+  const { resizeDistance, styleUpdater, domAttrs, axisParams } = resizeApplication;
   const { offsetX: domOffsetX, pointerDir } = domAttrs;
   // 延续之前的移动距离
-  const dir = resizeDistance.y.dir || 0.5 * pointerDir.y;
+  const dir = axisParams.y.dir || 0.5 * pointerDir.y;
   const distanceY = resizeDistance.y.total;
   beginResizeContent(resizeApplication, ({ startY, endY }) => {
     const { value: height, offset: offsetY, otherOffset: otherOffsetX } = resizingHeightFn(startY, endY + dir * distanceY, 'y', pointerDir.y);
@@ -43,12 +43,12 @@ function resizeVertical(resizeApplication: ResizeApplication, resizingHeightFn: 
 
 /** 调整水平与垂直方向 */
 function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resizingWidthFn: ResizingFn, resizingHeightFn: ResizingFn) {
-  const { options, resizeDistance, styleUpdater, domAttrs } = resizeApplication;
+  const { options, resizeDistance, styleUpdater, domAttrs, axisParams } = resizeApplication;
   const { aspectRatio, pointerDir } = domAttrs;
   const { lockAspectRatio } = options;
   // 延续之前的移动距离
-  const dirX = resizeDistance.x.dir || 0.5 * pointerDir.x;
-  const dirY = resizeDistance.y.dir || 0.5 * pointerDir.y;
+  const dirX = axisParams.x.dir || 0.5 * pointerDir.x;
+  const dirY = axisParams.y.dir || 0.5 * pointerDir.y;
   const distanceX = resizeDistance.x.total;
   const distanceY = resizeDistance.y.total;
   const updateDom = (coord: { startX: number, startY: number, endX: number, endY: number }) => {
@@ -70,16 +70,16 @@ function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resiz
     // 固定比例时，宽度根据鼠标位置决定，高度的调整根据宽度的变化与元素宽高比例决定
     // 根据宽高调整的方向处理
     let dir = resizingWidthFn === resizingHeightFn ? 1 : -1;
-    const isBothX = !resizeDistance.x.dir;
-    const isBothY = !resizeDistance.y.dir;
+    const isBothX = !axisParams.x.dir;
+    const isBothY = !axisParams.y.dir;
     if (isBothX || isBothY) {
       if (!isBothY) {
         // x轴可以左右移动，但y轴固定方向
-        dir = -dir * resizeDistance.y.dir * pointerDir.x * 2;
+        dir = -dir * axisParams.y.dir * pointerDir.x * 2;
       }
       else if (!isBothX) {
         // y轴可以上下移动，但x轴固定方向
-        dir = -dir * resizeDistance.x.dir * pointerDir.y / 2;
+        dir = -dir * axisParams.x.dir * pointerDir.y / 2;
       }
       else {
         // x轴和y轴都可以左右上下移动

@@ -71,15 +71,15 @@ export class OffsetCounter {
       this.getBothOffset = zeroOffset;
       return;
     }
-    const hasUpdate = Boolean(
-      this.domAttrs.hasUpdate
+    const isOffsetCounterUpdate = Boolean(
+      this.domAttrs.isSizeUpdate || this.domAttrs.isOffsetUpdate
       || Boolean(options.offset) !== Boolean(this.options.offset)
       || this.options.crossAxis !== options.crossAxis,
     );
 
     this.options = options;
 
-    if (hasUpdate) {
+    if (isOffsetCounterUpdate) {
       this.setTransformParams();
       this.setOffsetFunctions();
     }
@@ -138,6 +138,12 @@ export class OffsetCounter {
           originSin: height * (scaleY * sinRad) * (1 - 2 * originRelativeY),
           minSin: minHeight * scaleY * sinRad,
         },
+      };
+    }
+    else {
+      this.negativeAxiosOffset = {
+        x: { originCos: 0, minCos: 0, originSin: 0, minSin: 0 },
+        y: { originCos: 0, minCos: 0, originSin: 0, minSin: 0 },
       };
     }
   }

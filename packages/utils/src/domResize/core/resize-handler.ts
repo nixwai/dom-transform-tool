@@ -29,16 +29,16 @@ export class ResizeHandler {
   }
 
   public updateResizeHandler(options: DomResizeOptions) {
-    const hasUpdate = Boolean(options.offset !== this.options.offset);
+    const isResizeHandlerUpdate = Boolean(options.offset !== this.options.offset);
     this.options = options;
-    if (hasUpdate) {
+    if (isResizeHandlerUpdate) {
       this.createResizeValueMethod();
     }
   }
 
   private createResizeValueMethod() {
     this.getResizeValue = this.options.offset
-      ? (value: number) => Math.abs(value)
+      ? (value: number) => value
       : (value: number, minValue: number) => value > minValue ? value : minValue;
   }
 
@@ -51,7 +51,7 @@ export class ResizeHandler {
     const resizeValue = this.getResizeValue(value, minValue);
     this.resizeDistance.logDistance(resizeValue, axis);
     return {
-      value: resizeValue,
+      value: Math.abs(resizeValue),
       offset: offsetCurrentAxis,
       otherOffset: offsetAnotherAxis,
     };
@@ -66,7 +66,7 @@ export class ResizeHandler {
     const resizeValue = this.getResizeValue(value, minValue);
     this.resizeDistance.logDistance(resizeValue, axis);
     return {
-      value: resizeValue,
+      value: Math.abs(resizeValue),
       offset: offsetCurrentAxis,
       otherOffset: offsetAnotherAxis,
     };
@@ -82,7 +82,7 @@ export class ResizeHandler {
     const resizeValue = this.getResizeValue(value, minValue);
     this.resizeDistance.logDistance(resizeValue, axis);
     return {
-      value: resizeValue,
+      value: Math.abs(resizeValue),
       offset: offsetCurrentAxis,
       otherOffset: offsetAnotherAxis,
     };

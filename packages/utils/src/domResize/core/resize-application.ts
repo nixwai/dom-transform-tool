@@ -35,20 +35,21 @@ export class ResizeApplication {
       this.options = options;
     }
     this.domAttrs = new DomAttrs(this.options);
-    this.resizeDistance = new ResizeDistance(this.options, this.domAttrs);
-    this.axisParams = new AxisParams(this.options, this.domAttrs, this.resizeDistance);
-    this.distanceCounter = new DistanceCounter(this.options, this.domAttrs, this.axisParams);
+    this.axisParams = new AxisParams(this.options, this.domAttrs);
+    this.resizeDistance = new ResizeDistance(this.axisParams);
+    this.distanceCounter = new DistanceCounter(this.options, this.axisParams);
     this.offsetCounter = new OffsetCounter(this.options, this.domAttrs);
     this.resizeHandler = new ResizeHandler(this.options, this.axisParams, this.distanceCounter, this.offsetCounter, this.resizeDistance);
     this.styleUpdater = new StyleUpdater(this.options, this.domAttrs);
   }
 
+  /** 更新实例配置 */
   public updateInstance(options?: DomResizeOptions) {
     if (options) {
       this.options = Object.assign({}, this.options, options);
       this.domAttrs.updateDomAttrs(this.options, options.target);
-      this.resizeDistance.updateResizeDistance(this.options);
       this.axisParams.updateAxisParams(this.options);
+      this.resizeDistance.updateResizeDistance(options.target);
       this.distanceCounter.updateDistanceCounter(this.options);
       this.offsetCounter.updateOffsetCounter(this.options);
       this.resizeHandler.updateResizeHandler(this.options);
@@ -56,7 +57,13 @@ export class ResizeApplication {
     }
   }
 
-  public clearPointer() { 
+  /** 清除配置的手动调整 */
+  public clearManual() {
+    this.options.manual = undefined;
+  }
+
+  /** 清除配置的指针 */
+  public clearPointer() {
     this.options.pointer = undefined;
   }
 

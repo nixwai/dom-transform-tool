@@ -5,6 +5,7 @@ export function resizeByManual(resizeApplication: ResizeApplication) {
     return;
   }
   resizeApplication.resizeByDirection(resizeHorizontal, resizeVertical, resizeHorizontalAndVertical);
+  resizeApplication.clearManual();
 }
 
 /** 调整水平方向 */
@@ -13,7 +14,7 @@ function resizeHorizontal(resizeApplication: ResizeApplication, resizingWidthFn:
   const { manualDistance } = axisParams.x;
   const { width: domWidth, offsetY: domOffsetY } = domAttrs;
   const dir = resizingWidthFn === resizeHandler.resizingBackward ? -1 : 1;
-  const distanceX = resizeDistance.x.total / (resizingWidthFn === resizeHandler.resizingBoth ? 2 : 1);;
+  const distanceX = resizeDistance.x.total / (resizingWidthFn === resizeHandler.resizingBoth ? 2 : 1); ;
   const { value: width, offset: offsetX, otherOffset: otherOffsetY } = resizingWidthFn(domWidth, domWidth + dir * manualDistance + dir * distanceX, 'x');
   if (!resizeDistance.x.distance) { return; }
   const offsetY = domOffsetY + otherOffsetY;
@@ -48,7 +49,7 @@ function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resiz
     const dirY = resizingHeightFn === resizeHandler.resizingBackward ? -1 : 1;
     const distanceX = resizeDistance.x.total / (resizingWidthFn === resizeHandler.resizingBoth ? 2 : 1);
     const distanceY = resizeDistance.y.total / (resizingHeightFn === resizeHandler.resizingBoth ? 2 : 1);
-    
+
     const { value: width, offset: resizeOffsetX, otherOffset: otherOffsetY } = resizingWidthFn(domWidth, domWidth + dirX * options.distanceX + dirX * distanceX, 'x');
     const { value: height, offset: resizeOffsetY, otherOffset: otherOffsetX } = resizingHeightFn(domHeight, domHeight + dirY * options.distanceY + dirY * distanceY, 'y');
     if ((!resizeDistance.x.distance && !resizeDistance.y.distance) // 移动距离为0时，不更新dom
@@ -67,13 +68,13 @@ function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resiz
   const { manualDistance: manualDistanceY } = axisParams.y;
   if (lockAspectRatio) {
     if (manualDistanceX) {
-      let multiple = !resizeDistance.x.dir && resizeDistance.y.dir ? 2 : 1;
-      multiple = resizeDistance.x.dir && !resizeDistance.y.dir ? 0.5 : multiple;
+      let multiple = !axisParams.x.dir && axisParams.y.dir ? 2 : 1;
+      multiple = axisParams.x.dir && !axisParams.y.dir ? 0.5 : multiple;
       updateDom({ distanceX: manualDistanceX, distanceY: manualDistanceX / aspectRatio * multiple });
     }
     else {
-      let multiple = !resizeDistance.x.dir && resizeDistance.y.dir ? 0.5 : 1;
-      multiple = resizeDistance.x.dir && !resizeDistance.y.dir ? 2 : multiple;
+      let multiple = !axisParams.x.dir && axisParams.y.dir ? 0.5 : 1;
+      multiple = axisParams.x.dir && !axisParams.y.dir ? 2 : multiple;
       updateDom({ distanceX: manualDistanceY * aspectRatio * multiple, distanceY: manualDistanceY });
     }
   }
