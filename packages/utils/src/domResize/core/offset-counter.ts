@@ -87,55 +87,55 @@ export class OffsetCounter {
 
   /** 初始化变换参数 */
   private setTransformParams() {
-    const { width, height, offsetX, offsetY, transform, minWidth, minHeight } = this.domAttrs;
-    const { rotate, originRelativeX, originRelativeY, scaleX, scaleY } = transform;
+    const { width, height, offsetX, offsetY, variant, minWidth, minHeight } = this.domAttrs;
+    const { rotate, transformOriginX, transformOriginY, scaleX, scaleY } = variant;
     const rad = rotate * Math.PI / 180;
     const cosRad = Math.cos(rad);
     const sinRad = Math.sin(rad);
 
     this.scaleAxisMultiple = {
       x: {
-        v1: (scaleX - 1) * originRelativeX,
-        v2: (scaleX - 1) * (1 - originRelativeX),
+        v1: (scaleX - 1) * transformOriginX,
+        v2: (scaleX - 1) * (1 - transformOriginX),
       },
       y: {
-        v1: (scaleY - 1) * originRelativeY,
-        v2: (scaleY - 1) * (1 - originRelativeY),
+        v1: (scaleY - 1) * transformOriginY,
+        v2: (scaleY - 1) * (1 - transformOriginY),
       },
     };
     this.rotateCurrentAxisMultiple = {
       x: {
-        v1: scaleX * (cosRad - 1) * originRelativeX,
-        v2: scaleX * (cosRad - 1) * (1 - originRelativeX),
+        v1: scaleX * (cosRad - 1) * transformOriginX,
+        v2: scaleX * (cosRad - 1) * (1 - transformOriginX),
       },
       y: {
-        v1: scaleY * (cosRad - 1) * originRelativeY,
-        v2: scaleY * (cosRad - 1) * (1 - originRelativeY),
+        v1: scaleY * (cosRad - 1) * transformOriginY,
+        v2: scaleY * (cosRad - 1) * (1 - transformOriginY),
       },
     };
     this.rotateAnotherAxisMultiple = {
       x: {
-        v1: scaleX * sinRad * originRelativeX,
-        v2: scaleX * sinRad * (1 - originRelativeX),
+        v1: scaleX * sinRad * transformOriginX,
+        v2: scaleX * sinRad * (1 - transformOriginX),
       },
       y: {
-        v1: scaleY * sinRad * originRelativeY,
-        v2: scaleY * sinRad * (1 - originRelativeY),
+        v1: scaleY * sinRad * transformOriginY,
+        v2: scaleY * sinRad * (1 - transformOriginY),
       },
     };
     // 越轴改变时，才需要计算调整的偏移值
     if (this.options.crossAxis) {
       this.negativeAxiosOffset = {
         x: {
-          originCos: offsetX + width + width * (scaleX * cosRad - 1) * (1 - 2 * originRelativeX),
+          originCos: offsetX + width + width * (scaleX * cosRad - 1) * (1 - 2 * transformOriginX),
           minCos: minWidth * scaleX * cosRad,
-          originSin: width * (scaleX * sinRad) * (1 - 2 * originRelativeX),
+          originSin: width * (scaleX * sinRad) * (1 - 2 * transformOriginX),
           minSin: minWidth * scaleX * sinRad,
         },
         y: {
-          originCos: offsetY + height + height * (scaleY * cosRad - 1) * (1 - 2 * originRelativeY),
+          originCos: offsetY + height + height * (scaleY * cosRad - 1) * (1 - 2 * transformOriginY),
           minCos: minHeight * scaleY * cosRad,
-          originSin: height * (scaleY * sinRad) * (1 - 2 * originRelativeY),
+          originSin: height * (scaleY * sinRad) * (1 - 2 * transformOriginY),
           minSin: minHeight * scaleY * sinRad,
         },
       };
@@ -226,33 +226,33 @@ export class OffsetCounter {
 
     /** 获取前后调整的位移 */
     this.getBothOffset = createResizingOffset(() => {
-      const { width, height, offsetX, offsetY, transform } = this.domAttrs;
-      const { originRelativeX, rotate, originRelativeY, scaleX, scaleY } = transform;
+      const { width, height, offsetX, offsetY, variant } = this.domAttrs;
+      const { transformOriginX, rotate, transformOriginY, scaleX, scaleY } = variant;
       const rad = rotate * Math.PI / 180;
       const cosRad = Math.cos(rad);
       const sinRad = Math.sin(rad);
       const scaleMultiple = {
-        x: (scaleX - 1) * (originRelativeX - 0.5),
-        y: (scaleY - 1) * (originRelativeY - 0.5),
+        x: (scaleX - 1) * (transformOriginX - 0.5),
+        y: (scaleY - 1) * (transformOriginY - 0.5),
       };
       const rotateCurrentBothMultiple = {
-        x: scaleX * (cosRad - 1) * (originRelativeX - 0.5),
-        y: scaleY * (cosRad - 1) * (originRelativeY - 0.5),
+        x: scaleX * (cosRad - 1) * (transformOriginX - 0.5),
+        y: scaleY * (cosRad - 1) * (transformOriginY - 0.5),
       };
       const rotateAnotherBothMultiple = {
-        x: scaleX * sinRad * (originRelativeX - 0.5),
-        y: scaleY * sinRad * (originRelativeY - 0.5),
+        x: scaleX * sinRad * (transformOriginX - 0.5),
+        y: scaleY * sinRad * (transformOriginY - 0.5),
       };
       const otherCurrentNegativeValue = this.options.crossAxis
         ? {
-            x: offsetX + width - 2 * width * (scaleX * cosRad - 1) * (originRelativeX - 0.5),
-            y: offsetY + height - 2 * height * (scaleY * cosRad - 1) * (originRelativeY - 0.5),
+            x: offsetX + width - 2 * width * (scaleX * cosRad - 1) * (transformOriginX - 0.5),
+            y: offsetY + height - 2 * height * (scaleY * cosRad - 1) * (transformOriginY - 0.5),
           }
         : { x: 0, y: 0 };
       const otherAnotherNegativeValue = this.options.crossAxis
         ? {
-            x: -2 * width * (scaleX * sinRad) * (originRelativeX - 0.5),
-            y: -2 * height * (scaleY * sinRad) * (originRelativeY - 0.5),
+            x: -2 * width * (scaleX * sinRad) * (transformOriginX - 0.5),
+            y: -2 * height * (scaleY * sinRad) * (transformOriginY - 0.5),
           }
         : { x: 0, y: 0 };
       return (distance, axis, dir) => {

@@ -4,10 +4,6 @@ import type { Dir } from '../typing';
 const matrixValueReg = /(matrix3?d?)\((.+)\)/;
 
 export class DomAttrs {
-  /** 元素样式 */
-  domStyles?: CSSStyleDeclaration;
-  /** 父级元素样式 */
-  parentStyles?: CSSStyleDeclaration;
   /** 父级宽度 */
   parentWidth: number = 0;
   /** 父级高度 */
@@ -30,26 +26,30 @@ export class DomAttrs {
   offsetX: number = 0;
   /** 垂直偏移值 */
   offsetY: number = 0;
-  /** transform信息 */
-  transform = {
+  /** 变形信息（位移、旋转、缩放） */
+  variant = {
     /** matrix3d || matrix */
-    name: 'matrix',
-    /** matrix值 */
-    values: [1, 0, 0, 1, 0, 0],
-    /** 调整偏移值前的字符串 */
-    beforeTranslateValueStr: '1,0,0,1',
-    /** 调整偏移值后的字符串 */
-    afterTranslateValueStr: '',
+    transformName: 'matrix',
+    /** transform值 */
+    transformValue: [1, 0, 0, 1, 0, 0],
+    /** 横轴变形原点相对位置 */
+    transformOriginX: 0.5,
+    /** 纵轴变形原点相对位置 */
+    transformOriginY: 0.5,
+    /** 定位坐标left */
+    positionLeft: 0,
+    /** 定位坐标top */
+    positionTop: 0,
+    /** X轴位移 */
+    translateX: 0,
+    /** Y轴位移 */
+    translateY: 0,
     /** 横轴缩放值 */
     scaleX: 1,
     /** 纵轴缩放值 */
     scaleY: 1,
     /** 旋转值 */
     rotate: 0,
-    /** 横轴变形原点相对位置 */
-    originRelativeX: 0.5,
-    /** 纵轴变形原点相对位置 */
-    originRelativeY: 0.5,
   };
 
   /** 鼠标位置 */
@@ -112,87 +112,96 @@ export class DomAttrs {
 
   /** 更新目标属性信息 */
   private updateTargetAttrsInfo() {
-    if (this.options.target) {
-      this.domStyles = window.getComputedStyle(this.options.target, null);
-      this.parentStyles = window.getComputedStyle(this.options.target.parentNode as HTMLDivElement, null);
-      this.setSizeInfo();
-      this.setTransformInfo();
-      this.setTransformOrigin();
-    }
+    if (!this.options.target) { return; }
+    const domStyles = window.getComputedStyle(this.options.target, null);
+    const parentStyles = window.getComputedStyle(this.options.target.parentNode as HTMLDivElement, null);
+    this.setSizeInfo(domStyles, parentStyles);
+    this.setVariantInfo(domStyles);
+    this.setTransformOrigin(domStyles);
   }
 
   /** 尺寸信息 */
-  private setSizeInfo(): void {
-    if (!this.domStyles) { return; }
-
+  private setSizeInfo(domStyles: CSSStyleDeclaration, parentStyles: CSSStyleDeclaration): void {
     // 获取宽高
-    this.width = toNum(this.domStyles.width);
-    this.height = toNum(this.domStyles.height);
+    this.width = toNum(domStyles.width);
+    this.height = toNum(domStyles.height);
     this.aspectRatio = this.height !== 0 && this.width !== 0 ? this.width / this.height : 1;
 
-    if (!this.parentStyles) { return; }
-
     // 获取父级的宽高
-    this.parentWidth = toNum(this.parentStyles.width);
-    this.parentHeight = toNum(this.parentStyles.height);
-    if (this.parentStyles.boxSizing === 'border-box') {
-      this.parentWidth = this.parentWidth - toNum(this.parentStyles.paddingLeft) - toNum(this.parentStyles.paddingRight);
-      this.parentHeight = this.parentHeight - toNum(this.parentStyles.paddingTop) - toNum(this.parentStyles.paddingBottom);
+    this.parentWidth = toNum(parentStyles.width);
+    this.parentHeight = toNum(parentStyles.height);
+    if (parentStyles.boxSizing === 'border-box') {
+      this.parentWidth = this.parentWidth - toNum(parentStyles.paddingLeft) - toNum(parentStyles.paddingRight);
+      this.parentHeight = this.parentHeight - toNum(parentStyles.paddingTop) - toNum(parentStyles.paddingBottom);
     }
 
     // 宽高限制
-    this.domMaxWidth = getPctValue(this.domStyles.maxWidth, this.parentWidth) || Infinity;
-    this.domMaxHeight = getPctValue(this.domStyles.maxHeight, this.parentHeight) || Infinity;
-    this.domMinWidth = getPctValue(this.domStyles.minWidth, this.parentWidth) || 0;
-    this.domMinHeight = getPctValue(this.domStyles.minHeight, this.parentHeight) || 0;
+    this.domMaxWidth = getPctValue(domStyles.maxWidth, this.parentWidth) || Infinity;
+    this.domMaxHeight = getPctValue(domStyles.maxHeight, this.parentHeight) || Infinity;
+    this.domMinWidth = getPctValue(domStyles.minWidth, this.parentWidth) || 0;
+    this.domMinHeight = getPctValue(domStyles.minHeight, this.parentHeight) || 0;
   }
 
   /** 变换信息 */
-  private setTransformInfo() {
-    if (!this.domStyles) { return; }
-
+  private setVariantInfo(domStyles: CSSStyleDeclaration) {
     // 获取transform相关信息
-    const matchValue = this.domStyles.transform.match(matrixValueReg);
-    this.transform.name = matchValue?.[1] || 'matrix'; // matrix3d || matrix
-    this.transform.values = matchValue?.[2]?.split(',').map(Number) || [1, 0, 0, 1, 0, 0];
-    if (this.transform.values.length > 6) {
-      // matrix3d(https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function/matrix3d)
-      this.transform.beforeTranslateValueStr = `${this.transform.values.slice(0, 12).join(',')},`;
-      this.transform.afterTranslateValueStr = `,${this.transform.values.slice(15).join(',')}`;
+    const matchValue = domStyles.transform.match(matrixValueReg);
+    this.variant.transformName = matchValue?.[1] || 'matrix'; // matrix3d || matrix
+    this.variant.transformValue = matchValue?.[2]?.split(',').map(Number) || [1, 0, 0, 1, 0, 0];
+    if (this.variant.transformValue.length > 6) {
       // scale与rotate的配置信息
-      const a = this.transform.values[0];
-      const b = this.transform.values[1];
-      const c = this.transform.values[4];
-      const d = this.transform.values[5];
+      const a = this.variant.transformValue[0];
+      const b = this.variant.transformValue[1];
+      const c = this.variant.transformValue[4];
+      const d = this.variant.transformValue[5];
       // x轴和y轴的缩放倍数
-      this.transform.scaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
-      this.transform.scaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
+      this.variant.scaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
+      this.variant.scaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
       // 计算旋转角度
-      this.transform.rotate = transformValuePrecision((Math.atan2(b, a) * 180 / Math.PI + 360) % 360);
+      this.variant.rotate = transformValuePrecision((Math.atan2(b, a) * 180 / Math.PI + 360) % 360);
     }
     else {
-      // matrix(https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function/matrix)
-      this.transform.beforeTranslateValueStr = `${this.transform.values.slice(0, 4).join(',')},`;
-      this.transform.afterTranslateValueStr = '';
       // scale与rotate的配置信息
-      const a = this.transform.values[0];
-      const b = this.transform.values[1];
-      const c = this.transform.values[2];
-      const d = this.transform.values[3];
+      const a = this.variant.transformValue[0];
+      const b = this.variant.transformValue[1];
+      const c = this.variant.transformValue[2];
+      const d = this.variant.transformValue[3];
       // x轴和y轴的缩放倍数
-      this.transform.scaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
-      this.transform.scaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
+      this.variant.scaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
+      this.variant.scaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
       // 计算旋转角度
-      this.transform.rotate = transformValuePrecision((Math.atan2(b, a) * 180 / Math.PI + 360) % 360);
+      this.variant.rotate = transformValuePrecision((Math.atan2(b, a) * 180 / Math.PI + 360) % 360);
+    }
+
+    if (domStyles.scale && domStyles.scale !== 'none') {
+      const scaleList = domStyles.scale.split(/\s+/);
+      this.variant.scaleX *= toNum(scaleList[0]);
+      this.variant.scaleY *= toNum(scaleList[1] || scaleList[0]);
+    }
+
+    if (domStyles.rotate && domStyles.rotate !== 'none') {
+      this.variant.rotate += toNum(domStyles.rotate);
+    }
+
+    // 获取定位值
+    this.variant.positionLeft = toNum(domStyles.left);
+    this.variant.positionTop = toNum(domStyles.top);
+    // 获取偏移值
+    if (!domStyles.translate || domStyles.translate === 'none') {
+      this.variant.translateX = 0;
+      this.variant.translateY = 0;
+    }
+    else {
+      const translate = domStyles.translate.split(/\s+/);
+      this.variant.translateX = toNum(translate[0]);
+      this.variant.translateY = toNum(translate[1]);
     }
   }
 
   /** 变化原点 */
-  private setTransformOrigin() {
-    if (!this.domStyles) { return; }
-
+  private setTransformOrigin(domStyles: CSSStyleDeclaration) {
     // 获取transform变形原点相对定位的位置
-    const domTransformOriginList = this.domStyles.transformOrigin.split(' ');
+    const domTransformOriginList = domStyles.transformOrigin.split(' ');
     const styleTransformOriginStr = this.options.target?.style?.transformOrigin || '';
     const styleTransformOriginList = styleTransformOriginStr.split(' ');
     //
@@ -213,8 +222,8 @@ export class DomAttrs {
       styleTransformOriginList[1],
       styleTransformOriginStr.includes('top') || styleTransformOriginStr.includes('bottom'),
     );
-    this.transform.originRelativeX = originX / this.width;
-    this.transform.originRelativeY = originY / this.height;
+    this.variant.transformOriginX = originX / this.width;
+    this.variant.transformOriginY = originY / this.height;
   }
 
   private updateSizeConstraints() {
@@ -253,7 +262,7 @@ export class DomAttrs {
     const pointerX = this.options.pointer.clientX - centerX;
     const pointerY = this.options.pointer.clientY - centerY;
     // 旋转角度（转换为弧度）
-    const angleRad = -this.transform.rotate * Math.PI / 180;
+    const angleRad = -this.variant.rotate * Math.PI / 180;
     // 应用逆时针旋转矩阵
     const rotatedX = pointerX * Math.cos(angleRad) - pointerY * Math.sin(angleRad);
     const rotatedY = pointerX * Math.sin(angleRad) + pointerY * Math.cos(angleRad);
@@ -264,34 +273,22 @@ export class DomAttrs {
 
   /** 更新偏移信息 */
   private updateOffsetInfo() {
-    if (!this.domStyles) { return; }
-    // 获取偏移
     if (this.options.offset === 'position') {
-      // 使用position
-      this.offsetX = toNum(this.domStyles.left);
-      this.offsetY = toNum(this.domStyles.top);
+      this.offsetX = this.variant.positionLeft;
+      this.offsetY = this.variant.positionTop;
     }
     else if (this.options.offset === 'translate') {
-      // 使用translate
-      if (!this.domStyles.translate || this.domStyles.translate === 'none') {
-        this.offsetX = 0;
-        this.offsetY = 0;
-      }
-      else {
-        const translate = this.domStyles.translate.split(' ');
-        this.offsetX = toNum(translate[0]);
-        this.offsetY = toNum(translate[1]);
-      }
+      this.offsetX = this.variant.translateX;
+      this.offsetY = this.variant.translateY;
     }
     else {
-      // 使用transform
-      if (this.transform.values.length > 6) {
-        this.offsetX = this.transform.values[12];
-        this.offsetY = this.transform.values[13];
+      if (this.variant.transformValue.length > 6) {
+        this.offsetX = this.variant.transformValue[12];
+        this.offsetY = this.variant.transformValue[13];
       }
       else {
-        this.offsetX = this.transform.values[4];
-        this.offsetY = this.transform.values[5];
+        this.offsetX = this.variant.transformValue[4];
+        this.offsetY = this.variant.transformValue[5];
       }
     }
   }

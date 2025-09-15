@@ -140,7 +140,7 @@ function getMoveHandler(
   resizeApplication: ResizeApplication,
   moveFn: (coord: { startX: number, endX: number, startY: number, endY: number }) => void,
 ) {
-  const { scaleX, scaleY, rotate } = resizeApplication.domAttrs.transform;
+  const { scaleX, scaleY, rotate } = resizeApplication.domAttrs.variant;
   // 计算起始点坐标
   const clientX = resizeApplication.options.pointer!.clientX;
   const clientY = resizeApplication.options.pointer!.clientY;

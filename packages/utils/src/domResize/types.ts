@@ -40,8 +40,6 @@ export type DomResizeCustomRenderMethod = (
   options: {
     parentWidth: number
     parentHeight: number
-    parentStyles?: CSSStyleDeclaration
-    domStyles?: CSSStyleDeclaration
   }
 ) => string;
 

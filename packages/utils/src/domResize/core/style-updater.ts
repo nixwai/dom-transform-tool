@@ -41,8 +41,8 @@ export class StyleUpdater {
   /** 设置宽高样式更新方法 */
   private setStyleWidthHeightUpdater() {
     const getWidthOrHeight = {
-      width: this.createChangeTargetValue('width'),
-      height: this.createChangeTargetValue('height'),
+      width: this.changeByCustomRender('width'),
+      height: this.changeByCustomRender('height'),
     };
 
     this.setStyleWidthOrHeight = this.createChangeTargetStyle<SetStyleWidthOrHeightFn>((value, property) => {
@@ -59,10 +59,6 @@ export class StyleUpdater {
   /** 设置位移样式更新方法 */
   private setStyleOffsetUpdater() {
     if (this.options.offset) {
-      const { name, beforeTranslateValueStr, afterTranslateValueStr } = this.domAttrs.transform;
-      const getOffsetX = this.createChangeTargetValue('offsetX');
-      const getOffsetY = this.createChangeTargetValue('offsetY');
-
       const offsetDiff = Object.entries(this.cachedStyleOffset)
         .filter(([key]) => key !== this.options.offset)
         .reduce((acc, [_key, { valueX, valueY, originX, originY }]) => {
@@ -82,35 +78,61 @@ export class StyleUpdater {
       else {
         this.cachedStyleOffset[this.options.offset].originY = this.domAttrs.offsetY;
       }
-
-      const offsetHandlerMap: Record<DomResizeOffsetType, SetStyleOffset> = {
-        position: (valueX, valueY) => {
-          return { left: getOffsetX(valueX), top: getOffsetY(valueY) };
-        },
-        transform: (valueX, valueY) => {
-          // transform 不兼容customStyle自定义，固定px类型
-          return { transform: `${name}(${beforeTranslateValueStr}${valueX},${valueY}${afterTranslateValueStr})` };
-        },
-        translate: (valueX, valueY) => {
-          return { translate: `${getOffsetX(valueX)} ${getOffsetY(valueY)}` };
-        },
-      };
-
       const logStyleOffset = (realX: number, realY: number) => {
         this.cachedStyleOffset[this.options.offset!].valueX = realX;
         this.cachedStyleOffset[this.options.offset!].valueY = realY;
       };
 
+      const offsetHandler = this.createOffsetHandler();
+
       this.setStyleOffset = this.createChangeTargetStyle<SetStyleOffset>((valueX, valueY) => {
         const realX = valueX - offsetDiff.x;
         const realY = valueY - offsetDiff.y;
         logStyleOffset(realX, realY);
-        return offsetHandlerMap[this.options.offset!](realX, realY);
+        return offsetHandler(realX, realY);
       });
     }
     else {
       this.setStyleOffset = () => ({});
     }
+  }
+
+  /** 获取位移修改函数 */
+  private createOffsetHandler() {
+    const { transformName, transformValue } = this.domAttrs.variant;
+    let offsetHandler: SetStyleOffset = () => ({});
+    const getOffsetX = this.changeByCustomRender('offsetX');
+    const getOffsetY = this.changeByCustomRender('offsetY');
+
+    if (this.options.offset === 'position') {
+      offsetHandler = (valueX, valueY) => {
+        return { left: getOffsetX(valueX), top: getOffsetY(valueY) };
+      };
+    }
+    else if (this.options.offset === 'translate') {
+      offsetHandler = (valueX, valueY) => {
+        return { translate: `${getOffsetX(valueX)} ${getOffsetY(valueY)}` };
+      };
+    }
+    else {
+      let beforeTransformValueStr = '';
+      let afterTransformValueStr = '';
+      if (transformValue.length > 6) {
+        // matrix3d(https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function/matrix3d)
+        beforeTransformValueStr = `${transformValue.slice(0, 12).join(',')},`;
+        afterTransformValueStr = `,${transformValue.slice(15).join(',')}`;
+      }
+      else {
+        // matrix(https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function/matrix)
+        beforeTransformValueStr = `${transformValue.slice(0, 4).join(',')},`;
+        afterTransformValueStr = '';
+      }
+      offsetHandler = (valueX, valueY) => {
+        // transform 不兼容customStyle自定义，固定px类型
+        return { transform: `${transformName}(${beforeTransformValueStr}${valueX},${valueY}${afterTransformValueStr})` };
+      };
+    }
+    return offsetHandler;
   }
 
   /** 创建改变target元素样式方法 */
@@ -132,15 +154,13 @@ export class StyleUpdater {
   }
 
   /** 创建改变target元素的值方法 */
-  private createChangeTargetValue(key: keyof DomResizeCustomRender) {
+  private changeByCustomRender(key: keyof DomResizeCustomRender) {
     if (this.options.customRender?.[key]) {
       return (value: number) => this.options.customRender![key]!(
         value,
         {
           parentWidth: this.domAttrs.parentWidth,
           parentHeight: this.domAttrs.parentHeight,
-          parentStyles: this.domAttrs.parentStyles,
-          domStyles: this.domAttrs.domStyles,
         },
       );
     }
