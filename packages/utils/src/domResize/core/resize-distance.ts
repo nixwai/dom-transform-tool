@@ -1,5 +1,6 @@
 import type { Axis } from '../typing';
 import type { AxisParams } from './axis-params';
+import type { DomAttrs } from './dom-attrs';
 
 interface AxisDistance {
   /** 调整后的值 */
@@ -23,19 +24,19 @@ export class ResizeDistance {
     distance: 0,
   };
 
-  constructor(private axiosParams: AxisParams) {
+  constructor(private axiosParams: AxisParams, private domAttrs: DomAttrs) {
     this.setDistance();
   };
 
-  public updateResizeDistance(target?: HTMLDivElement) {
-    if (target) {
+  public updateResizeDistance() {
+    if (this.domAttrs.isTargetAttrsUpdate) {
       this.setDistance();
     }
   };
 
   private setDistance() {
-    this.x.value = 0;
-    this.y.value = 0;
+    this.x.value = this.domAttrs.width;
+    this.y.value = this.domAttrs.height;
     this.x.total = 0;
     this.y.total = 0;
     this.x.distance = 0;

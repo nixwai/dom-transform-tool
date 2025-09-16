@@ -72,31 +72,33 @@ export class DomAttrs {
     this.updatePointerDirection();
   }
 
-  /** 当前元素尺寸是否发生改变 */
-  public isSizeUpdate = false;
+  /** 当前元素信息是否发生改变 */
+  public isTargetAttrsUpdate = false;
   /** 当前元素偏移是否发生改变 */
   public isOffsetUpdate = false;
 
-  public updateDomAttrs(options: DomResizeOptions, target?: HTMLDivElement) {
-    this.isSizeUpdate = false;
+  public updateDomAttrs(options: DomResizeOptions, recount: boolean) {
+    this.isTargetAttrsUpdate = false;
     this.isOffsetUpdate = false;
+
+    const isChangeTarget = this.options.target !== options.target;
     const taskList: [unknown, () => void][] = [
       [
-        target,
+        recount || isChangeTarget,
         () => {
           this.updateTargetAttrsInfo();
-          this.isSizeUpdate = true;
+          this.isTargetAttrsUpdate = true;
         },
       ],
       [
-        target || options.lockAspectRatio !== this.options.lockAspectRatio,
+        recount || isChangeTarget || options.lockAspectRatio !== this.options.lockAspectRatio,
         () => {
           this.updateSizeConstraints();
-          this.isSizeUpdate = true;
+          this.isTargetAttrsUpdate = true;
         },
       ],
       [
-        target || options.offset !== this.options.offset,
+        recount || isChangeTarget || options.offset !== this.options.offset,
         () => {
           this.updateOffsetInfo();
           this.isOffsetUpdate = true;

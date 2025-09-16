@@ -24,6 +24,8 @@ const zeroOffset: OffsetFn = () => {
 };
 
 export class OffsetCounter {
+  private cosRad = 0;
+  private sinRad = 0;
   /** 原始位移 */
   private axiosOffsetKey = { x: 'offsetX', y: 'offsetY' } as const;
   /** 缩放增值 */
@@ -59,7 +61,8 @@ export class OffsetCounter {
 
   constructor(private options: DomResizeOptions, private domAttrs: DomAttrs) {
     if (!this.options.offset) { return; }
-    this.setTransformParams();
+    this.setVariantParams();
+    this.setOffsetParams();
     this.setOffsetFunctions();
   }
 
@@ -72,26 +75,26 @@ export class OffsetCounter {
       return;
     }
     const isOffsetCounterUpdate = Boolean(
-      this.domAttrs.isSizeUpdate || this.domAttrs.isOffsetUpdate
-      || Boolean(options.offset) !== Boolean(this.options.offset)
+      this.domAttrs.isTargetAttrsUpdate || this.domAttrs.isOffsetUpdate
+      || options.offset !== this.options.offset
       || this.options.crossAxis !== options.crossAxis,
     );
 
     this.options = options;
 
     if (isOffsetCounterUpdate) {
-      this.setTransformParams();
+      this.setVariantParams();
+      this.setOffsetParams();
       this.setOffsetFunctions();
     }
   }
 
-  /** 初始化变换参数 */
-  private setTransformParams() {
-    const { width, height, offsetX, offsetY, variant, minWidth, minHeight } = this.domAttrs;
-    const { rotate, transformOriginX, transformOriginY, scaleX, scaleY } = variant;
+  /** 更新变换参数 */
+  private setVariantParams() {
+    const { rotate, transformOriginX, transformOriginY, scaleX, scaleY } = this.domAttrs.variant;
     const rad = rotate * Math.PI / 180;
-    const cosRad = Math.cos(rad);
-    const sinRad = Math.sin(rad);
+    this.cosRad = Math.cos(rad);
+    this.sinRad = Math.sin(rad);
 
     this.scaleAxisMultiple = {
       x: {
@@ -105,38 +108,44 @@ export class OffsetCounter {
     };
     this.rotateCurrentAxisMultiple = {
       x: {
-        v1: scaleX * (cosRad - 1) * transformOriginX,
-        v2: scaleX * (cosRad - 1) * (1 - transformOriginX),
+        v1: scaleX * (this.cosRad - 1) * transformOriginX,
+        v2: scaleX * (this.cosRad - 1) * (1 - transformOriginX),
       },
       y: {
-        v1: scaleY * (cosRad - 1) * transformOriginY,
-        v2: scaleY * (cosRad - 1) * (1 - transformOriginY),
+        v1: scaleY * (this.cosRad - 1) * transformOriginY,
+        v2: scaleY * (this.cosRad - 1) * (1 - transformOriginY),
       },
     };
     this.rotateAnotherAxisMultiple = {
       x: {
-        v1: scaleX * sinRad * transformOriginX,
-        v2: scaleX * sinRad * (1 - transformOriginX),
+        v1: scaleX * this.sinRad * transformOriginX,
+        v2: scaleX * this.sinRad * (1 - transformOriginX),
       },
       y: {
-        v1: scaleY * sinRad * transformOriginY,
-        v2: scaleY * sinRad * (1 - transformOriginY),
+        v1: scaleY * this.sinRad * transformOriginY,
+        v2: scaleY * this.sinRad * (1 - transformOriginY),
       },
     };
+  }
+
+  /** 更新位移参数 */
+  private setOffsetParams() {
+    const { width, height, offsetX, offsetY, minWidth, minHeight } = this.domAttrs;
+    const { transformOriginX, transformOriginY, scaleX, scaleY } = this.domAttrs.variant;
     // 越轴改变时，才需要计算调整的偏移值
     if (this.options.crossAxis) {
       this.negativeAxiosOffset = {
         x: {
-          originCos: offsetX + width + width * (scaleX * cosRad - 1) * (1 - 2 * transformOriginX),
-          minCos: minWidth * scaleX * cosRad,
-          originSin: width * (scaleX * sinRad) * (1 - 2 * transformOriginX),
-          minSin: minWidth * scaleX * sinRad,
+          originCos: offsetX + width + width * (scaleX * this.cosRad - 1) * (1 - 2 * transformOriginX),
+          minCos: minWidth * scaleX * this.cosRad,
+          originSin: width * (scaleX * this.sinRad) * (1 - 2 * transformOriginX),
+          minSin: minWidth * scaleX * this.sinRad,
         },
         y: {
-          originCos: offsetY + height + height * (scaleY * cosRad - 1) * (1 - 2 * transformOriginY),
-          minCos: minHeight * scaleY * cosRad,
-          originSin: height * (scaleY * sinRad) * (1 - 2 * transformOriginY),
-          minSin: minHeight * scaleY * sinRad,
+          originCos: offsetY + height + height * (scaleY * this.cosRad - 1) * (1 - 2 * transformOriginY),
+          minCos: minHeight * scaleY * this.cosRad,
+          originSin: height * (scaleY * this.sinRad) * (1 - 2 * transformOriginY),
+          minSin: minHeight * scaleY * this.sinRad,
         },
       };
     }
@@ -148,7 +157,7 @@ export class OffsetCounter {
     }
   }
 
-  /** 初始化移动偏移函数 */
+  /** 获取移动偏移函数 */
   private setOffsetFunctions() {
     // 获取向前调整的位移
     this.getForwardOffset = createResizingOffset(() => {

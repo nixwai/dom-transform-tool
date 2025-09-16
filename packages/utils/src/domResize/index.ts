@@ -23,8 +23,13 @@ export class DomResize {
     this.resizeApplication = new ResizeApplication(options);
   }
 
-  handler(options?: DomResizeOptions) {
-    this.resizeApplication.updateInstance(options);
+  /**
+   * 执行调整大小
+   * @param options 配置项
+   * @param recount 是否重置重新计算元素信息
+   */
+  handler(options: DomResizeOptions = {}, recount: boolean = false) {
+    this.resizeApplication.updateInstance(options, recount);
     resizeByManual(this.resizeApplication);
     resizeByPointer(this.resizeApplication);
   }

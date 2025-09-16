@@ -89,7 +89,7 @@ export interface DomResizeOptions {
      * @see https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-origin
      * 由于函数仅会识别内联样式设置的transform-origin类型，其他情况需要通过主要设置判断是否为绝对定位，确保不会有异常的偏移
      */
-    origin?: boolean | (boolean | undefined)[]
+    transformOrigin?: boolean | (boolean | undefined)[]
     /** 旋转度数 */
     rotate?: number | string
     /** 缩放值，使用数组可以分别指定横轴和纵轴 */

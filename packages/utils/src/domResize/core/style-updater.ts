@@ -14,6 +14,13 @@ export class StyleUpdater {
   /** 设置位移样式 */
   public setStyleOffset: SetStyleOffset = () => ({});
 
+  /** 缓存位移样式 */
+  private cachedStyleOffset: Record<DomResizeOffsetType, { valueX: number, valueY: number, originX?: number, originY?: number }> = {
+    position: { valueX: 0, valueY: 0 },
+    transform: { valueX: 0, valueY: 0 },
+    translate: { valueX: 0, valueY: 0 },
+  };
+
   constructor(private options: DomResizeOptions, private domAttrs: DomAttrs) {
     if (options.target) {
       this.targetRef = new WeakRef(options.target);
@@ -23,10 +30,13 @@ export class StyleUpdater {
   }
 
   public updateStyleUpdater(options: DomResizeOptions) {
+    if (this.domAttrs.isTargetAttrsUpdate) {
+      this.resetCachedStyleOffset();
+    }
+
     const isStyleUpdaterUpdate = Boolean(
-      options.target !== this.options.target
+      this.domAttrs.isTargetAttrsUpdate
       || options.offset !== this.options.offset
-      || options.customRender !== this.options.customRender
       || options.disableUpdate !== this.options.disableUpdate,
     );
     this.options = options;
@@ -36,6 +46,14 @@ export class StyleUpdater {
       this.setStyleWidthHeightUpdater();
       this.setStyleOffsetUpdater();
     }
+  }
+
+  private resetCachedStyleOffset() {
+    this.cachedStyleOffset = {
+      position: { valueX: 0, valueY: 0 },
+      transform: { valueX: 0, valueY: 0 },
+      translate: { valueX: 0, valueY: 0 },
+    };
   }
 
   /** 设置宽高样式更新方法 */
@@ -49,12 +67,6 @@ export class StyleUpdater {
       return { [property]: getWidthOrHeight[property](value) };
     });
   }
-
-  private cachedStyleOffset: Record<DomResizeOffsetType, { valueX: number, valueY: number, originX?: number, originY?: number }> = {
-    position: { valueX: 0, valueY: 0 },
-    transform: { valueX: 0, valueY: 0 },
-    translate: { valueX: 0, valueY: 0 },
-  };
 
   /** 设置位移样式更新方法 */
   private setStyleOffsetUpdater() {
@@ -98,23 +110,24 @@ export class StyleUpdater {
   }
 
   /** 获取位移修改函数 */
-  private createOffsetHandler() {
+  private createOffsetHandler(): SetStyleOffset {
     const { transformName, transformValue } = this.domAttrs.variant;
-    let offsetHandler: SetStyleOffset = () => ({});
     const getOffsetX = this.changeByCustomRender('offsetX');
     const getOffsetY = this.changeByCustomRender('offsetY');
-
+    // 使用position
     if (this.options.offset === 'position') {
-      offsetHandler = (valueX, valueY) => {
+      return (valueX, valueY) => {
         return { left: getOffsetX(valueX), top: getOffsetY(valueY) };
       };
     }
-    else if (this.options.offset === 'translate') {
-      offsetHandler = (valueX, valueY) => {
+    // 使用translate
+    if (this.options.offset === 'translate') {
+      return (valueX, valueY) => {
         return { translate: `${getOffsetX(valueX)} ${getOffsetY(valueY)}` };
       };
     }
-    else {
+    // 使用transform
+    if (this.options.offset === 'transform') {
       let beforeTransformValueStr = '';
       let afterTransformValueStr = '';
       if (transformValue.length > 6) {
@@ -127,12 +140,13 @@ export class StyleUpdater {
         beforeTransformValueStr = `${transformValue.slice(0, 4).join(',')},`;
         afterTransformValueStr = '';
       }
-      offsetHandler = (valueX, valueY) => {
+      return (valueX, valueY) => {
         // transform 不兼容customStyle自定义，固定px类型
         return { transform: `${transformName}(${beforeTransformValueStr}${valueX},${valueY}${afterTransformValueStr})` };
       };
     }
-    return offsetHandler;
+
+    return () => ({});
   }
 
   /** 创建改变target元素样式方法 */
@@ -155,15 +169,9 @@ export class StyleUpdater {
 
   /** 创建改变target元素的值方法 */
   private changeByCustomRender(key: keyof DomResizeCustomRender) {
-    if (this.options.customRender?.[key]) {
-      return (value: number) => this.options.customRender![key]!(
-        value,
-        {
-          parentWidth: this.domAttrs.parentWidth,
-          parentHeight: this.domAttrs.parentHeight,
-        },
-      );
-    }
-    return (value: number) => `${value}px`;
+    return (value: number) => this.options.customRender?.[key]?.(
+      value,
+      { parentWidth: this.domAttrs.parentWidth, parentHeight: this.domAttrs.parentHeight },
+    ) ?? `${value}px`;
   }
 }

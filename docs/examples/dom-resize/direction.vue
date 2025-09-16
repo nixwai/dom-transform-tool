@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { DomResize, type DomResizeDirection } from '../../../packages/utils/src/index';
 
 const resizeTarget1 = ref<HTMLDivElement>();
@@ -28,14 +28,11 @@ const offset = ref<'position' | 'transform' | 'translate'>('position');
 const grid = ref([0.5, 0.5]);
 const crossAxis = ref(false);
 
-let targetDomResize: DomResize;
-
-onMounted(() => {
-  targetDomResize = new DomResize({ target: resizeTarget1.value });
-});
+const targetDomResize = new DomResize(); ;
 
 function handleTargetResize(event: PointerEvent) {
   targetDomResize.handler({
+    target: resizeTarget1.value,
     pointer: event,
     offset: offset.value,
     lockAspectRatio: lockAspectRatio.value,

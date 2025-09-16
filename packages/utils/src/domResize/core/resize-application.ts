@@ -36,7 +36,7 @@ export class ResizeApplication {
     }
     this.domAttrs = new DomAttrs(this.options);
     this.axisParams = new AxisParams(this.options, this.domAttrs);
-    this.resizeDistance = new ResizeDistance(this.axisParams);
+    this.resizeDistance = new ResizeDistance(this.axisParams, this.domAttrs);
     this.distanceCounter = new DistanceCounter(this.options, this.axisParams);
     this.offsetCounter = new OffsetCounter(this.options, this.domAttrs);
     this.resizeHandler = new ResizeHandler(this.options, this.axisParams, this.distanceCounter, this.offsetCounter, this.resizeDistance);
@@ -44,17 +44,15 @@ export class ResizeApplication {
   }
 
   /** 更新实例配置 */
-  public updateInstance(options?: DomResizeOptions) {
-    if (options) {
-      this.options = Object.assign({}, this.options, options);
-      this.domAttrs.updateDomAttrs(this.options, options.target);
-      this.axisParams.updateAxisParams(this.options);
-      this.resizeDistance.updateResizeDistance(options.target);
-      this.distanceCounter.updateDistanceCounter(this.options);
-      this.offsetCounter.updateOffsetCounter(this.options);
-      this.resizeHandler.updateResizeHandler(this.options);
-      this.styleUpdater.updateStyleUpdater(this.options);
-    }
+  public updateInstance(options: DomResizeOptions, recount: boolean) {
+    this.options = Object.assign({}, this.options, options);
+    this.domAttrs.updateDomAttrs(this.options, recount);
+    this.axisParams.updateAxisParams(this.options);
+    this.resizeDistance.updateResizeDistance();
+    this.distanceCounter.updateDistanceCounter(this.options);
+    this.offsetCounter.updateOffsetCounter(this.options);
+    this.resizeHandler.updateResizeHandler(this.options);
+    this.styleUpdater.updateStyleUpdater(this.options);
   }
 
   /** 清除配置的手动调整 */

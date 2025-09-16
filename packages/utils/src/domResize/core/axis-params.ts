@@ -56,23 +56,24 @@ export class AxisParams {
   }
 
   public updateAxisParams(options: DomResizeOptions) {
-    const isManualUpdate = this.domAttrs.isSizeUpdate || JSON.stringify(this.options.manual) !== JSON.stringify(options.manual);
     const isDirectionUpdate = this.options.direction !== options.direction;
+    
     const isAxisParamsUpdate = Boolean(
-      isManualUpdate || isDirectionUpdate
+      this.domAttrs.isTargetAttrsUpdate
       || this.options.grid !== options.grid
       || this.options.lockAspectRatio !== options.lockAspectRatio,
     );
 
     this.options = options;
 
-    if (isManualUpdate) {
-      this.setManualDistance();
-    }
+    const isManualUpdate =  this.setManualDistance();
+
     if (isDirectionUpdate) {
       this.setDirection();
     }
-    if (isAxisParamsUpdate) {
+
+    // 相关轴参数、轴方向、锁宽高比下手动调整数据更新时触发重新计算
+    if (isAxisParamsUpdate || isDirectionUpdate|| (this.options.lockAspectRatio && isManualUpdate)) {
       this.setAxisParams();
     }
   }
@@ -82,8 +83,11 @@ export class AxisParams {
     const manualDistanceX = this.resolveManualDistance(width, parentWidth, this.options.manual?.width);
     const manualDistanceY = this.resolveManualDistance(height, parentHeight, this.options.manual?.height);
 
+    const hasChange = manualDistanceX !== this.x.manualDistance || manualDistanceY !== this.y.manualDistance;
     this.x.manualDistance = manualDistanceX;
     this.y.manualDistance = manualDistanceY;
+
+    return hasChange;
   }
 
   private setDirection() {
@@ -105,7 +109,7 @@ export class AxisParams {
     let gridY = (this.options.grid?.[1] || DEFAULT_GRID) * (this.y.dir ? 1 : 2);
     if (this.options.lockAspectRatio) {
       // 锁定宽高比时，固定的移动距离也会变化
-      if (this.options.pointer || this.x.manualDistance) {
+      if (this.options.pointer || this.options.manual?.width) {
         gridY = gridX / aspectRatio;
       }
       else {
