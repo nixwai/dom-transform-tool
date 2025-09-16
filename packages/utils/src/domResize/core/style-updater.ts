@@ -15,7 +15,7 @@ export class StyleUpdater {
   public setStyleOffset: SetStyleOffset = () => ({});
 
   /** 缓存位移样式 */
-  private cachedStyleOffset: Record<DomResizeOffsetType, { valueX: number, valueY: number, originX?: number, originY?: number }> = {
+  private cachedStyleOffset: Record<DomResizeOffsetType, { valueX: number, valueY: number }> = {
     position: { valueX: 0, valueY: 0 },
     transform: { valueX: 0, valueY: 0 },
     translate: { valueX: 0, valueY: 0 },
@@ -73,26 +73,11 @@ export class StyleUpdater {
     if (this.options.offset) {
       const offsetDiff = Object.entries(this.cachedStyleOffset)
         .filter(([key]) => key !== this.options.offset)
-        .reduce((acc, [_key, { valueX, valueY, originX, originY }]) => {
-          return { x: acc.x += valueX - (originX || 0), y: acc.y += valueY - (originY || 0) };
-        }, { x: 0, y: 0 });
+        .reduce((acc, [_key, { valueX, valueY }]) => ({ x: acc.x += valueX, y: acc.y += valueY }), { x: 0, y: 0 });
 
-      if (this.cachedStyleOffset[this.options.offset].originX !== undefined) {
-        offsetDiff.x += this.domAttrs.offsetX - this.cachedStyleOffset[this.options.offset].originX!;
-      }
-      else {
-        this.cachedStyleOffset[this.options.offset].originX = this.domAttrs.offsetX;
-      }
-
-      if (this.cachedStyleOffset[this.options.offset].originY !== undefined) {
-        offsetDiff.y += this.domAttrs.offsetY - this.cachedStyleOffset[this.options.offset].originY!;
-      }
-      else {
-        this.cachedStyleOffset[this.options.offset].originY = this.domAttrs.offsetY;
-      }
       const logStyleOffset = (realX: number, realY: number) => {
-        this.cachedStyleOffset[this.options.offset!].valueX = realX;
-        this.cachedStyleOffset[this.options.offset!].valueY = realY;
+        this.cachedStyleOffset[this.options.offset!].valueX = realX - this.domAttrs.offsetX;
+        this.cachedStyleOffset[this.options.offset!].valueY = realY - this.domAttrs.offsetY;
       };
 
       const offsetHandler = this.createOffsetHandler();
