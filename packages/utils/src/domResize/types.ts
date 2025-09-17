@@ -72,7 +72,12 @@ export interface DomResizeOptions {
   }
   /** 指针控制事件 */
   pointer?: PointerEvent
-  /** 使用transform/position/translate进行偏移 */
+  /**
+   * 使用position/translate/transform进行偏移
+   * - 推荐使用position、translate，transform无法与CSS的rotate、scale同时使用
+   * - https://developer.mozilla.org/zh-CN/docs/Web/CSS/rotate
+   * - https://developer.mozilla.org/zh-CN/docs/Web/CSS/scale
+   */
   offset?: DomResizeOffsetType
   /** 是否可跨轴调整，需要配置offset才生效 */
   crossAxis?: boolean
@@ -87,7 +92,7 @@ export interface DomResizeOptions {
     /**
      * transform的变化原点，使用数组可以分别指定横轴和纵轴，默认根据内联样式决定
      * @see https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-origin
-     * 当前功能仅会识别target的内联样式transform-origin类型，其他情况需要通过配置，确保不会有异常的偏移
+     * - 当前功能仅会识别target的内联样式transform-origin类型，其他情况需要通过配置，确保不会有异常的偏移
      */
     transformOrigin?: string | string[]
     /** 旋转度数 */

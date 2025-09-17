@@ -130,7 +130,8 @@ export class OffsetCounter {
 
   /** 更新位移参数 */
   private setOffsetParams() {
-    const { width, height, offsetX, offsetY, minWidth, minHeight } = this.domAttrs;
+    const { offsetX, offsetY } = this.domAttrs;
+    const { width, height, minWidth, minHeight } = this.domAttrs.size;
     const { transformOriginX, transformOriginY, scaleX, scaleY } = this.domAttrs.variant;
     // 越轴改变时，才需要计算调整的偏移值
     if (this.options.crossAxis) {
@@ -235,8 +236,9 @@ export class OffsetCounter {
 
     /** 获取前后调整的位移 */
     this.getBothOffset = createResizingOffset(() => {
-      const { width, height, offsetX, offsetY, variant } = this.domAttrs;
-      const { transformOriginX, rotate, transformOriginY, scaleX, scaleY } = variant;
+      const { offsetX, offsetY } = this.domAttrs;
+      const { width, height } = this.domAttrs.size;
+      const { transformOriginX, rotate, transformOriginY, scaleX, scaleY } = this.domAttrs.variant;
       const rad = rotate * Math.PI / 180;
       const cosRad = Math.cos(rad);
       const sinRad = Math.sin(rad);

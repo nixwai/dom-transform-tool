@@ -12,7 +12,8 @@ export function resizeByManual(resizeApplication: ResizeApplication) {
 function resizeHorizontal(resizeApplication: ResizeApplication, resizingWidthFn: ResizingFn) {
   const { resizeDistance, styleUpdater, domAttrs, axisParams, resizeHandler } = resizeApplication;
   const { manualDistance } = axisParams.x;
-  const { width: domWidth, offsetY: domOffsetY } = domAttrs;
+  const domWidth = domAttrs.size.width;
+  const domOffsetY = domAttrs.offsetY;
   const dir = resizingWidthFn === resizeHandler.resizingBackward ? -1 : 1;
   const distanceX = resizeDistance.x.total / (resizingWidthFn === resizeHandler.resizingBoth ? 2 : 1); ;
   const { value: width, offset: offsetX, otherOffset: otherOffsetY } = resizingWidthFn(domWidth, domWidth + dir * manualDistance + dir * distanceX, 'x');
@@ -27,7 +28,8 @@ function resizeHorizontal(resizeApplication: ResizeApplication, resizingWidthFn:
 function resizeVertical(resizeApplication: ResizeApplication, resizingHeightFn: ResizingFn) {
   const { resizeDistance, styleUpdater, domAttrs, axisParams, resizeHandler } = resizeApplication;
   const { manualDistance } = axisParams.y;
-  const { height: domHeight, offsetX: domOffsetX } = domAttrs;
+  const domHeight = domAttrs.size.height;
+  const domOffsetX = domAttrs.offsetX;
   const dir = resizingHeightFn === resizeHandler.resizingBackward ? -1 : 1;
   const distanceY = resizeDistance.y.total / (resizingHeightFn === resizeHandler.resizingBoth ? 2 : 1);
   const { value: height, offset: offsetY, otherOffset: otherOffsetX } = resizingHeightFn(domHeight, domHeight + dir * manualDistance + dir * distanceY, 'y');
@@ -42,7 +44,7 @@ function resizeVertical(resizeApplication: ResizeApplication, resizingHeightFn: 
 function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resizingWidthFn: ResizingFn, resizingHeightFn: ResizingFn) {
   const { resizeDistance, styleUpdater, domAttrs, axisParams, resizeHandler } = resizeApplication;
   const { lockAspectRatio } = resizeApplication.options;
-  const { width: domWidth, height: domHeight, aspectRatio } = domAttrs;
+  const { width: domWidth, height: domHeight, aspectRatio } = domAttrs.size;
 
   const updateDom = (options: { distanceX: number, distanceY: number }) => {
     const dirX = resizingWidthFn === resizeHandler.resizingBackward ? -1 : 1;

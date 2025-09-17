@@ -35,8 +35,8 @@ export class ResizeDistance {
   };
 
   private setDistance() {
-    this.x.value = this.domAttrs.width;
-    this.y.value = this.domAttrs.height;
+    this.x.value = this.domAttrs.size.width;
+    this.y.value = this.domAttrs.size.height;
     this.x.total = 0;
     this.y.total = 0;
     this.x.distance = 0;

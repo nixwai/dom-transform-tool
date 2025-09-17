@@ -1,0 +1,152 @@
+import { toNum } from '../utils';
+
+const MatrixValueReg = /(matrix3?d?)\((.+)\)/;
+
+/** 元素的变形信息 */
+export class DomVariant {
+  /** matrix3d || matrix */
+  transformName = 'matrix';
+  /** transform值 */
+  transformValue = [1, 0, 0, 1, 0, 0];
+  /** 横轴变形原点相对位置 */
+  transformOriginX = 0.5;
+  /** 纵轴变形原点相对位置 */
+  transformOriginY = 0.5;
+  /** 定位坐标left */
+  positionLeft = 0;
+  /** 定位坐标top */
+  positionTop = 0;
+  /** X轴位移 */
+  translateX = 0;
+  /** Y轴位移 */
+  translateY = 0;
+  /** 横轴缩放值 */
+  scaleX = 1;
+  /** 纵轴缩放值 */
+  scaleY = 1;
+  /** 旋转值 */
+  rotate = 0;
+
+  /** 获取所有变形信息 */
+  public setVariantInfo(domStyles: CSSStyleDeclaration, transformOrigin?: string | string[]) {
+    this.setTransform(domStyles);
+    this.setPosition(domStyles);
+    this.setTranslate(domStyles);
+    this.setScale(domStyles);
+    this.setRotate(domStyles);
+    this.setTransformOrigin(domStyles, transformOrigin);
+  }
+
+  /** 获取transform相关信息 */
+  public setTransform(domStyles: CSSStyleDeclaration) {
+    const matchValue = domStyles.transform.match(MatrixValueReg);
+    this.transformName = matchValue?.[1] || 'matrix'; // matrix3d || matrix
+    this.transformValue = matchValue?.[2]?.split(',').map(Number) || [1, 0, 0, 1, 0, 0];
+  }
+
+  /** 获取定位值 */
+  public setPosition(domStyles: CSSStyleDeclaration) {
+    this.positionLeft = toNum(domStyles.left);
+    this.positionTop = toNum(domStyles.top);
+  }
+
+  /** 获取位移值 */
+  public setTranslate(domStyles: CSSStyleDeclaration) {
+    const translate = domStyles.translate.split(/\s+/);
+    this.translateX = toNum(translate[0]);
+    this.translateY = toNum(translate[1]);
+  }
+
+  /** 获取缩放值 */
+  public setScale(domStyles: CSSStyleDeclaration) {
+    if (this.transformValue.length > 6) {
+      const a = this.transformValue[0];
+      const b = this.transformValue[1];
+      const c = this.transformValue[4];
+      const d = this.transformValue[5];
+      this.scaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
+      this.scaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
+    }
+    else {
+      const a = this.transformValue[0];
+      const b = this.transformValue[1];
+      const c = this.transformValue[2];
+      const d = this.transformValue[3];
+      this.scaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
+      this.scaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
+    }
+    if (domStyles.scale && domStyles.scale !== 'none') {
+      const scaleList = domStyles.scale.split(/\s+/);
+      this.scaleX *= toNum(scaleList[0]);
+      this.scaleY *= toNum(scaleList[1] || scaleList[0]);
+    }
+  }
+
+  /** 获取旋转值 */
+  public setRotate(domStyles: CSSStyleDeclaration) {
+    const a = this.transformValue[0];
+    const b = this.transformValue[1];
+    this.rotate = transformValuePrecision((Math.atan2(b, a) * 180 / Math.PI + 360) % 360);
+    if (domStyles.rotate && domStyles.rotate !== 'none') {
+      this.rotate += toNum(domStyles.rotate);
+    }
+  }
+
+  /** 变化原点 */
+  public setTransformOrigin(domStyles: CSSStyleDeclaration, transformOrigin?: string | string[]) {
+    if (transformOrigin) {
+      this.resolveTransformOrigin(transformOrigin);
+    }
+    else {
+      const domTransformOriginList = domStyles.transformOrigin.split(' ');
+      this.transformOriginX = toNum(domTransformOriginList[0]) / toNum(domStyles.width);
+      this.transformOriginY = toNum(domTransformOriginList[1]) / toNum(domStyles.height);
+    }
+  }
+
+  /** 解析设置变形原点 */
+  public resolveTransformOrigin(transformOrigin: string | string[]) {
+    const transformOriginStr = new Array<string>().concat(transformOrigin).join(' ');
+    const transformOriginList = transformOriginStr.split(/\s+/);
+    if (transformOriginStr.includes('left')) {
+      this.transformOriginX = 0;
+    }
+    else if (transformOriginStr.includes('right')) {
+      this.transformOriginX = 1;
+    }
+    else {
+      if (!transformOriginList[0] || transformOriginList[0].includes('center')) {
+        this.transformOriginX = 0.5;
+      }
+      else if (transformOriginList[0].includes('%')) {
+        this.transformOriginX = toNum(transformOriginList[0]) / 100;
+      }
+      else {
+        this.transformOriginX = 0;
+      }
+    }
+
+    if (transformOriginStr.includes('top')) {
+      this.transformOriginY = 0;
+    }
+    else if (transformOriginStr.includes('bottom')) {
+      this.transformOriginY = 1;
+    }
+    else {
+      if (!transformOriginList[1] || transformOriginList[1].includes('center')) {
+        this.transformOriginY = 0.5;
+      }
+      else if (transformOriginList[1].includes('%')) {
+        this.transformOriginY = toNum(transformOriginList[1]) / 100;
+      }
+      else {
+        this.transformOriginX = 0;
+      }
+    }
+  }
+}
+
+/** transform精度处理函数 */
+function transformValuePrecision(value: number): number {
+  return Math.round(value * 100) / 100;
+}

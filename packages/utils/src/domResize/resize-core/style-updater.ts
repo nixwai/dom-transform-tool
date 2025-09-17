@@ -96,7 +96,6 @@ export class StyleUpdater {
 
   /** 获取位移修改函数 */
   private createOffsetHandler(): SetStyleOffset {
-    const { transformName, transformValue } = this.domAttrs.variant;
     const getOffsetX = this.changeByCustomRender('offsetX');
     const getOffsetY = this.changeByCustomRender('offsetY');
     // 使用position
@@ -113,6 +112,7 @@ export class StyleUpdater {
     }
     // 使用transform
     if (this.options.offset === 'transform') {
+      const { transformName, transformValue } = this.domAttrs.variant;
       let beforeTransformValueStr = '';
       let afterTransformValueStr = '';
       if (transformValue.length > 6) {
@@ -156,7 +156,7 @@ export class StyleUpdater {
   private changeByCustomRender(key: keyof DomResizeCustomRender) {
     return (value: number) => this.options.customRender?.[key]?.(
       value,
-      { parentWidth: this.domAttrs.parentWidth, parentHeight: this.domAttrs.parentHeight },
+      { parentWidth: this.domAttrs.size.parentWidth, parentHeight: this.domAttrs.size.parentHeight },
     ) ?? `${value}px`;
   }
 }

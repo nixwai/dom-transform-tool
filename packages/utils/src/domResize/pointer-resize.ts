@@ -44,7 +44,7 @@ function resizeVertical(resizeApplication: ResizeApplication, resizingHeightFn: 
 /** 调整水平与垂直方向 */
 function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resizingWidthFn: ResizingFn, resizingHeightFn: ResizingFn) {
   const { options, resizeDistance, styleUpdater, domAttrs, axisParams } = resizeApplication;
-  const { aspectRatio, pointerDir } = domAttrs;
+  const { size: { aspectRatio }, pointerDir } = domAttrs;
   const { lockAspectRatio } = options;
   // 延续之前的移动距离
   const dirX = axisParams.x.dir || 0.5 * pointerDir.x;

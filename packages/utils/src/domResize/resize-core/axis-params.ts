@@ -79,7 +79,7 @@ export class AxisParams {
   }
 
   private setManualDistance() {
-    const { width, height, parentWidth, parentHeight } = this.domAttrs;
+    const { width, height, parentWidth, parentHeight } = this.domAttrs.size;
     const manualDistanceX = this.resolveManualDistance(width, parentWidth, this.options.manual?.width);
     const manualDistanceY = this.resolveManualDistance(height, parentHeight, this.options.manual?.height);
 
@@ -102,7 +102,7 @@ export class AxisParams {
   };
 
   private setAxisParams() {
-    const { width, height, aspectRatio, maxWidth, minWidth, maxHeight, minHeight } = this.domAttrs;
+    const { width, height, aspectRatio, maxWidth, minWidth, maxHeight, minHeight } = this.domAttrs.size;
 
     // 固定的移动距离，两边都移动时需要*2
     let gridX = (this.options.grid?.[0] || DEFAULT_GRID) * (this.x.dir ? 1 : 2);

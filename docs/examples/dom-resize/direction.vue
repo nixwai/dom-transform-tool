@@ -195,7 +195,6 @@ function changeTargetResize(dis: { x: number, y: number }) {
     <div
       ref="resizeTarget1"
       class="w-30 h-30 position-absolute bg-blue min-w-10 min-h-10 max-w-100 left-[200px] max-h-100 top-[200px]"
-      style="transform-origin: right top;rotate: 45deg;"
       @pointerdown.stop.prevent="handleTargetResize"
     />
   </div>

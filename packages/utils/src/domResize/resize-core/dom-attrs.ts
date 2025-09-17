@@ -1,56 +1,13 @@
 import type { DomResizeOptions } from '../types';
 import type { Dir } from '../typing';
-
-const matrixValueReg = /(matrix3?d?)\((.+)\)/;
+import { DomSize, DomVariant } from '../../core';
+import { toNum } from '../../utils';
 
 export class DomAttrs {
-  /** 父级宽度 */
-  parentWidth: number = 0;
-  /** 父级高度 */
-  parentHeight: number = 0;
-  /** 宽 */
-  width: number = 0;
-  /** 高 */
-  height: number = 0;
-  /** 宽高比 */
-  aspectRatio: number = 1;
-  /** 最大宽度 */
-  maxWidth: number = Infinity;
-  /** 最大高度 */
-  maxHeight: number = Infinity;
-  /** 最小宽度 */
-  minWidth: number = 0;
-  /** 最小高度 */
-  minHeight: number = 0;
   /** 水平偏移值 */
   offsetX: number = 0;
   /** 垂直偏移值 */
   offsetY: number = 0;
-  /** 变形信息（位移、旋转、缩放） */
-  variant = {
-    /** matrix3d || matrix */
-    transformName: 'matrix',
-    /** transform值 */
-    transformValue: [1, 0, 0, 1, 0, 0],
-    /** 横轴变形原点相对位置 */
-    transformOriginX: 0.5,
-    /** 纵轴变形原点相对位置 */
-    transformOriginY: 0.5,
-    /** 定位坐标left */
-    positionLeft: 0,
-    /** 定位坐标top */
-    positionTop: 0,
-    /** X轴位移 */
-    translateX: 0,
-    /** Y轴位移 */
-    translateY: 0,
-    /** 横轴缩放值 */
-    scaleX: 1,
-    /** 纵轴缩放值 */
-    scaleY: 1,
-    /** 旋转值 */
-    rotate: 0,
-  };
 
   /** 鼠标位置 */
   pointerDir: {
@@ -60,10 +17,8 @@ export class DomAttrs {
     y: Dir
   } = { x: 1, y: 1 };
 
-  private domMinWidth = 0;
-  private domMinHeight = 0;
-  private domMaxWidth = Infinity;
-  private domMaxHeight = Infinity;
+  public variant = new DomVariant();
+  public size = new DomSize();
 
   constructor(private options: DomResizeOptions) {
     this.updateTargetAttrsInfo();
@@ -118,122 +73,12 @@ export class DomAttrs {
     if (!this.options.target) { return; }
     const domStyles = window.getComputedStyle(this.options.target, null);
     const parentStyles = window.getComputedStyle(this.options.target.parentNode as HTMLDivElement, null);
-    this.setSizeInfo(domStyles, parentStyles);
-    this.setVariantInfo(domStyles);
-    this.setTransformOrigin(domStyles);
-  }
-
-  /** 尺寸信息 */
-  private setSizeInfo(domStyles: CSSStyleDeclaration, parentStyles: CSSStyleDeclaration): void {
-    // 获取宽高
-    this.width = toNum(domStyles.width);
-    this.height = toNum(domStyles.height);
-    this.aspectRatio = (this.height && this.width) ? (this.width / this.height) : 1;
-
-    // 获取父级的宽高
-    this.parentWidth = toNum(parentStyles.width);
-    this.parentHeight = toNum(parentStyles.height);
-    if (parentStyles.boxSizing === 'border-box') {
-      this.parentWidth = this.parentWidth - toNum(parentStyles.paddingLeft) - toNum(parentStyles.paddingRight);
-      this.parentHeight = this.parentHeight - toNum(parentStyles.paddingTop) - toNum(parentStyles.paddingBottom);
-    }
-
-    // 宽高限制
-    this.domMaxWidth = getPctValue(domStyles.maxWidth, this.parentWidth) || Infinity;
-    this.domMaxHeight = getPctValue(domStyles.maxHeight, this.parentHeight) || Infinity;
-    this.domMinWidth = getPctValue(domStyles.minWidth, this.parentWidth) || 0;
-    this.domMinHeight = getPctValue(domStyles.minHeight, this.parentHeight) || 0;
-  }
-
-  /** 变换信息 */
-  private setVariantInfo(domStyles: CSSStyleDeclaration) {
-    // 获取transform相关信息
-    const matchValue = domStyles.transform.match(matrixValueReg);
-    this.variant.transformName = matchValue?.[1] || 'matrix'; // matrix3d || matrix
-    this.variant.transformValue = matchValue?.[2]?.split(',').map(Number) || [1, 0, 0, 1, 0, 0];
-    if (this.variant.transformValue.length > 6) {
-      // scale与rotate的配置信息
-      const a = this.variant.transformValue[0];
-      const b = this.variant.transformValue[1];
-      const c = this.variant.transformValue[4];
-      const d = this.variant.transformValue[5];
-      // x轴和y轴的缩放倍数
-      this.variant.scaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
-      this.variant.scaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
-      // 计算旋转角度
-      this.variant.rotate = transformValuePrecision((Math.atan2(b, a) * 180 / Math.PI + 360) % 360);
-    }
-    else {
-      // scale与rotate的配置信息
-      const a = this.variant.transformValue[0];
-      const b = this.variant.transformValue[1];
-      const c = this.variant.transformValue[2];
-      const d = this.variant.transformValue[3];
-      // x轴和y轴的缩放倍数
-      this.variant.scaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
-      this.variant.scaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
-      // 计算旋转角度
-      this.variant.rotate = transformValuePrecision((Math.atan2(b, a) * 180 / Math.PI + 360) % 360);
-    }
-
-    if (domStyles.scale && domStyles.scale !== 'none') {
-      const scaleList = domStyles.scale.split(/\s+/);
-      this.variant.scaleX *= toNum(scaleList[0]);
-      this.variant.scaleY *= toNum(scaleList[1] || scaleList[0]);
-    }
-
-    if (domStyles.rotate && domStyles.rotate !== 'none') {
-      this.variant.rotate += toNum(domStyles.rotate);
-    }
-
-    // 获取定位值
-    this.variant.positionLeft = toNum(domStyles.left);
-    this.variant.positionTop = toNum(domStyles.top);
-    // 获取偏移值
-    if (!domStyles.translate || domStyles.translate === 'none') {
-      this.variant.translateX = 0;
-      this.variant.translateY = 0;
-    }
-    else {
-      const translate = domStyles.translate.split(/\s+/);
-      this.variant.translateX = toNum(translate[0]);
-      this.variant.translateY = toNum(translate[1]);
-    }
-  }
-
-  /** 变化原点 */
-  private setTransformOrigin(domStyles: CSSStyleDeclaration) {
-    // 获取transform变形原点相对定位的位置
-    const styleTransformOriginStr = this.options.target?.style?.transformOrigin || '';
-    if (styleTransformOriginStr) {
-      this.resolveTransformOrigin(styleTransformOriginStr);
-    }
-    else {
-      const domTransformOriginList = domStyles.transformOrigin.split(' ');
-      this.variant.transformOriginX = toNum(domTransformOriginList[0]) / this.width;
-      this.variant.transformOriginY = toNum(domTransformOriginList[1]) / this.height;
-    }
+    this.size.setSizeInfo(domStyles, parentStyles);
+    this.variant.setVariantInfo(domStyles, this.options.target?.style?.transformOrigin);
   }
 
   private updateSizeConstraints() {
-    if (this.options.lockAspectRatio) {
-      // 锁定纵横比时，最小宽高也会受限改变
-      const lockMinHeight = this.domMinHeight * this.aspectRatio;
-      if (lockMinHeight > this.domMinWidth) {
-        this.minWidth = lockMinHeight;
-        this.minHeight = this.domMinHeight;
-      }
-      else {
-        this.minHeight = this.domMinWidth / this.aspectRatio;
-        this.minWidth = this.domMinWidth;
-      }
-    }
-    else {
-      this.minWidth = this.domMinWidth;
-      this.minHeight = this.domMinHeight;
-    }
-    this.maxWidth = this.domMaxWidth;
-    this.maxHeight = this.domMaxHeight;
+    this.size.lockWidthHeightRatio(this.options.lockAspectRatio || false);
   }
 
   /** 初始化指针点击的位置 */
@@ -294,63 +139,7 @@ export class DomAttrs {
       this.variant.scaleY = toNum(scaleList[1] || scaleList[0]);
     }
     if (this.options.customStyle?.transformOrigin !== undefined) {
-      this.resolveTransformOrigin(this.options.customStyle.transformOrigin);
+      this.variant.resolveTransformOrigin(this.options.customStyle.transformOrigin);
     }
   }
-
-  private resolveTransformOrigin(transformOrigin: string | string[]) {
-    const transformOriginStr = new Array<string>().concat(transformOrigin).join(' ');
-    const transformOriginList = transformOriginStr.split(/\s+/);
-    if (transformOriginStr.includes('left')) {
-      this.variant.transformOriginX = 0;
-    }
-    else if (transformOriginStr.includes('right')) {
-      this.variant.transformOriginX = 1;
-    }
-    else {
-      if (!transformOriginList[0] || transformOriginList[0].includes('center')) {
-        this.variant.transformOriginX = 0.5;
-      }
-      else if (transformOriginList[0].includes('%')) {
-        this.variant.transformOriginX = toNum(transformOriginList[0]) / 100;
-      }
-      else {
-        this.variant.transformOriginX = 0;
-      }
-    }
-
-    if (transformOriginStr.includes('top')) {
-      this.variant.transformOriginY = 0;
-    }
-    else if (transformOriginStr.includes('bottom')) {
-      this.variant.transformOriginY = 1;
-    }
-    else {
-      if (!transformOriginList[1] || transformOriginList[1].includes('center')) {
-        this.variant.transformOriginY = 0.5;
-      }
-      else if (transformOriginList[1].includes('%')) {
-        this.variant.transformOriginY = toNum(transformOriginList[1]) / 100;
-      }
-      else {
-        this.variant.transformOriginX = 0;
-      }
-    }
-  }
-}
-
-/** 获取百分比值 */
-function getPctValue(value: string, parentValue: number) {
-  return value.includes('%') ? parentValue * toNum(value) / 100 : toNum(value);
-}
-
-/** 转换为数字 */
-function toNum(value?: string) {
-  if (!value) { return 0; }
-  return Number.parseFloat(value) || 0;
-}
-
-/** 精度处理函数 */
-function transformValuePrecision(value: number): number {
-  return Math.round(value * 100) / 100;
 }
