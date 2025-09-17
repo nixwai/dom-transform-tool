@@ -43,6 +43,7 @@ function handleTargetResize(event: PointerEvent) {
 
 function changeTargetResize(dis: { x: number, y: number }) {
   domResize({
+    target: resizeTarget1.value,
     offset: offset.value,
     lockAspectRatio: lockAspectRatio.value,
     direction: direction.value,
@@ -194,7 +195,7 @@ function changeTargetResize(dis: { x: number, y: number }) {
   <div class="position-relative h-100">
     <div
       ref="resizeTarget1"
-      class="w-30 h-30 position-absolute bg-blue min-w-10 min-h-10 max-w-[50%] left-[200px] max-h-100 top-[200px]"
+      class="w-30 h-30 position-absolute bg-blue min-w-10 min-h-10 max-w-100 left-[200px] max-h-100 top-[200px]"
       @pointerdown.stop.prevent="handleTargetResize"
     />
   </div>

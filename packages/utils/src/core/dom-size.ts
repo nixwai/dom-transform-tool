@@ -21,10 +21,14 @@ export class DomSize {
   /** 最小高度 */
   minHeight: number = 0;
 
-  private domMinWidth = 0;
-  private domMinHeight = 0;
-  private domMaxWidth = Infinity;
-  private domMaxHeight = Infinity;
+  /** 原始最大宽度 */
+  domMinWidth = 0;
+  /** 原始最小高度 */
+  domMinHeight = 0;
+  /** 原始最大宽度 */
+  domMaxWidth = Infinity;
+  /** 原始最小高度 */
+  domMaxHeight = Infinity;
 
   /** 尺寸信息 */
   public setSizeInfo(domStyles: CSSStyleDeclaration, parentStyles: CSSStyleDeclaration): void {

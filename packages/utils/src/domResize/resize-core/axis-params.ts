@@ -1,5 +1,6 @@
 import type { DomResizeOptions } from '../types';
 import type { DomAttrs } from './dom-attrs';
+import { getPctValue } from '../../utils';
 
 interface DirectionParams {
   /** 原值 */
@@ -80,7 +81,6 @@ export class AxisParams {
 
   private setAxisParams() {
     const { width, height, aspectRatio, maxWidth, minWidth, maxHeight, minHeight } = this.domAttrs.size;
-
     // 固定的移动距离，两边都移动时需要*2
     let gridX = (this.options.grid?.[0] || DEFAULT_GRID) * (this.x.dir ? 1 : 2);
     let gridY = (this.options.grid?.[1] || DEFAULT_GRID) * (this.y.dir ? 1 : 2);
@@ -117,9 +117,7 @@ export class AxisParams {
     let distance = 0;
     // 获取手动调整的偏移量
     if (manualValue) {
-      distance = manualValue.includes('%')
-        ? Number.parseFloat(manualValue) / 100 * parentValue
-        : Number.parseFloat(manualValue);
+      distance = getPctValue(manualValue, parentValue);
       if (this.options.manual?.type === 'size') {
         // 调整到固定的大小
         distance = distance - originValue;

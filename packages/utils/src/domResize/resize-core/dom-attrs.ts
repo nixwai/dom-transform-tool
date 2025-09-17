@@ -22,10 +22,10 @@ export class DomAttrs {
 
   constructor(private options: DomResizeOptions) {
     this.updateTargetAttrsInfo();
-    this.updateSizeConstraints();
     this.updateOffsetInfo();
     this.updatePointerDirection();
     this.customDomAttrs();
+    this.updateSizeConstraints();
   }
 
   /** 更新目标属性信息 */
@@ -95,10 +95,10 @@ export class DomAttrs {
     const { parentWidth, parentHeight, width, height, maxWidth, maxHeight, minWidth, minHeight } = this.options.customStyle;
     const { offsetX, offsetY, rotate, scale, transformOrigin } = this.options.customStyle;
 
-    if (parentWidth) {
+    if (parentWidth !== undefined) {
       this.size.parentWidth = parentWidth;
     }
-    if (parentHeight) {
+    if (parentHeight !== undefined) {
       this.size.parentHeight = parentHeight;
     }
     if (width !== undefined) {
@@ -108,16 +108,16 @@ export class DomAttrs {
       this.size.height = getPctValue(String(height), this.size.parentHeight);
     }
     if (maxWidth !== undefined) {
-      this.size.maxWidth = getPctValue(String(maxWidth), this.size.parentWidth);
+      this.size.domMaxWidth = this.size.maxWidth = getPctValue(String(maxWidth), this.size.parentWidth);
     }
     if (maxHeight !== undefined) {
-      this.size.maxHeight = getPctValue(String(maxHeight), this.size.parentHeight);
+      this.size.domMaxHeight = this.size.maxHeight = getPctValue(String(maxHeight), this.size.parentHeight);
     }
     if (minWidth !== undefined) {
-      this.size.minWidth = getPctValue(String(minWidth), this.size.parentWidth);
+      this.size.domMinWidth = this.size.minWidth = getPctValue(String(minWidth), this.size.parentWidth);
     }
     if (minHeight !== undefined) {
-      this.size.minHeight = getPctValue(String(minHeight), this.size.parentHeight);
+      this.size.domMinHeight = this.size.minHeight = getPctValue(String(minHeight), this.size.parentHeight);
     }
     if (rotate !== undefined) {
       this.variant.rotate = toNum(String(rotate));
