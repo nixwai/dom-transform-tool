@@ -13,3 +13,7 @@
 ## 参数类型
 
 <<< @/../packages/utils/dist/types/domResize/types.d.ts
+
+## 源码
+
+[源代码](https://github.com/nixwai/dom-transform-tool/blob/main/packages/utils/src/domResize/index.ts)

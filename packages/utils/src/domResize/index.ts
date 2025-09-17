@@ -1,17 +1,18 @@
 import type { DomResizeOptions } from './types';
-import { initResize } from './core';
 import { resizeByManual } from './manual-resize';
 import { resizeByPointer } from './pointer-resize';
+import { ResizeApplication } from './resize-core/resize-application';
 
 /**
- * 调整容器
+ * 调节大小函数
  * @param options 配置项 - {@link DomResizeOptions}
  */
-export function domResize(options: DomResizeOptions) {
-  if (!options.target || !options.direction) { return; }
-  const resizeData = initResize(options);
-  resizeByManual(resizeData);
-  resizeByPointer(resizeData);
+export function domResize(options?: DomResizeOptions) {
+  const resizeApplication = new ResizeApplication(options);
+  resizeByManual(resizeApplication);
+  resizeByPointer(resizeApplication);
 }
+
+export * from './helper';
 
 export * from './types';

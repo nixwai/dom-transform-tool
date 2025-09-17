@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { DomResizeDirection } from 'dom-transform-tool';
-import { domResize } from 'dom-transform-tool';
 import { ref } from 'vue';
+import { domResize, type DomResizeDirection } from '../../../packages/utils/src/index';
 
 const resizeTarget1 = ref<HTMLDivElement>();
 
@@ -32,12 +31,13 @@ const crossAxis = ref(false);
 function handleTargetResize(event: PointerEvent) {
   domResize({
     target: resizeTarget1.value,
-    event,
+    pointer: event,
     offset: offset.value,
     lockAspectRatio: lockAspectRatio.value,
     direction: direction.value,
     grid: grid.value,
     crossAxis: crossAxis.value,
+    manual: undefined,
   });
 }
 
@@ -47,9 +47,12 @@ function changeTargetResize(dis: { x: number, y: number }) {
     offset: offset.value,
     lockAspectRatio: lockAspectRatio.value,
     direction: direction.value,
-    distanceX: dis.x,
-    distanceY: dis.y,
     grid: grid.value,
+    crossAxis: crossAxis.value,
+    manual: {
+      width: dis.x,
+      height: dis.y,
+    },
   });
 }
 </script>
