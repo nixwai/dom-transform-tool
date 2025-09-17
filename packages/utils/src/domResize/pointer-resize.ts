@@ -118,9 +118,15 @@ function beginResizeContent(
     resizePointerIdSet.add(pointerId);
     target.setPointerCapture(resizeApplication.options.pointer.pointerId);
   }
+  resizeApplication.onPointerBegin();
+
   // 移动
-  const moveHandler = getMoveHandler(resizeApplication, moveFn);
+  const moveHandler = getMoveHandler(resizeApplication, (coord) => {
+    moveFn(coord);
+    resizeApplication.onPointerMove();
+  });
   target.addEventListener('pointermove', moveHandler);
+
   // 结束
   const upHandler = (overEvent: PointerEvent) => {
     const targetDeref = targetRef.deref();
@@ -130,6 +136,7 @@ function beginResizeContent(
     targetDeref?.removeEventListener('pointerup', upHandler);
     targetDeref?.removeEventListener('pointercancel', upHandler);
     resizeApplication.clearPointer();
+    resizeApplication.onPointerEnd();
   };
   target.addEventListener('pointerup', upHandler);
   target.addEventListener('pointercancel', upHandler);

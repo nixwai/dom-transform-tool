@@ -53,9 +53,33 @@ export class ResizeApplication {
     this.options.pointer = undefined;
   }
 
+  private cacheResizeContent: DomResizeContent = {};
+
   /** 触发调整事件 */
   public updateResize(content: DomResizeContent, styles: DomResizeStyle) {
+    this.cacheResizeContent = content;
     this.options.callback?.(content, styles);
+  }
+
+  /** 指针活动开始 */
+  public onPointerBegin() {
+    this.cacheResizeContent = {
+      width: this.domAttrs.size.width,
+      height: this.domAttrs.size.height,
+      offsetX: this.domAttrs.offsetX,
+      offsetY: this.domAttrs.offsetY,
+    };
+    this.options.onPointerBegin?.(this.cacheResizeContent);
+  }
+
+  /** 指针活动 */
+  public onPointerMove() {
+    this.options.onPointerMove?.(this.cacheResizeContent);
+  }
+
+  /** 指针活动结束 */
+  public onPointerEnd() {
+    this.options.onPointerEnd?.(this.cacheResizeContent);
   }
 
   /** 根据方向调整 */

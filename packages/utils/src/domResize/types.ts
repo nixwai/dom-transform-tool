@@ -127,4 +127,10 @@ export interface DomResizeOptions {
   disableUpdate?: boolean
   /** 调整回调 */
   callback?: (content: DomResizeContent, style: DomResizeStyle) => void
+  /** 指针活动开始 */
+  onPointerBegin?: (content: DomResizeContent) => void
+  /** 指针活动 */
+  onPointerMove?: (content: DomResizeContent) => void
+  /** 指针活动结束 */
+  onPointerEnd?: (content: DomResizeContent) => void
 }
