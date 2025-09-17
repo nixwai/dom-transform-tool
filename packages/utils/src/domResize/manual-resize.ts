@@ -1,4 +1,4 @@
-import type { ResizeApplication, ResizingFn } from './core/resize-application';
+import type { ResizeApplication, ResizingFn } from './resize-core/resize-application';
 
 export function resizeByManual(resizeApplication: ResizeApplication) {
   if (!resizeApplication.axisParams.x.manualDistance && !resizeApplication.axisParams.y.manualDistance) {

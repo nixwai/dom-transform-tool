@@ -57,7 +57,7 @@ export class AxisParams {
 
   public updateAxisParams(options: DomResizeOptions) {
     const isDirectionUpdate = this.options.direction !== options.direction;
-    
+
     const isAxisParamsUpdate = Boolean(
       this.domAttrs.isTargetAttrsUpdate
       || this.options.grid !== options.grid
@@ -66,14 +66,14 @@ export class AxisParams {
 
     this.options = options;
 
-    const isManualUpdate =  this.setManualDistance();
+    const isManualUpdate = this.setManualDistance();
 
     if (isDirectionUpdate) {
       this.setDirection();
     }
 
     // 相关轴参数、轴方向、锁宽高比下手动调整数据更新时触发重新计算
-    if (isAxisParamsUpdate || isDirectionUpdate|| (this.options.lockAspectRatio && isManualUpdate)) {
+    if (isAxisParamsUpdate || isDirectionUpdate || (this.options.lockAspectRatio && isManualUpdate)) {
       this.setAxisParams();
     }
   }

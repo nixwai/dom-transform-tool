@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { DomResize, type DomResizeDirection } from '../../../packages/utils/src/index';
+import { domResize, type DomResizeDirection } from '../../../packages/utils/src/index';
 
 const resizeTarget1 = ref<HTMLDivElement>();
 
@@ -28,10 +28,8 @@ const offset = ref<'position' | 'transform' | 'translate'>('position');
 const grid = ref([0.5, 0.5]);
 const crossAxis = ref(false);
 
-const targetDomResize = new DomResize(); ;
-
 function handleTargetResize(event: PointerEvent) {
-  targetDomResize.handler({
+  domResize({
     target: resizeTarget1.value,
     pointer: event,
     offset: offset.value,
@@ -44,7 +42,7 @@ function handleTargetResize(event: PointerEvent) {
 }
 
 function changeTargetResize(dis: { x: number, y: number }) {
-  targetDomResize.handler({
+  domResize({
     offset: offset.value,
     lockAspectRatio: lockAspectRatio.value,
     direction: direction.value,
@@ -197,6 +195,7 @@ function changeTargetResize(dis: { x: number, y: number }) {
     <div
       ref="resizeTarget1"
       class="w-30 h-30 position-absolute bg-blue min-w-10 min-h-10 max-w-100 left-[200px] max-h-100 top-[200px]"
+      style="transform-origin: right top;rotate: 45deg;"
       @pointerdown.stop.prevent="handleTargetResize"
     />
   </div>

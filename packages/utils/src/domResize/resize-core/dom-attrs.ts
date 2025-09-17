@@ -70,6 +70,7 @@ export class DomAttrs {
     this.updateSizeConstraints();
     this.updateOffsetInfo();
     this.updatePointerDirection();
+    this.customDomAttrs();
   }
 
   /** 当前元素信息是否发生改变 */
@@ -127,7 +128,7 @@ export class DomAttrs {
     // 获取宽高
     this.width = toNum(domStyles.width);
     this.height = toNum(domStyles.height);
-    this.aspectRatio = this.height !== 0 && this.width !== 0 ? this.width / this.height : 1;
+    this.aspectRatio = (this.height && this.width) ? (this.width / this.height) : 1;
 
     // 获取父级的宽高
     this.parentWidth = toNum(parentStyles.width);
@@ -203,47 +204,34 @@ export class DomAttrs {
   /** 变化原点 */
   private setTransformOrigin(domStyles: CSSStyleDeclaration) {
     // 获取transform变形原点相对定位的位置
-    const domTransformOriginList = domStyles.transformOrigin.split(' ');
     const styleTransformOriginStr = this.options.target?.style?.transformOrigin || '';
-    const styleTransformOriginList = styleTransformOriginStr.split(' ');
-    //
-    // const originIsAbsolute = Array.isArray(this.options.originIsAbsolute)
-    //   ? this.options.originIsAbsolute
-    //   : [this.options.originIsAbsolute, this.options.originIsAbsolute];
-    const originIsAbsolute: boolean[] = [];
-
-    const originX = parseTransformOriginValue(
-      originIsAbsolute[0],
-      domTransformOriginList[0],
-      styleTransformOriginList[0],
-      styleTransformOriginStr.includes('left') || styleTransformOriginStr.includes('right'),
-    );
-    const originY = parseTransformOriginValue(
-      originIsAbsolute[1],
-      domTransformOriginList[1],
-      styleTransformOriginList[1],
-      styleTransformOriginStr.includes('top') || styleTransformOriginStr.includes('bottom'),
-    );
-    this.variant.transformOriginX = originX / this.width;
-    this.variant.transformOriginY = originY / this.height;
+    if (styleTransformOriginStr) {
+      this.resolveTransformOrigin(styleTransformOriginStr);
+    }
+    else {
+      const domTransformOriginList = domStyles.transformOrigin.split(' ');
+      this.variant.transformOriginX = toNum(domTransformOriginList[0]) / this.width;
+      this.variant.transformOriginY = toNum(domTransformOriginList[1]) / this.height;
+    }
   }
 
   private updateSizeConstraints() {
     if (this.options.lockAspectRatio) {
       // 锁定纵横比时，最小宽高也会受限改变
       const lockMinHeight = this.domMinHeight * this.aspectRatio;
-      if (lockMinHeight > this.domMinHeight) {
+      if (lockMinHeight > this.domMinWidth) {
         this.minWidth = lockMinHeight;
+        this.minHeight = this.domMinHeight;
       }
       else {
         this.minHeight = this.domMinWidth / this.aspectRatio;
+        this.minWidth = this.domMinWidth;
       }
     }
     else {
       this.minWidth = this.domMinWidth;
       this.minHeight = this.domMinHeight;
     }
-
     this.maxWidth = this.domMaxWidth;
     this.maxHeight = this.domMaxHeight;
   }
@@ -294,6 +282,61 @@ export class DomAttrs {
       }
     }
   }
+
+  /** 自定义信息 */
+  private customDomAttrs() {
+    if (this.options.customStyle?.rotate !== undefined) {
+      this.variant.rotate = toNum(String(this.options.customStyle.rotate));
+    }
+    if (this.options.customStyle?.scale !== undefined) {
+      const scaleList = new Array<string | number>().concat(this.options.customStyle.scale).join(' ').split(/\s+/);
+      this.variant.scaleX = toNum(scaleList[0]);
+      this.variant.scaleY = toNum(scaleList[1] || scaleList[0]);
+    }
+    if (this.options.customStyle?.transformOrigin !== undefined) {
+      this.resolveTransformOrigin(this.options.customStyle.transformOrigin);
+    }
+  }
+
+  private resolveTransformOrigin(transformOrigin: string | string[]) {
+    const transformOriginStr = new Array<string>().concat(transformOrigin).join(' ');
+    const transformOriginList = transformOriginStr.split(/\s+/);
+    if (transformOriginStr.includes('left')) {
+      this.variant.transformOriginX = 0;
+    }
+    else if (transformOriginStr.includes('right')) {
+      this.variant.transformOriginX = 1;
+    }
+    else {
+      if (!transformOriginList[0] || transformOriginList[0].includes('center')) {
+        this.variant.transformOriginX = 0.5;
+      }
+      else if (transformOriginList[0].includes('%')) {
+        this.variant.transformOriginX = toNum(transformOriginList[0]) / 100;
+      }
+      else {
+        this.variant.transformOriginX = 0;
+      }
+    }
+
+    if (transformOriginStr.includes('top')) {
+      this.variant.transformOriginY = 0;
+    }
+    else if (transformOriginStr.includes('bottom')) {
+      this.variant.transformOriginY = 1;
+    }
+    else {
+      if (!transformOriginList[1] || transformOriginList[1].includes('center')) {
+        this.variant.transformOriginY = 0.5;
+      }
+      else if (transformOriginList[1].includes('%')) {
+        this.variant.transformOriginY = toNum(transformOriginList[1]) / 100;
+      }
+      else {
+        this.variant.transformOriginX = 0;
+      }
+    }
+  }
 }
 
 /** 获取百分比值 */
@@ -305,20 +348,6 @@ function getPctValue(value: string, parentValue: number) {
 function toNum(value?: string) {
   if (!value) { return 0; }
   return Number.parseFloat(value) || 0;
-}
-
-/** 解析 transform-origin相对定位的位置，绝对位置固定为0 */
-function parseTransformOriginValue(isAbsolute: boolean | undefined, domValue: string, styleValue: string | undefined, hasKeyword: boolean): number {
-  if (isAbsolute === true) {
-    return 0;
-  }
-  if (isAbsolute === false) {
-    return toNum(domValue);
-  }
-  if (!styleValue || styleValue.includes('%') || styleValue.includes('center') || hasKeyword) {
-    return toNum(domValue);
-  }
-  return 0;
 }
 
 /** 精度处理函数 */

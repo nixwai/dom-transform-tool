@@ -1,7 +1,7 @@
 import type { DomResizeOptions } from './types';
-import { ResizeApplication } from './core/resize-application';
 import { resizeByManual } from './manual-resize';
 import { resizeByPointer } from './pointer-resize';
+import { ResizeApplication } from './resize-core/resize-application';
 
 /**
  * 调节大小函数

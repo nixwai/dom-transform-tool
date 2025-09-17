@@ -85,15 +85,20 @@ export interface DomResizeOptions {
   /** 自定义样式，用于兼容一些无法通过当前节点获取的样式 */
   customStyle?: {
     /**
-     * transform-origin的是否为绝对定位（非百分比或offset-keyword），使用数组可以分别指定横轴和纵轴，默认根据内联样式决定
+     * transform的变化原点，使用数组可以分别指定横轴和纵轴，默认根据内联样式决定
      * @see https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-origin
-     * 由于函数仅会识别内联样式设置的transform-origin类型，其他情况需要通过主要设置判断是否为绝对定位，确保不会有异常的偏移
+     * 当前功能仅会识别target的内联样式transform-origin类型，其他情况需要通过配置，确保不会有异常的偏移
      */
-    transformOrigin?: boolean | (boolean | undefined)[]
+    transformOrigin?: string | string[]
     /** 旋转度数 */
     rotate?: number | string
     /** 缩放值，使用数组可以分别指定横轴和纵轴 */
-    scale?: number | string | (number | string | undefined)[]
+    scale?: number | string | (number | string)[]
+    // /** 宽度(仅支持px/百分比) */
+    // width?: number | string
+    // /** 高度(仅支持px/百分比) */
+    // height?: number | string
+    // /** 横轴位移(仅支持px/百分比) */
   }
   /** 关闭对target元素的更新，关闭后需通过callback方法手动给元素添加样式 */
   disableUpdate?: boolean
