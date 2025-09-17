@@ -36,9 +36,11 @@ export class DomSize {
     // 获取父级的宽高
     this.parentWidth = toNum(parentStyles.width);
     this.parentHeight = toNum(parentStyles.height);
+
     if (parentStyles.boxSizing === 'border-box') {
-      this.parentWidth = this.parentWidth - toNum(parentStyles.paddingLeft) - toNum(parentStyles.paddingRight);
-      this.parentHeight = this.parentHeight - toNum(parentStyles.paddingTop) - toNum(parentStyles.paddingBottom);
+      // 宽高包含内边距时需减去
+      this.parentWidth = this.parentWidth - toNum(parentStyles.paddingLeft) - toNum(parentStyles.paddingRight) - toNum(parentStyles.borderLeftWidth) - toNum(parentStyles.borderRightWidth);
+      this.parentHeight = this.parentHeight - toNum(parentStyles.paddingTop) - toNum(parentStyles.paddingBottom) - toNum(parentStyles.borderTopWidth) - toNum(parentStyles.borderBottomWidth);
     }
 
     // 宽高限制
@@ -49,7 +51,7 @@ export class DomSize {
   }
 
   /** 固定宽高比 */
-  public lockWidthHeightRatio(isLock: boolean) { 
+  public lockWidthHeightRatio(isLock: boolean) {
     if (isLock) {
       // 锁定纵横比时，最大与最小宽高会受限改变
       const lockMinHeight = this.domMinHeight * this.aspectRatio;

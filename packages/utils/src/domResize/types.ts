@@ -55,6 +55,40 @@ export interface DomResizeCustomRender {
   offsetY?: DomResizeCustomRenderMethod
 }
 
+/** 自定义样式，用于兼容一些无法通过当前节点获取的样式 */
+export interface DomResizeCustomStyle {
+  /**
+   * transform的变化原点，使用数组可以分别指定横轴和纵轴，默认根据内联样式决定
+   * @see https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-origin
+   * - 当前功能仅会识别target的内联样式transform-origin类型，其他情况需要通过配置，确保不会有异常的偏移
+   */
+  transformOrigin?: string | string[]
+  /** 旋转度数(仅支持deg单位) */
+  rotate?: number | string
+  /** 缩放值，使用数组可以分别指定横轴和纵轴 */
+  scale?: number | string | (number | string)[]
+  /** 横轴位移(仅支持px/百分比) */
+  offsetX?: number | string
+  /** 纵轴位移(仅支持px/百分比) */
+  offsetY?: number | string
+  /** 宽度(仅支持px/百分比) */
+  width?: number | string
+  /** 高度(仅支持px/百分比) */
+  height?: number | string
+  /** 父级宽度(仅支持px) */
+  parentWidth?: number
+  /** 父级高度(仅支持px) */
+  parentHeight?: number
+  /** 最大宽度(仅支持px/百分比) */
+  maxWidth?: number | string
+  /** 最大高度(仅支持px/百分比) */
+  maxHeight?: number | string
+  /** 最小宽度(仅支持px/百分比) */
+  minWidth?: number | string
+  /** 最小高度(仅支持px/百分比) */
+  minHeight?: number | string
+}
+
 /** 调整大小配置项 */
 export interface DomResizeOptions {
   /** 调整元素 */
@@ -65,9 +99,9 @@ export interface DomResizeOptions {
   manual?: {
     /** 类型，默认distance，distance: 调整的宽高距离，size: 调整到对应宽高大小 */
     type?: 'distance' | 'size'
-    /** 宽度 */
+    /** 宽度(仅支持px/百分比) */
     width?: number | string
-    /** 高度 */
+    /** 高度(仅支持px/百分比) */
     height?: number | string
   }
   /** 指针控制事件 */
@@ -88,23 +122,7 @@ export interface DomResizeOptions {
   /** 自定义渲染 */
   customRender?: DomResizeCustomRender
   /** 自定义样式，用于兼容一些无法通过当前节点获取的样式 */
-  customStyle?: {
-    /**
-     * transform的变化原点，使用数组可以分别指定横轴和纵轴，默认根据内联样式决定
-     * @see https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-origin
-     * - 当前功能仅会识别target的内联样式transform-origin类型，其他情况需要通过配置，确保不会有异常的偏移
-     */
-    transformOrigin?: string | string[]
-    /** 旋转度数 */
-    rotate?: number | string
-    /** 缩放值，使用数组可以分别指定横轴和纵轴 */
-    scale?: number | string | (number | string)[]
-    // /** 宽度(仅支持px/百分比) */
-    // width?: number | string
-    // /** 高度(仅支持px/百分比) */
-    // height?: number | string
-    // /** 横轴位移(仅支持px/百分比) */
-  }
+  customStyle?: DomResizeCustomStyle
   /** 关闭对target元素的更新，关闭后需通过callback方法手动给元素添加样式 */
   disableUpdate?: boolean
   /** 调整回调 */

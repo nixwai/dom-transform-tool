@@ -1,7 +1,7 @@
 import type { DomResizeOptions } from '../types';
 import type { Dir } from '../typing';
 import { DomSize, DomVariant } from '../../core';
-import { toNum } from '../../utils';
+import { getPctValue, toNum } from '../../utils';
 
 export class DomAttrs {
   /** 水平偏移值 */
@@ -90,16 +90,51 @@ export class DomAttrs {
 
   /** 自定义信息 */
   private customDomAttrs() {
-    if (this.options.customStyle?.rotate !== undefined) {
-      this.variant.rotate = toNum(String(this.options.customStyle.rotate));
+    if (!this.options.customStyle) { return; }
+
+    const { parentWidth, parentHeight, width, height, maxWidth, maxHeight, minWidth, minHeight } = this.options.customStyle;
+    const { offsetX, offsetY, rotate, scale, transformOrigin } = this.options.customStyle;
+
+    if (parentWidth) {
+      this.size.parentWidth = parentWidth;
     }
-    if (this.options.customStyle?.scale !== undefined) {
-      const scaleList = new Array<string | number>().concat(this.options.customStyle.scale).join(' ').split(/\s+/);
+    if (parentHeight) {
+      this.size.parentHeight = parentHeight;
+    }
+    if (width !== undefined) {
+      this.size.width = getPctValue(String(width), this.size.parentWidth);
+    }
+    if (height !== undefined) {
+      this.size.height = getPctValue(String(height), this.size.parentHeight);
+    }
+    if (maxWidth !== undefined) {
+      this.size.maxWidth = getPctValue(String(maxWidth), this.size.parentWidth);
+    }
+    if (maxHeight !== undefined) {
+      this.size.maxHeight = getPctValue(String(maxHeight), this.size.parentHeight);
+    }
+    if (minWidth !== undefined) {
+      this.size.minWidth = getPctValue(String(minWidth), this.size.parentWidth);
+    }
+    if (minHeight !== undefined) {
+      this.size.minHeight = getPctValue(String(minHeight), this.size.parentHeight);
+    }
+    if (rotate !== undefined) {
+      this.variant.rotate = toNum(String(rotate));
+    }
+    if (scale !== undefined) {
+      const scaleList = new Array<string | number>().concat(scale).join(' ').split(/\s+/);
       this.variant.scaleX = toNum(scaleList[0]);
       this.variant.scaleY = toNum(scaleList[1] || scaleList[0]);
     }
-    if (this.options.customStyle?.transformOrigin !== undefined) {
-      this.variant.resolveTransformOrigin(this.options.customStyle.transformOrigin);
+    if (transformOrigin !== undefined) {
+      this.variant.resolveTransformOrigin(transformOrigin);
+    }
+    if (offsetX !== undefined) {
+      this.offsetX = getPctValue(String(offsetX), this.size.width);
+    }
+    if (offsetY !== undefined) {
+      this.offsetY = getPctValue(String(offsetY), this.size.height);
     }
   }
 }
