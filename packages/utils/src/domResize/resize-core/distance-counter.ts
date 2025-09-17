@@ -10,16 +10,6 @@ export class DistanceCounter {
     this.createGetDistanceMethod();
   }
 
-  public updateDistanceCounter(options: DomResizeOptions) {
-    const isDistanceCounterUpdate = Boolean(options.crossAxis !== this.options.crossAxis);
-
-    this.options = options;
-
-    if (isDistanceCounterUpdate) {
-      this.createGetDistanceMethod();
-    }
-  }
-
   /** 初始化移动距离方法 */
   private createGetDistanceMethod() {
     if (this.options.crossAxis) {

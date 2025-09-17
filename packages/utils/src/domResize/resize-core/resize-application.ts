@@ -43,18 +43,6 @@ export class ResizeApplication {
     this.styleUpdater = new StyleUpdater(this.options, this.domAttrs);
   }
 
-  /** 更新实例配置 */
-  public updateInstance(options: DomResizeOptions, recount: boolean) {
-    this.options = Object.assign({}, this.options, options);
-    this.domAttrs.updateDomAttrs(this.options, recount);
-    this.axisParams.updateAxisParams(this.options);
-    this.resizeDistance.updateResizeDistance();
-    this.distanceCounter.updateDistanceCounter(this.options);
-    this.offsetCounter.updateOffsetCounter(this.options);
-    this.resizeHandler.updateResizeHandler(this.options);
-    this.styleUpdater.updateStyleUpdater(this.options);
-  }
-
   /** 清除配置的手动调整 */
   public clearManual() {
     this.options.manual = undefined;

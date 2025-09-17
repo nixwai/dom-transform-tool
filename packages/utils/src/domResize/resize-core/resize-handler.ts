@@ -28,14 +28,6 @@ export class ResizeHandler {
     this.createResizeValueMethod();
   }
 
-  public updateResizeHandler(options: DomResizeOptions) {
-    const isResizeHandlerUpdate = Boolean(options.offset !== this.options.offset);
-    this.options = options;
-    if (isResizeHandlerUpdate) {
-      this.createResizeValueMethod();
-    }
-  }
-
   private createResizeValueMethod() {
     this.getResizeValue = this.options.offset
       ? (value: number) => value

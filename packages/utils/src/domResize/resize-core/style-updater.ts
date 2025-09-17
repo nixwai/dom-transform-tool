@@ -29,33 +29,6 @@ export class StyleUpdater {
     this.setStyleOffsetUpdater();
   }
 
-  public updateStyleUpdater(options: DomResizeOptions) {
-    if (this.domAttrs.isTargetAttrsUpdate) {
-      this.resetCachedStyleOffset();
-    }
-
-    const isStyleUpdaterUpdate = Boolean(
-      this.domAttrs.isTargetAttrsUpdate
-      || options.offset !== this.options.offset
-      || options.disableUpdate !== this.options.disableUpdate,
-    );
-    this.options = options;
-
-    if (isStyleUpdaterUpdate) {
-      this.targetRef = options.target ? new WeakRef(options.target) : undefined;
-      this.setStyleWidthHeightUpdater();
-      this.setStyleOffsetUpdater();
-    }
-  }
-
-  private resetCachedStyleOffset() {
-    this.cachedStyleOffset = {
-      position: { valueX: 0, valueY: 0 },
-      transform: { valueX: 0, valueY: 0 },
-      translate: { valueX: 0, valueY: 0 },
-    };
-  }
-
   /** 设置宽高样式更新方法 */
   private setStyleWidthHeightUpdater() {
     const getWidthOrHeight = {

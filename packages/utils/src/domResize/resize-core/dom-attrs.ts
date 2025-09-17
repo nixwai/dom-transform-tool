@@ -28,46 +28,6 @@ export class DomAttrs {
     this.customDomAttrs();
   }
 
-  /** 当前元素信息是否发生改变 */
-  public isTargetAttrsUpdate = false;
-  /** 当前元素偏移是否发生改变 */
-  public isOffsetUpdate = false;
-
-  public updateDomAttrs(options: DomResizeOptions, recount: boolean) {
-    this.isTargetAttrsUpdate = false;
-    this.isOffsetUpdate = false;
-
-    const isChangeTarget = this.options.target !== options.target;
-    const taskList: [unknown, () => void][] = [
-      [
-        recount || isChangeTarget,
-        () => {
-          this.updateTargetAttrsInfo();
-          this.isTargetAttrsUpdate = true;
-        },
-      ],
-      [
-        recount || isChangeTarget || options.lockAspectRatio !== this.options.lockAspectRatio,
-        () => {
-          this.updateSizeConstraints();
-          this.isTargetAttrsUpdate = true;
-        },
-      ],
-      [
-        recount || isChangeTarget || options.offset !== this.options.offset,
-        () => {
-          this.updateOffsetInfo();
-          this.isOffsetUpdate = true;
-        },
-      ],
-    ];
-    this.options = options;
-    taskList.forEach(([condition, fn]) => {
-      if (condition) { fn.call(this); }
-    });
-    this.updatePointerDirection();
-  }
-
   /** 更新目标属性信息 */
   private updateTargetAttrsInfo() {
     if (!this.options.target) { return; }

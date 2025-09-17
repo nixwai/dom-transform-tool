@@ -55,29 +55,6 @@ export class AxisParams {
     this.setAxisParams();
   }
 
-  public updateAxisParams(options: DomResizeOptions) {
-    const isDirectionUpdate = this.options.direction !== options.direction;
-
-    const isAxisParamsUpdate = Boolean(
-      this.domAttrs.isTargetAttrsUpdate
-      || this.options.grid !== options.grid
-      || this.options.lockAspectRatio !== options.lockAspectRatio,
-    );
-
-    this.options = options;
-
-    const isManualUpdate = this.setManualDistance();
-
-    if (isDirectionUpdate) {
-      this.setDirection();
-    }
-
-    // 相关轴参数、轴方向、锁宽高比下手动调整数据更新时触发重新计算
-    if (isAxisParamsUpdate || isDirectionUpdate || (this.options.lockAspectRatio && isManualUpdate)) {
-      this.setAxisParams();
-    }
-  }
-
   private setManualDistance() {
     const { width, height, parentWidth, parentHeight } = this.domAttrs.size;
     const manualDistanceX = this.resolveManualDistance(width, parentWidth, this.options.manual?.width);

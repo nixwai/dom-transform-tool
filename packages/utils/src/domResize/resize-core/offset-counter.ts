@@ -66,29 +66,6 @@ export class OffsetCounter {
     this.setOffsetFunctions();
   }
 
-  public updateOffsetCounter(options: DomResizeOptions) {
-    if (!options.offset) {
-      this.options = options;
-      this.getForwardOffset = zeroOffset;
-      this.getBackwardOffset = zeroOffset;
-      this.getBothOffset = zeroOffset;
-      return;
-    }
-    const isOffsetCounterUpdate = Boolean(
-      this.domAttrs.isTargetAttrsUpdate || this.domAttrs.isOffsetUpdate
-      || options.offset !== this.options.offset
-      || this.options.crossAxis !== options.crossAxis,
-    );
-
-    this.options = options;
-
-    if (isOffsetCounterUpdate) {
-      this.setVariantParams();
-      this.setOffsetParams();
-      this.setOffsetFunctions();
-    }
-  }
-
   /** 更新变换参数 */
   private setVariantParams() {
     const { rotate, transformOriginX, transformOriginY, scaleX, scaleY } = this.domAttrs.variant;

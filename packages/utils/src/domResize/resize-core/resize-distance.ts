@@ -28,12 +28,6 @@ export class ResizeDistance {
     this.setDistance();
   };
 
-  public updateResizeDistance() {
-    if (this.domAttrs.isTargetAttrsUpdate) {
-      this.setDistance();
-    }
-  };
-
   private setDistance() {
     this.x.value = this.domAttrs.size.width;
     this.y.value = this.domAttrs.size.height;
