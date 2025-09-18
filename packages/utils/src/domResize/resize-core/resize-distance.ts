@@ -1,4 +1,4 @@
-import type { Axis } from '../typing';
+import type { Axis } from '../../typing';
 import type { ResizeAxisParams } from './resize-axis-params';
 import type { ResizeDomAttrs } from './resize-dom-attrs';
 

@@ -1,5 +1,5 @@
+import type { Axis, Dir } from '../../typing';
 import type { DomResizeOptions } from '../types';
-import type { Axis, Dir } from '../typing';
 import type { ResizeAxisParams } from './resize-axis-params';
 import type { ResizeDistance } from './resize-distance';
 import type { ResizeDistanceCounter } from './resize-distance-counter';

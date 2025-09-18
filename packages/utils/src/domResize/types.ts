@@ -1,94 +1,3 @@
-/** 四个方向同时调整 */
-type AllDirection = 'all';
-
-/** 单独调整一个方向 */
-type SingleDirection = 'left' | 'right' | 'top' | 'bottom';
-
-/** 两个方向同时调整 */
-type TwoDirection = 'left-top' | 'left-bottom' | 'right-top' | 'right-bottom' | 'left-right' | 'top-bottom';
-
-/** 三个方向同时调整 */
-type ThreeDirection = 'left-top-right' | 'left-bottom-right' | 'top-left-bottom' | 'top-right-bottom';
-
-/** 调整方向 */
-export type DomResizeDirection = AllDirection | SingleDirection | TwoDirection | ThreeDirection;
-
-/** 调整的内容，单位px */
-export interface DomResizeContent {
-  width?: number
-  height?: number
-  offsetX?: number
-  offsetY?: number
-};
-
-/** 调整的样式 */
-export interface DomResizeStyle {
-  width?: string
-  height?: string
-  transform?: string
-  translate?: string
-  top?: string
-  left?: string
-}
-
-/** 调整偏移的类型 */
-export type DomResizeOffsetType = 'position' | 'transform' | 'translate';
-
-/** 自定义样式类型 */
-export type DomResizeCustomRenderMethod = (
-  value: number,
-  options: {
-    parentWidth: number
-    parentHeight: number
-  }
-) => string;
-
-/** 自定义样式 */
-export interface DomResizeCustomRender {
-  /** 宽度 */
-  width?: DomResizeCustomRenderMethod
-  /** 高度 */
-  height?: DomResizeCustomRenderMethod
-  /** 横轴的偏移，offset为transform时仅px可用 */
-  offsetX?: DomResizeCustomRenderMethod
-  /** 纵轴的偏移，offset为transform时仅px可用 */
-  offsetY?: DomResizeCustomRenderMethod
-}
-
-/** 自定义样式，用于兼容一些无法通过当前节点获取的样式 */
-export interface DomResizeCustomStyle {
-  /**
-   * transform的变化原点，使用数组可以分别指定横轴和纵轴，默认根据内联样式决定
-   * @see https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-origin
-   * - 当前功能仅会识别target的内联样式transform-origin类型，其他情况需要通过配置，确保不会有异常的偏移
-   */
-  transformOrigin?: string | string[]
-  /** 旋转度数(仅支持deg单位) */
-  rotate?: number | string
-  /** 缩放值，使用数组可以分别指定横轴和纵轴 */
-  scale?: number | string | (number | string)[]
-  /** 横轴位移(仅支持px/百分比) */
-  offsetX?: number | string
-  /** 纵轴位移(仅支持px/百分比) */
-  offsetY?: number | string
-  /** 宽度(仅支持px/百分比) */
-  width?: number | string
-  /** 高度(仅支持px/百分比) */
-  height?: number | string
-  /** 父级宽度(仅支持px) */
-  parentWidth?: number
-  /** 父级高度(仅支持px) */
-  parentHeight?: number
-  /** 最大宽度(仅支持px/百分比) */
-  maxWidth?: number | string
-  /** 最大高度(仅支持px/百分比) */
-  maxHeight?: number | string
-  /** 最小宽度(仅支持px/百分比) */
-  minWidth?: number | string
-  /** 最小高度(仅支持px/百分比) */
-  minHeight?: number | string
-}
-
 /** 调整大小配置项 */
 export interface DomResizeOptions {
   /** 调整元素 */
@@ -97,8 +6,8 @@ export interface DomResizeOptions {
   direction?: DomResizeDirection
   /** 手动调整控制 */
   manual?: {
-    /** 类型，默认distance，distance: 调整的宽高距离，size: 调整到对应宽高大小 */
-    type?: 'distance' | 'size'
+    /** 调整模式，默认为relative，relative: 相对当前尺寸调整，absolute: 调整到对应的尺寸 */
+    mode?: 'relative' | 'absolute'
     /** 宽度(仅支持px/百分比) */
     width?: number | string
     /** 高度(仅支持px/百分比) */
@@ -133,4 +42,95 @@ export interface DomResizeOptions {
   onPointerMove?: (content: DomResizeContent) => void
   /** 指针活动结束 */
   onPointerEnd?: (content: DomResizeContent) => void
+}
+
+/** 四个方向同时调整 */
+type AllDirection = 'all';
+
+/** 单独调整一个方向 */
+type SingleDirection = 'left' | 'right' | 'top' | 'bottom';
+
+/** 两个方向同时调整 */
+type TwoDirection = 'left-top' | 'left-bottom' | 'right-top' | 'right-bottom' | 'left-right' | 'top-bottom';
+
+/** 三个方向同时调整 */
+type ThreeDirection = 'left-top-right' | 'left-bottom-right' | 'top-left-bottom' | 'top-right-bottom';
+
+/** 调整方向 */
+export type DomResizeDirection = AllDirection | SingleDirection | TwoDirection | ThreeDirection;
+
+/** 调整偏移的类型 */
+export type DomResizeOffsetType = 'position' | 'transform' | 'translate';
+
+/** 自定义样式 */
+export interface DomResizeCustomRender {
+  /** 宽度 */
+  width?: DomResizeCustomRenderMethod
+  /** 高度 */
+  height?: DomResizeCustomRenderMethod
+  /** 横轴的偏移，offset为transform时仅px可用 */
+  offsetX?: DomResizeCustomRenderMethod
+  /** 纵轴的偏移，offset为transform时仅px可用 */
+  offsetY?: DomResizeCustomRenderMethod
+}
+
+/** 自定义样式类型 */
+export type DomResizeCustomRenderMethod = (
+  value: number,
+  options: {
+    parentWidth: number
+    parentHeight: number
+  }
+) => string;
+
+/** 自定义样式，用于兼容一些无法通过当前节点获取的样式 */
+export interface DomResizeCustomStyle {
+  /**
+   * transform的变化原点，使用数组可以分别指定横轴和纵轴，默认根据内联样式决定
+   * - https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-origin
+   * - 当前功能仅会识别target的内联样式transform-origin类型，其他情况需要通过配置，确保不会有异常的偏移
+   */
+  transformOrigin?: string | string[]
+  /** 旋转度数(仅支持deg单位) */
+  rotate?: number | string
+  /** 缩放值，使用数组可以分别指定横轴和纵轴 */
+  scale?: number | string | (number | string)[]
+  /** 横轴位移(仅支持px/百分比) */
+  offsetX?: number | string
+  /** 纵轴位移(仅支持px/百分比) */
+  offsetY?: number | string
+  /** 宽度(仅支持px/百分比) */
+  width?: number | string
+  /** 高度(仅支持px/百分比) */
+  height?: number | string
+  /** 父级宽度(仅支持px) */
+  parentWidth?: number
+  /** 父级高度(仅支持px) */
+  parentHeight?: number
+  /** 最大宽度(仅支持px/百分比) */
+  maxWidth?: number | string
+  /** 最大高度(仅支持px/百分比) */
+  maxHeight?: number | string
+  /** 最小宽度(仅支持px/百分比) */
+  minWidth?: number | string
+  /** 最小高度(仅支持px/百分比) */
+  minHeight?: number | string
+}
+
+/** 调整的内容，单位px */
+export interface DomResizeContent {
+  width?: number
+  height?: number
+  offsetX?: number
+  offsetY?: number
+};
+
+/** 调整的样式 */
+export interface DomResizeStyle {
+  width?: string
+  height?: string
+  transform?: string
+  translate?: string
+  top?: string
+  left?: string
 }

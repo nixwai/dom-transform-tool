@@ -1,5 +1,5 @@
+import type { Dir } from '../../typing';
 import type { DomResizeOptions } from '../types';
-import type { Dir } from '../typing';
 import { DomSize, DomVariant } from '../../base';
 import { getPctValue, toNum } from '../../utils';
 

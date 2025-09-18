@@ -1,5 +1,5 @@
+import type { Axis } from '../../typing';
 import type { DomResizeOptions } from '../types';
-import type { Axis } from '../typing';
 import type { ResizeDomAttrs } from './resize-dom-attrs';
 
 type GetOffsetFn = (distance: number, axis: Axis, dir: 1 | -1, value: number) => { offsetCurrentAxis: number, offsetAnotherAxis: number };

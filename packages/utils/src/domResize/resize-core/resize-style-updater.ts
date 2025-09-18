@@ -1,5 +1,6 @@
-import type { DomResizeCustomRender, DomResizeOffsetType, DomResizeOptions, DomResizeStyle } from '../types';
+import type { DomResizeCustomRender, DomResizeOptions, DomResizeStyle } from '../types';
 import type { ResizeDomAttrs } from './resize-dom-attrs';
+import { createDomStyleUpdateMethod } from '../../utils';
 
 /** 设置宽或者高样式 */
 export type SetStyleWidthOrHeightFn = (value: number, property: 'width' | 'height') => DomResizeStyle;
@@ -13,13 +14,6 @@ export class ResizeStyleUpdater {
   public setStyleWidthOrHeight: SetStyleWidthOrHeightFn = () => ({});
   /** 设置位移样式 */
   public setStyleOffset: SetStyleOffset = () => ({});
-
-  /** 缓存位移样式 */
-  private cachedStyleOffset: Record<DomResizeOffsetType, { valueX: number, valueY: number }> = {
-    position: { valueX: 0, valueY: 0 },
-    transform: { valueX: 0, valueY: 0 },
-    translate: { valueX: 0, valueY: 0 },
-  };
 
   constructor(private options: DomResizeOptions, private resizeDomAttrs: ResizeDomAttrs) {
     if (options.target) {
@@ -36,35 +30,40 @@ export class ResizeStyleUpdater {
       height: this.changeByCustomRender('height'),
     };
 
-    this.setStyleWidthOrHeight = this.createChangeTargetStyle<SetStyleWidthOrHeightFn>((value, property) => {
-      return { [property]: getWidthOrHeight[property](value) };
-    });
+    this.setStyleWidthOrHeight = createDomStyleUpdateMethod<SetStyleWidthOrHeightFn, DomResizeStyle>(
+      (value, property) => ({ [property]: getWidthOrHeight[property](value) }),
+      this.targetRef,
+      this.options.disableUpdate,
+    );
   }
 
   /** 设置位移样式更新方法 */
   private setStyleOffsetUpdater() {
     if (this.options.offset) {
-      const offsetDiff = Object.entries(this.cachedStyleOffset)
-        .filter(([key]) => key !== this.options.offset)
-        .reduce((acc, [_key, { valueX, valueY }]) => ({ x: acc.x += valueX, y: acc.y += valueY }), { x: 0, y: 0 });
-
-      const logStyleOffset = (realX: number, realY: number) => {
-        this.cachedStyleOffset[this.options.offset!].valueX = realX - this.resizeDomAttrs.offsetX;
-        this.cachedStyleOffset[this.options.offset!].valueY = realY - this.resizeDomAttrs.offsetY;
-      };
-
-      const offsetHandler = this.createOffsetHandler();
-
-      this.setStyleOffset = this.createChangeTargetStyle<SetStyleOffset>((valueX, valueY) => {
-        const realX = valueX - offsetDiff.x;
-        const realY = valueY - offsetDiff.y;
-        logStyleOffset(realX, realY);
-        return offsetHandler(realX, realY);
-      });
+      this.setStyleOffset = createDomStyleUpdateMethod<SetStyleOffset, DomResizeStyle>(
+        this.createOffsetHandler(),
+        this.targetRef,
+        this.options.disableUpdate,
+      );
     }
     else {
       this.setStyleOffset = () => ({});
     }
+  }
+
+  /** 创建改变target元素的值方法 */
+  private changeByCustomRender(key: keyof DomResizeCustomRender) {
+    return (value: number) => {
+      const customRender = this.options.customRender?.[key];
+      const customValue = customRender?.(
+        value,
+        {
+          parentWidth: this.resizeDomAttrs.size.parentWidth,
+          parentHeight: this.resizeDomAttrs.size.parentHeight,
+        },
+      );
+      return customValue ?? `${value}px`;
+    };
   }
 
   /** 获取位移修改函数 */
@@ -73,15 +72,11 @@ export class ResizeStyleUpdater {
     const getOffsetY = this.changeByCustomRender('offsetY');
     // 使用position
     if (this.options.offset === 'position') {
-      return (valueX, valueY) => {
-        return { left: getOffsetX(valueX), top: getOffsetY(valueY) };
-      };
+      return (valueX, valueY) => ({ left: getOffsetX(valueX), top: getOffsetY(valueY) });
     }
     // 使用translate
     if (this.options.offset === 'translate') {
-      return (valueX, valueY) => {
-        return { translate: `${getOffsetX(valueX)} ${getOffsetY(valueY)}` };
-      };
+      return (valueX, valueY) => ({ translate: `${getOffsetX(valueX)} ${getOffsetY(valueY)}` });
     }
     // 使用transform
     if (this.options.offset === 'transform') {
@@ -98,38 +93,11 @@ export class ResizeStyleUpdater {
         beforeTransformValueStr = `${transformValue.slice(0, 4).join(',')},`;
         afterTransformValueStr = '';
       }
+      // transform 不兼容customStyle自定义，无法通过getOffsetX设置，固定px类型
       return (valueX, valueY) => {
-        // transform 不兼容customStyle自定义，固定px类型
         return { transform: `${transformName}(${beforeTransformValueStr}${valueX},${valueY}${afterTransformValueStr})` };
       };
     }
-
     return () => ({});
-  }
-
-  /** 创建改变target元素样式方法 */
-  private createChangeTargetStyle<T extends (...params: any[]) => DomResizeStyle>(fn: T): T {
-    if (!this.targetRef || this.options.disableUpdate) {
-      // 获取不到实例或者关闭更新模式下，不进行样式设置
-      return fn;
-    }
-    // 给传入的target元素设置样式
-    return ((...params) => {
-      const target = this.targetRef!.deref();
-      const styles = fn(...params);
-      if (!target) { return styles; } // 获取不到实例
-      for (const key in styles) {
-        (target.style as any)[key] = styles[key as keyof DomResizeStyle];
-      }
-      return styles;
-    }) as T;
-  }
-
-  /** 创建改变target元素的值方法 */
-  private changeByCustomRender(key: keyof DomResizeCustomRender) {
-    return (value: number) => this.options.customRender?.[key]?.(
-      value,
-      { parentWidth: this.resizeDomAttrs.size.parentWidth, parentHeight: this.resizeDomAttrs.size.parentHeight },
-    ) ?? `${value}px`;
   }
 }
