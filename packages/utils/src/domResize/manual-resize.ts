@@ -1,7 +1,7 @@
 import type { ResizeApplication, ResizingFn } from './resize-core/resize-application';
 
 export function resizeByManual(resizeApplication: ResizeApplication) {
-  if (!resizeApplication.axisParams.x.manualDistance && !resizeApplication.axisParams.y.manualDistance) {
+  if (!resizeApplication.resizeAxisParams.x.manualDistance && !resizeApplication.resizeAxisParams.y.manualDistance) {
     return;
   }
   resizeApplication.resizeByDirection(resizeHorizontal, resizeVertical, resizeHorizontalAndVertical);
@@ -10,41 +10,41 @@ export function resizeByManual(resizeApplication: ResizeApplication) {
 
 /** 调整水平方向 */
 function resizeHorizontal(resizeApplication: ResizeApplication, resizingWidthFn: ResizingFn) {
-  const { resizeDistance, styleUpdater, domAttrs, axisParams, resizeHandler } = resizeApplication;
-  const { manualDistance } = axisParams.x;
-  const domWidth = domAttrs.size.width;
-  const domOffsetY = domAttrs.offsetY;
+  const { resizeDistance, resizeStyleUpdater, resizeDomAttrs, resizeAxisParams, resizeHandler } = resizeApplication;
+  const { manualDistance } = resizeAxisParams.x;
+  const domWidth = resizeDomAttrs.size.width;
+  const domOffsetY = resizeDomAttrs.offsetY;
   const dir = resizingWidthFn === resizeHandler.resizingBackward ? -1 : 1;
   const distanceX = resizeDistance.x.total / (resizingWidthFn === resizeHandler.resizingBoth ? 2 : 1); ;
   const { value: width, offset: offsetX, otherOffset: otherOffsetY } = resizingWidthFn(domWidth, domWidth + dir * manualDistance + dir * distanceX, 'x');
   if (!resizeDistance.x.distance) { return; }
   const offsetY = domOffsetY + otherOffsetY;
-  const widthStyle = styleUpdater.setStyleWidthOrHeight(width, 'width');
-  const offsetStyle = styleUpdater.setStyleOffset(offsetX, offsetY);
+  const widthStyle = resizeStyleUpdater.setStyleWidthOrHeight(width, 'width');
+  const offsetStyle = resizeStyleUpdater.setStyleOffset(offsetX, offsetY);
   resizeApplication.updateResize({ width, offsetX, offsetY }, { ...widthStyle, ...offsetStyle });
 }
 
 /** 调整垂直方向 */
 function resizeVertical(resizeApplication: ResizeApplication, resizingHeightFn: ResizingFn) {
-  const { resizeDistance, styleUpdater, domAttrs, axisParams, resizeHandler } = resizeApplication;
-  const { manualDistance } = axisParams.y;
-  const domHeight = domAttrs.size.height;
-  const domOffsetX = domAttrs.offsetX;
+  const { resizeDistance, resizeStyleUpdater, resizeDomAttrs, resizeAxisParams, resizeHandler } = resizeApplication;
+  const { manualDistance } = resizeAxisParams.y;
+  const domHeight = resizeDomAttrs.size.height;
+  const domOffsetX = resizeDomAttrs.offsetX;
   const dir = resizingHeightFn === resizeHandler.resizingBackward ? -1 : 1;
   const distanceY = resizeDistance.y.total / (resizingHeightFn === resizeHandler.resizingBoth ? 2 : 1);
   const { value: height, offset: offsetY, otherOffset: otherOffsetX } = resizingHeightFn(domHeight, domHeight + dir * manualDistance + dir * distanceY, 'y');
   if (!resizeDistance.y.distance) { return; }
   const offsetX = domOffsetX - otherOffsetX;
-  const heightStyle = styleUpdater.setStyleWidthOrHeight(height, 'height');
-  const offsetStyle = styleUpdater.setStyleOffset(offsetX, offsetY);
+  const heightStyle = resizeStyleUpdater.setStyleWidthOrHeight(height, 'height');
+  const offsetStyle = resizeStyleUpdater.setStyleOffset(offsetX, offsetY);
   resizeApplication.updateResize({ height, offsetX, offsetY }, { ...heightStyle, ...offsetStyle });
 }
 
 /** 调整水平与垂直方向 */
 function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resizingWidthFn: ResizingFn, resizingHeightFn: ResizingFn) {
-  const { resizeDistance, styleUpdater, domAttrs, axisParams, resizeHandler } = resizeApplication;
+  const { resizeDistance, resizeStyleUpdater, resizeDomAttrs, resizeAxisParams, resizeHandler } = resizeApplication;
   const { lockAspectRatio } = resizeApplication.options;
-  const { width: domWidth, height: domHeight, aspectRatio } = domAttrs.size;
+  const { width: domWidth, height: domHeight, aspectRatio } = resizeDomAttrs.size;
 
   const updateDom = (options: { distanceX: number, distanceY: number }) => {
     const dirX = resizingWidthFn === resizeHandler.resizingBackward ? -1 : 1;
@@ -60,23 +60,23 @@ function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resiz
     }
     const offsetX = resizeOffsetX - otherOffsetX;
     const offsetY = resizeOffsetY + otherOffsetY;
-    const widthStyle = styleUpdater.setStyleWidthOrHeight(width, 'width');
-    const heightStyle = styleUpdater.setStyleWidthOrHeight(height, 'height');
-    const offsetStyle = styleUpdater.setStyleOffset(offsetX, offsetY);
+    const widthStyle = resizeStyleUpdater.setStyleWidthOrHeight(width, 'width');
+    const heightStyle = resizeStyleUpdater.setStyleWidthOrHeight(height, 'height');
+    const offsetStyle = resizeStyleUpdater.setStyleOffset(offsetX, offsetY);
     resizeApplication.updateResize({ width, height, offsetX, offsetY }, { ...widthStyle, ...heightStyle, ...offsetStyle });
   };
 
-  const { manualDistance: manualDistanceX } = axisParams.x;
-  const { manualDistance: manualDistanceY } = axisParams.y;
+  const { manualDistance: manualDistanceX } = resizeAxisParams.x;
+  const { manualDistance: manualDistanceY } = resizeAxisParams.y;
   if (lockAspectRatio) {
     if (manualDistanceX) {
-      let multiple = !axisParams.x.dir && axisParams.y.dir ? 2 : 1;
-      multiple = axisParams.x.dir && !axisParams.y.dir ? 0.5 : multiple;
+      let multiple = !resizeAxisParams.x.dir && resizeAxisParams.y.dir ? 2 : 1;
+      multiple = resizeAxisParams.x.dir && !resizeAxisParams.y.dir ? 0.5 : multiple;
       updateDom({ distanceX: manualDistanceX, distanceY: manualDistanceX / aspectRatio * multiple });
     }
     else {
-      let multiple = !axisParams.x.dir && axisParams.y.dir ? 0.5 : 1;
-      multiple = axisParams.x.dir && !axisParams.y.dir ? 2 : multiple;
+      let multiple = !resizeAxisParams.x.dir && resizeAxisParams.y.dir ? 0.5 : 1;
+      multiple = resizeAxisParams.x.dir && !resizeAxisParams.y.dir ? 2 : multiple;
       updateDom({ distanceX: manualDistanceY * aspectRatio * multiple, distanceY: manualDistanceY });
     }
   }

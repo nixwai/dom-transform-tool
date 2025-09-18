@@ -1,9 +1,9 @@
 import type { DomResizeOptions } from '../types';
 import type { Axis, Dir } from '../typing';
-import type { AxisParams } from './axis-params';
-import type { DistanceCounter } from './distance-counter';
-import type { OffsetCounter } from './offset-counter';
+import type { ResizeAxisParams } from './resize-axis-params';
 import type { ResizeDistance } from './resize-distance';
+import type { ResizeDistanceCounter } from './resize-distance-counter';
+import type { ResizeOffsetCounter } from './resize-offset-counter';
 
 /**
  * 调节函数
@@ -20,9 +20,9 @@ export class ResizeHandler {
 
   constructor(
     private options: DomResizeOptions,
-    private axisParams: AxisParams,
-    private distanceCounter: DistanceCounter,
-    private offsetCounter: OffsetCounter,
+    private resizeAxisParams: ResizeAxisParams,
+    private resizeDistanceCounter: ResizeDistanceCounter,
+    private resizeOffsetCounter: ResizeOffsetCounter,
     private resizeDistance: ResizeDistance,
   ) {
     this.createResizeValueMethod();
@@ -36,10 +36,10 @@ export class ResizeHandler {
 
   /** 向前调整（往右或者往下）长度与位移 */
   public resizingForward: ResizingFn = (startLocation, endLocation, axis) => {
-    const { originValue, minValue } = this.axisParams[axis];
-    const distance = this.distanceCounter.getDistance(startLocation, endLocation, axis, 1);
+    const { originValue, minValue } = this.resizeAxisParams[axis];
+    const distance = this.resizeDistanceCounter.getDistance(startLocation, endLocation, axis, 1);
     const value = originValue + distance;
-    const { offsetCurrentAxis, offsetAnotherAxis } = this.offsetCounter.getForwardOffset(distance, axis, 1, value);
+    const { offsetCurrentAxis, offsetAnotherAxis } = this.resizeOffsetCounter.getForwardOffset(distance, axis, 1, value);
     const resizeValue = this.getResizeValue(value, minValue);
     this.resizeDistance.logDistance(resizeValue, axis);
     return {
@@ -51,10 +51,10 @@ export class ResizeHandler {
 
   /** 向后调整（往左或者往上）长度与位移 */
   public resizingBackward: ResizingFn = (startLocation, endLocation, axis) => {
-    const { originValue, minValue } = this.axisParams[axis];
-    const distance = this.distanceCounter.getDistance(startLocation, endLocation, axis, -1);
+    const { originValue, minValue } = this.resizeAxisParams[axis];
+    const distance = this.resizeDistanceCounter.getDistance(startLocation, endLocation, axis, -1);
     const value = originValue - distance;
-    const { offsetCurrentAxis, offsetAnotherAxis } = this.offsetCounter.getBackwardOffset(distance, axis, -1, value);
+    const { offsetCurrentAxis, offsetAnotherAxis } = this.resizeOffsetCounter.getBackwardOffset(distance, axis, -1, value);
     const resizeValue = this.getResizeValue(value, minValue);
     this.resizeDistance.logDistance(resizeValue, axis);
     return {
@@ -66,11 +66,11 @@ export class ResizeHandler {
 
   /** 前后一起调整(上下或者左右)长度与位移 */
   public resizingBoth: ResizingFn = (startLocation, endLocation, axis, pointerDir = 1) => {
-    const { originValue, minValue } = this.axisParams[axis];
+    const { originValue, minValue } = this.resizeAxisParams[axis];
     // 两边一起调整时需要对数据翻倍
-    const distance = this.distanceCounter.getDistance(2 * startLocation, 2 * endLocation, axis, pointerDir);
+    const distance = this.resizeDistanceCounter.getDistance(2 * startLocation, 2 * endLocation, axis, pointerDir);
     const value = originValue + pointerDir * distance;
-    const { offsetCurrentAxis, offsetAnotherAxis } = this.offsetCounter.getBothOffset(distance, axis, pointerDir, value);
+    const { offsetCurrentAxis, offsetAnotherAxis } = this.resizeOffsetCounter.getBothOffset(distance, axis, pointerDir, value);
     const resizeValue = this.getResizeValue(value, minValue);
     this.resizeDistance.logDistance(resizeValue, axis);
     return {

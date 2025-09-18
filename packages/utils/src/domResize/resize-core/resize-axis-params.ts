@@ -1,5 +1,5 @@
 import type { DomResizeOptions } from '../types';
-import type { DomAttrs } from './dom-attrs';
+import type { ResizeDomAttrs } from './resize-dom-attrs';
 import { getPctValue } from '../../utils';
 
 interface DirectionParams {
@@ -25,7 +25,7 @@ interface DirectionParams {
 
 const DEFAULT_GRID = 0.5;
 
-export class AxisParams {
+export class ResizeAxisParams {
   x: DirectionParams = {
     originValue: 0,
     minValue: 0,
@@ -50,14 +50,14 @@ export class AxisParams {
     dir: 0,
   };
 
-  constructor(private options: DomResizeOptions, private domAttrs: DomAttrs) {
+  constructor(private options: DomResizeOptions, private resizeDomAttrs: ResizeDomAttrs) {
     this.setManualDistance();
     this.setDirection();
     this.setAxisParams();
   }
 
   private setManualDistance() {
-    const { width, height, parentWidth, parentHeight } = this.domAttrs.size;
+    const { width, height, parentWidth, parentHeight } = this.resizeDomAttrs.size;
     const manualDistanceX = this.resolveManualDistance(width, parentWidth, this.options.manual?.width);
     const manualDistanceY = this.resolveManualDistance(height, parentHeight, this.options.manual?.height);
 
@@ -80,7 +80,7 @@ export class AxisParams {
   };
 
   private setAxisParams() {
-    const { width, height, aspectRatio, maxWidth, minWidth, maxHeight, minHeight } = this.domAttrs.size;
+    const { width, height, aspectRatio, maxWidth, minWidth, maxHeight, minHeight } = this.resizeDomAttrs.size;
     // 固定的移动距离，两边都移动时需要*2
     let gridX = (this.options.grid?.[0] || DEFAULT_GRID) * (this.x.dir ? 1 : 2);
     let gridY = (this.options.grid?.[1] || DEFAULT_GRID) * (this.y.dir ? 1 : 2);

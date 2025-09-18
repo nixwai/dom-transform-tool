@@ -1,12 +1,12 @@
 import type { DomResizeContent, DomResizeOptions, DomResizeStyle } from '../types';
 import type { Axis, Dir } from '../typing';
-import { AxisParams } from './axis-params';
-import { DistanceCounter } from './distance-counter';
-import { DomAttrs } from './dom-attrs';
-import { OffsetCounter } from './offset-counter';
+import { ResizeAxisParams } from './resize-axis-params';
 import { ResizeDistance } from './resize-distance';
+import { ResizeDistanceCounter } from './resize-distance-counter';
+import { ResizeDomAttrs } from './resize-dom-attrs';
 import { ResizeHandler } from './resize-handler';
-import { StyleUpdater } from './style-updater';
+import { ResizeOffsetCounter } from './resize-offset-counter';
+import { ResizeStyleUpdater } from './resize-style-updater';
 
 /**
  * 调节函数
@@ -22,25 +22,25 @@ type ResizeDirectionFn = (resizeData: ResizeApplication, ...resizingFns: Resizin
 
 export class ResizeApplication {
   public options: DomResizeOptions = {};
-  public domAttrs: DomAttrs;
+  public resizeDomAttrs: ResizeDomAttrs;
   public resizeDistance: ResizeDistance;
-  public axisParams: AxisParams;
-  private distanceCounter: DistanceCounter;
-  public offsetCounter: OffsetCounter;
+  public resizeAxisParams: ResizeAxisParams;
+  private resizeDistanceCounter: ResizeDistanceCounter;
+  public resizeOffsetCounter: ResizeOffsetCounter;
   public resizeHandler: ResizeHandler;
-  public styleUpdater: StyleUpdater;
+  public resizeStyleUpdater: ResizeStyleUpdater;
 
   constructor(options?: DomResizeOptions) {
     if (options) {
       this.options = options;
     }
-    this.domAttrs = new DomAttrs(this.options);
-    this.axisParams = new AxisParams(this.options, this.domAttrs);
-    this.resizeDistance = new ResizeDistance(this.axisParams, this.domAttrs);
-    this.distanceCounter = new DistanceCounter(this.options, this.axisParams);
-    this.offsetCounter = new OffsetCounter(this.options, this.domAttrs);
-    this.resizeHandler = new ResizeHandler(this.options, this.axisParams, this.distanceCounter, this.offsetCounter, this.resizeDistance);
-    this.styleUpdater = new StyleUpdater(this.options, this.domAttrs);
+    this.resizeDomAttrs = new ResizeDomAttrs(this.options);
+    this.resizeAxisParams = new ResizeAxisParams(this.options, this.resizeDomAttrs);
+    this.resizeDistance = new ResizeDistance(this.resizeAxisParams, this.resizeDomAttrs);
+    this.resizeDistanceCounter = new ResizeDistanceCounter(this.options, this.resizeAxisParams);
+    this.resizeOffsetCounter = new ResizeOffsetCounter(this.options, this.resizeDomAttrs);
+    this.resizeHandler = new ResizeHandler(this.options, this.resizeAxisParams, this.resizeDistanceCounter, this.resizeOffsetCounter, this.resizeDistance);
+    this.resizeStyleUpdater = new ResizeStyleUpdater(this.options, this.resizeDomAttrs);
   }
 
   /** 清除配置的手动调整 */
@@ -64,10 +64,10 @@ export class ResizeApplication {
   /** 指针活动开始 */
   public onPointerBegin() {
     this.cacheResizeContent = {
-      width: this.domAttrs.size.width,
-      height: this.domAttrs.size.height,
-      offsetX: this.domAttrs.offsetX,
-      offsetY: this.domAttrs.offsetY,
+      width: this.resizeDomAttrs.size.width,
+      height: this.resizeDomAttrs.size.height,
+      offsetX: this.resizeDomAttrs.offsetX,
+      offsetY: this.resizeDomAttrs.offsetY,
     };
     this.options.onPointerBegin?.(this.cacheResizeContent);
   }

@@ -1,6 +1,6 @@
 import type { DomResizeOptions } from '../types';
 import type { Axis } from '../typing';
-import type { DomAttrs } from './dom-attrs';
+import type { ResizeDomAttrs } from './resize-dom-attrs';
 
 type GetOffsetFn = (distance: number, axis: Axis, dir: 1 | -1, value: number) => { offsetCurrentAxis: number, offsetAnotherAxis: number };
 type OffsetFn = (dis: number, axis: Axis, dir: 1 | -1) => { offsetCurrentAxis: number, offsetAnotherAxis: number };
@@ -23,7 +23,7 @@ const zeroOffset: OffsetFn = () => {
   return { offsetCurrentAxis: 0, offsetAnotherAxis: 0 };
 };
 
-export class OffsetCounter {
+export class ResizeOffsetCounter {
   private cosRad = 0;
   private sinRad = 0;
   /** 原始位移 */
@@ -59,7 +59,7 @@ export class OffsetCounter {
   /** 获取前后调整的位移 */
   public getBothOffset: GetOffsetFn = zeroOffset;
 
-  constructor(private options: DomResizeOptions, private domAttrs: DomAttrs) {
+  constructor(private options: DomResizeOptions, private resizeDomAttrs: ResizeDomAttrs) {
     if (!this.options.offset) { return; }
     this.setVariantParams();
     this.setOffsetParams();
@@ -68,7 +68,7 @@ export class OffsetCounter {
 
   /** 更新变换参数 */
   private setVariantParams() {
-    const { rotate, transformOriginX, transformOriginY, scaleX, scaleY } = this.domAttrs.variant;
+    const { rotate, transformOriginX, transformOriginY, scaleX, scaleY } = this.resizeDomAttrs.variant;
     const rad = rotate * Math.PI / 180;
     this.cosRad = Math.cos(rad);
     this.sinRad = Math.sin(rad);
@@ -107,9 +107,9 @@ export class OffsetCounter {
 
   /** 更新位移参数 */
   private setOffsetParams() {
-    const { offsetX, offsetY } = this.domAttrs;
-    const { width, height, minWidth, minHeight } = this.domAttrs.size;
-    const { transformOriginX, transformOriginY, scaleX, scaleY } = this.domAttrs.variant;
+    const { offsetX, offsetY } = this.resizeDomAttrs;
+    const { width, height, minWidth, minHeight } = this.resizeDomAttrs.size;
+    const { transformOriginX, transformOriginY, scaleX, scaleY } = this.resizeDomAttrs.variant;
     // 越轴改变时，才需要计算调整的偏移值
     if (this.options.crossAxis) {
       this.negativeAxiosOffset = {
@@ -144,7 +144,7 @@ export class OffsetCounter {
         const rotateCurrentPositiveOffset = distance * this.rotateCurrentAxisMultiple[axis].v1;
         const rotateAnotherPositiveOffset = distance * this.rotateAnotherAxisMultiple[axis].v1;
         return {
-          offsetCurrentAxis: this.domAttrs[this.axiosOffsetKey[axis]] + scalePositiveOffset + rotateCurrentPositiveOffset,
+          offsetCurrentAxis: this.resizeDomAttrs[this.axiosOffsetKey[axis]] + scalePositiveOffset + rotateCurrentPositiveOffset,
           offsetAnotherAxis: rotateAnotherPositiveOffset,
         };
       };
@@ -181,7 +181,7 @@ export class OffsetCounter {
         const rotateCurrentPositiveOffset = distance * this.rotateCurrentAxisMultiple[axis].v2;
         const rotateAnotherPositiveOffset = distance * this.rotateAnotherAxisMultiple[axis].v2;
         return {
-          offsetCurrentAxis: this.domAttrs[this.axiosOffsetKey[axis]] + distance + scalePositiveOffset + rotateCurrentPositiveOffset,
+          offsetCurrentAxis: this.resizeDomAttrs[this.axiosOffsetKey[axis]] + distance + scalePositiveOffset + rotateCurrentPositiveOffset,
           offsetAnotherAxis: rotateAnotherPositiveOffset,
         };
       };
@@ -213,9 +213,9 @@ export class OffsetCounter {
 
     /** 获取前后调整的位移 */
     this.getBothOffset = createResizingOffset(() => {
-      const { offsetX, offsetY } = this.domAttrs;
-      const { width, height } = this.domAttrs.size;
-      const { transformOriginX, rotate, transformOriginY, scaleX, scaleY } = this.domAttrs.variant;
+      const { offsetX, offsetY } = this.resizeDomAttrs;
+      const { width, height } = this.resizeDomAttrs.size;
+      const { transformOriginX, rotate, transformOriginY, scaleX, scaleY } = this.resizeDomAttrs.variant;
       const rad = rotate * Math.PI / 180;
       const cosRad = Math.cos(rad);
       const sinRad = Math.sin(rad);
@@ -252,7 +252,7 @@ export class OffsetCounter {
         const distanceAnotherOffset = rotateAnotherBothOffset;
         return {
           getOffsetPositive: () => ({
-            offsetCurrentAxis: this.domAttrs[this.axiosOffsetKey[axis]] + distanceCurrentOffset,
+            offsetCurrentAxis: this.resizeDomAttrs[this.axiosOffsetKey[axis]] + distanceCurrentOffset,
             offsetAnotherAxis: distanceAnotherOffset,
           }),
           getOffsetNegative: () => ({

@@ -1,6 +1,6 @@
 import type { Axis } from '../typing';
-import type { AxisParams } from './axis-params';
-import type { DomAttrs } from './dom-attrs';
+import type { ResizeAxisParams } from './resize-axis-params';
+import type { ResizeDomAttrs } from './resize-dom-attrs';
 
 interface AxisDistance {
   /** 调整后的值 */
@@ -24,13 +24,13 @@ export class ResizeDistance {
     distance: 0,
   };
 
-  constructor(private axiosParams: AxisParams, private domAttrs: DomAttrs) {
+  constructor(private axiosParams: ResizeAxisParams, private resizeDomAttrs: ResizeDomAttrs) {
     this.setDistance();
   };
 
   private setDistance() {
-    this.x.value = this.domAttrs.size.width;
-    this.y.value = this.domAttrs.size.height;
+    this.x.value = this.resizeDomAttrs.size.width;
+    this.y.value = this.resizeDomAttrs.size.height;
     this.x.total = 0;
     this.y.total = 0;
     this.x.distance = 0;

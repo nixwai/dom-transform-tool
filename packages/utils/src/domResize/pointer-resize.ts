@@ -9,46 +9,46 @@ export function resizeByPointer(resizeApplication: ResizeApplication) {
 
 /** 调整水平方向 */
 function resizeHorizontal(resizeApplication: ResizeApplication, resizingWidthFn: ResizingFn) {
-  const { resizeDistance, styleUpdater, domAttrs, axisParams } = resizeApplication;
-  const { offsetY: domOffsetY, pointerDir } = domAttrs;
+  const { resizeDistance, resizeStyleUpdater, resizeDomAttrs, resizeAxisParams } = resizeApplication;
+  const { offsetY: domOffsetY, pointerDir } = resizeDomAttrs;
   // 延续之前的移动距离
-  const dir = axisParams.x.dir || 0.5 * pointerDir.x;
+  const dir = resizeAxisParams.x.dir || 0.5 * pointerDir.x;
   const distanceX = resizeDistance.x.total;
   beginResizeContent(resizeApplication, ({ startX, endX }) => {
     const { value: width, offset: offsetX, otherOffset: otherOffsetY } = resizingWidthFn(startX, endX + dir * distanceX, 'x', pointerDir.x);
     if (!resizeDistance.x.distance) { return; }
     const offsetY = domOffsetY + otherOffsetY;
-    const widthStyle = styleUpdater.setStyleWidthOrHeight(width, 'width');
-    const offsetStyle = styleUpdater.setStyleOffset(offsetX, offsetY);
+    const widthStyle = resizeStyleUpdater.setStyleWidthOrHeight(width, 'width');
+    const offsetStyle = resizeStyleUpdater.setStyleOffset(offsetX, offsetY);
     resizeApplication.updateResize({ width, offsetX, offsetY }, { ...widthStyle, ...offsetStyle });
   });
 }
 
 /** 调整垂直方向 */
 function resizeVertical(resizeApplication: ResizeApplication, resizingHeightFn: ResizingFn) {
-  const { resizeDistance, styleUpdater, domAttrs, axisParams } = resizeApplication;
-  const { offsetX: domOffsetX, pointerDir } = domAttrs;
+  const { resizeDistance, resizeStyleUpdater, resizeDomAttrs, resizeAxisParams } = resizeApplication;
+  const { offsetX: domOffsetX, pointerDir } = resizeDomAttrs;
   // 延续之前的移动距离
-  const dir = axisParams.y.dir || 0.5 * pointerDir.y;
+  const dir = resizeAxisParams.y.dir || 0.5 * pointerDir.y;
   const distanceY = resizeDistance.y.total;
   beginResizeContent(resizeApplication, ({ startY, endY }) => {
     const { value: height, offset: offsetY, otherOffset: otherOffsetX } = resizingHeightFn(startY, endY + dir * distanceY, 'y', pointerDir.y);
     if (!resizeDistance.y.distance) { return; }
     const offsetX = domOffsetX - otherOffsetX;
-    const heightStyle = styleUpdater.setStyleWidthOrHeight(height, 'height');
-    const offsetStyle = styleUpdater.setStyleOffset(offsetX, offsetY);
+    const heightStyle = resizeStyleUpdater.setStyleWidthOrHeight(height, 'height');
+    const offsetStyle = resizeStyleUpdater.setStyleOffset(offsetX, offsetY);
     resizeApplication.updateResize({ height, offsetX, offsetY }, { ...heightStyle, ...offsetStyle });
   });
 }
 
 /** 调整水平与垂直方向 */
 function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resizingWidthFn: ResizingFn, resizingHeightFn: ResizingFn) {
-  const { options, resizeDistance, styleUpdater, domAttrs, axisParams } = resizeApplication;
-  const { size: { aspectRatio }, pointerDir } = domAttrs;
+  const { options, resizeDistance, resizeStyleUpdater, resizeDomAttrs, resizeAxisParams } = resizeApplication;
+  const { size: { aspectRatio }, pointerDir } = resizeDomAttrs;
   const { lockAspectRatio } = options;
   // 延续之前的移动距离
-  const dirX = axisParams.x.dir || 0.5 * pointerDir.x;
-  const dirY = axisParams.y.dir || 0.5 * pointerDir.y;
+  const dirX = resizeAxisParams.x.dir || 0.5 * pointerDir.x;
+  const dirY = resizeAxisParams.y.dir || 0.5 * pointerDir.y;
   const distanceX = resizeDistance.x.total;
   const distanceY = resizeDistance.y.total;
   const updateDom = (coord: { startX: number, startY: number, endX: number, endY: number }) => {
@@ -60,9 +60,9 @@ function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resiz
     }
     const offsetX = resizeOffsetX - otherOffsetX;
     const offsetY = resizeOffsetY + otherOffsetY;
-    const widthStyle = styleUpdater.setStyleWidthOrHeight(width, 'width');
-    const heightStyle = styleUpdater.setStyleWidthOrHeight(height, 'height');
-    const offsetStyle = styleUpdater.setStyleOffset(offsetX, offsetY);
+    const widthStyle = resizeStyleUpdater.setStyleWidthOrHeight(width, 'width');
+    const heightStyle = resizeStyleUpdater.setStyleWidthOrHeight(height, 'height');
+    const offsetStyle = resizeStyleUpdater.setStyleOffset(offsetX, offsetY);
     resizeApplication.updateResize({ width, height, offsetX, offsetY }, { ...widthStyle, ...heightStyle, ...offsetStyle });
   };
 
@@ -70,16 +70,16 @@ function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resiz
     // 固定比例时，宽度根据鼠标位置决定，高度的调整根据宽度的变化与元素宽高比例决定
     // 根据宽高调整的方向处理
     let dir = resizingWidthFn === resizingHeightFn ? 1 : -1;
-    const isBothX = !axisParams.x.dir;
-    const isBothY = !axisParams.y.dir;
+    const isBothX = !resizeAxisParams.x.dir;
+    const isBothY = !resizeAxisParams.y.dir;
     if (isBothX || isBothY) {
       if (!isBothY) {
         // x轴可以左右移动，但y轴固定方向
-        dir = -dir * axisParams.y.dir * pointerDir.x * 2;
+        dir = -dir * resizeAxisParams.y.dir * pointerDir.x * 2;
       }
       else if (!isBothX) {
         // y轴可以上下移动，但x轴固定方向
-        dir = -dir * axisParams.x.dir * pointerDir.y / 2;
+        dir = -dir * resizeAxisParams.x.dir * pointerDir.y / 2;
       }
       else {
         // x轴和y轴都可以左右上下移动
@@ -147,7 +147,7 @@ function getMoveHandler(
   resizeApplication: ResizeApplication,
   moveFn: (coord: { startX: number, endX: number, startY: number, endY: number }) => void,
 ) {
-  const { scaleX, scaleY, rotate } = resizeApplication.domAttrs.variant;
+  const { scaleX, scaleY, rotate } = resizeApplication.resizeDomAttrs.variant;
   // 计算起始点坐标
   const clientX = resizeApplication.options.pointer!.clientX;
   const clientY = resizeApplication.options.pointer!.clientY;

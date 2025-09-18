@@ -1,12 +1,12 @@
 import type { DomResizeCustomRender, DomResizeOffsetType, DomResizeOptions, DomResizeStyle } from '../types';
-import type { DomAttrs } from './dom-attrs';
+import type { ResizeDomAttrs } from './resize-dom-attrs';
 
 /** 设置宽或者高样式 */
 export type SetStyleWidthOrHeightFn = (value: number, property: 'width' | 'height') => DomResizeStyle;
 /** 设置位移样式 */
 export type SetStyleOffset = (valueX: number, valueY: number) => DomResizeStyle;
 
-export class StyleUpdater {
+export class ResizeStyleUpdater {
   private targetRef?: WeakRef<HTMLDivElement>;
 
   /** 设置宽或者高样式 */
@@ -21,7 +21,7 @@ export class StyleUpdater {
     translate: { valueX: 0, valueY: 0 },
   };
 
-  constructor(private options: DomResizeOptions, private domAttrs: DomAttrs) {
+  constructor(private options: DomResizeOptions, private resizeDomAttrs: ResizeDomAttrs) {
     if (options.target) {
       this.targetRef = new WeakRef(options.target);
     }
@@ -49,8 +49,8 @@ export class StyleUpdater {
         .reduce((acc, [_key, { valueX, valueY }]) => ({ x: acc.x += valueX, y: acc.y += valueY }), { x: 0, y: 0 });
 
       const logStyleOffset = (realX: number, realY: number) => {
-        this.cachedStyleOffset[this.options.offset!].valueX = realX - this.domAttrs.offsetX;
-        this.cachedStyleOffset[this.options.offset!].valueY = realY - this.domAttrs.offsetY;
+        this.cachedStyleOffset[this.options.offset!].valueX = realX - this.resizeDomAttrs.offsetX;
+        this.cachedStyleOffset[this.options.offset!].valueY = realY - this.resizeDomAttrs.offsetY;
       };
 
       const offsetHandler = this.createOffsetHandler();
@@ -85,7 +85,7 @@ export class StyleUpdater {
     }
     // 使用transform
     if (this.options.offset === 'transform') {
-      const { transformName, transformValue } = this.domAttrs.variant;
+      const { transformName, transformValue } = this.resizeDomAttrs.variant;
       let beforeTransformValueStr = '';
       let afterTransformValueStr = '';
       if (transformValue.length > 6) {
@@ -129,7 +129,7 @@ export class StyleUpdater {
   private changeByCustomRender(key: keyof DomResizeCustomRender) {
     return (value: number) => this.options.customRender?.[key]?.(
       value,
-      { parentWidth: this.domAttrs.size.parentWidth, parentHeight: this.domAttrs.size.parentHeight },
+      { parentWidth: this.resizeDomAttrs.size.parentWidth, parentHeight: this.resizeDomAttrs.size.parentHeight },
     ) ?? `${value}px`;
   }
 }

@@ -1,9 +1,9 @@
 import type { DomResizeOptions } from '../types';
 import type { Dir } from '../typing';
-import { DomSize, DomVariant } from '../../core';
+import { DomSize, DomVariant } from '../../base';
 import { getPctValue, toNum } from '../../utils';
 
-export class DomAttrs {
+export class ResizeDomAttrs {
   /** 水平偏移值 */
   offsetX: number = 0;
   /** 垂直偏移值 */
