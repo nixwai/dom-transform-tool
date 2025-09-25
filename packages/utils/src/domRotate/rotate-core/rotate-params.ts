@@ -3,10 +3,16 @@ import type { RotateDomAttrs } from './rotate-dom-attrs';
 import { toNum } from '../../utils';
 
 export class RotateParams {
+  /** 手动调整的角度 */
   public manualRotate = 0;
+  /** 原值 */
+  public originValue = 0;
+  /** 最小值 */
+  public minValue = 0;
 
   constructor(private options: DomRotateOptions, private domRotateAttrs: RotateDomAttrs) {
     this.setManualDeg();
+    this.setParams();
   }
 
   private setManualDeg() {
@@ -20,5 +26,9 @@ export class RotateParams {
       }
     }
     this.manualRotate = rotateDeg;
+  }
+
+  private setParams() {
+    this.originValue = this.domRotateAttrs.variant.rotate;
   }
 }

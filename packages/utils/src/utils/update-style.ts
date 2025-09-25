@@ -12,10 +12,11 @@ export function updateDomStyle<S>(targetRef: WeakRef<HTMLDivElement>, styles: S)
 }
 
 /**
- * 创建改变元素样式方法
+ * 创建改变元素样式方法，如果targetRef存在且disableUpdate不为true，则修改元素样式
  * @param getStyleFn 获取样式方法
  * @param targetRef 目标元素
  * @param disableUpdate 是否关闭更新
+ * @returns 改变元素样式方法，该方法调用时无论是否有改变样式都会返回样式对象
  */
 export function createDomStyleUpdateMethod<T extends (...params: any[]) => S, S>(
   getStyleFn: T,

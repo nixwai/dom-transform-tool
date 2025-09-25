@@ -1,8 +1,3 @@
-/** 调整的样式 */
-export interface DomRotateStyle {
-  rotate?: string
-}
-
 /** 调整旋转配置项 */
 export interface DomRotateOptions {
   /** 调整元素 */
@@ -16,4 +11,26 @@ export interface DomRotateOptions {
   }
   /** 指针控制事件 */
   pointer?: PointerEvent
+  /** 自定义渲染 */
+  customRender?: DomRotateCustomRender
+  /** 关闭对target元素的更新，关闭后需通过callback方法手动给元素添加样式 */
+  disableUpdate?: boolean
+  /** 调整回调 */
+  callback?: (content: DomRotateContent, style: DomRotateStyle) => void
+}
+
+/** 调整的样式 */
+export interface DomRotateCustomRender {
+  /** 旋转值 */
+  rotate?: (value: number) => string
+}
+
+/** 旋转内容 */
+export interface DomRotateContent {
+  rotate?: number
+}
+
+/** 调整的样式 */
+export interface DomRotateStyle {
+  rotate?: string
 }

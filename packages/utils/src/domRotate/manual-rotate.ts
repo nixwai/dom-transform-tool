@@ -1,13 +1,12 @@
 import type { RotateApplication } from './rotate-core/rotate-application';
 
 export function rotateByManual(rotateApplication: RotateApplication) {
-  const { options, domRotateAttrs } = rotateApplication;
-  const { manual } = options;
-  if (!manual) { return; }
-  const { mode, rotate } = manual;
-  const rotateParams = new RotateParams(options, domRotateAttrs);
-  if (mode === 'relative') {
-    rotateParams.setManualDeg();
+  if (!rotateApplication.rotateParams.manualRotate) {
+    return;
   }
-  else {}
+  const { rotateParams, rotateHandler, rotateAngle, rotateStyleUpdater } = rotateApplication;
+  const angle = rotateHandler.rotating(rotateParams.manualRotate);
+  if (!rotateAngle.angle) { return; }
+  const rotateStyle = rotateStyleUpdater.setStyleRotate(angle);
+  rotateApplication.updateRotate({ rotate: angle }, rotateStyle);
 }
