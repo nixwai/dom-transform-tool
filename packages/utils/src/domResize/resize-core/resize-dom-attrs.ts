@@ -43,8 +43,7 @@ export class ResizeDomAttrs {
 
   /** 初始化指针点击的位置 */
   private updatePointerDirection() {
-    if (!this.options.target) { return; }
-    if (!this.options.pointer) {
+    if (!this.options.target || !this.options.pointer) {
       this.pointerDir.x = 1;
       this.pointerDir.y = 1;
       return;

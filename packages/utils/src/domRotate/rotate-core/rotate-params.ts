@@ -8,7 +8,7 @@ export class RotateParams {
   /** 原值 */
   public originValue = 0;
   /** 最小值 */
-  public minValue = 0;
+  public minValue = -Infinity;
 
   constructor(private options: DomRotateOptions, private domRotateAttrs: RotateDomAttrs) {
     this.setManualDeg();

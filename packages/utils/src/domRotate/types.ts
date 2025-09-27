@@ -17,6 +17,12 @@ export interface DomRotateOptions {
   disableUpdate?: boolean
   /** 调整回调 */
   callback?: (content: DomRotateContent, style: DomRotateStyle) => void
+  /** 指针活动开始 */
+  onPointerBegin?: (content: DomRotateContent) => void
+  /** 指针活动 */
+  onPointerMove?: (content: DomRotateContent) => void
+  /** 指针活动结束 */
+  onPointerEnd?: (content: DomRotateContent) => void
 }
 
 /** 调整的样式 */
