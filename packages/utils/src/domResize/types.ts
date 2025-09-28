@@ -1,4 +1,4 @@
-/** 调整大小配置项 */
+/** DomResize的配置项 */
 export interface DomResizeOptions {
   /** 调整元素 */
   target?: HTMLDivElement
@@ -56,13 +56,13 @@ type TwoDirection = 'left-top' | 'left-bottom' | 'right-top' | 'right-bottom' | 
 /** 三个方向同时调整 */
 type ThreeDirection = 'left-top-right' | 'left-bottom-right' | 'top-left-bottom' | 'top-right-bottom';
 
-/** 调整方向 */
+/** DomResize的调整方向 */
 export type DomResizeDirection = AllDirection | SingleDirection | TwoDirection | ThreeDirection;
 
-/** 调整偏移的类型 */
+/** DomResize的调整偏移的类型 */
 export type DomResizeOffsetType = 'position' | 'transform' | 'translate';
 
-/** 自定义样式 */
+/** DomResize的自定义渲染样式 */
 export interface DomResizeCustomRender {
   /** 宽度 */
   width?: DomResizeCustomRenderMethod
@@ -74,7 +74,7 @@ export interface DomResizeCustomRender {
   offsetY?: DomResizeCustomRenderMethod
 }
 
-/** 自定义样式类型 */
+/** DomResize的自定义渲染样式的方法 */
 export type DomResizeCustomRenderMethod = (
   value: number,
   options: {
@@ -83,7 +83,7 @@ export type DomResizeCustomRenderMethod = (
   }
 ) => string;
 
-/** 自定义样式，用于兼容一些无法通过当前节点获取的样式 */
+/** DomResize的自定义样式，用于兼容一些无法通过当前节点获取的样式 */
 export interface DomResizeCustomStyle {
   /**
    * transform的变化原点，使用数组可以分别指定横轴和纵轴，默认根据内联样式决定
@@ -117,7 +117,7 @@ export interface DomResizeCustomStyle {
   minHeight?: number | string
 }
 
-/** 调整的内容，单位px */
+/** DomResize的内容，单位px */
 export interface DomResizeContent {
   width?: number
   height?: number
@@ -125,7 +125,7 @@ export interface DomResizeContent {
   offsetY?: number
 };
 
-/** 调整的样式 */
+/** DomResize的样式 */
 export interface DomResizeStyle {
   width?: string
   height?: string

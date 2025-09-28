@@ -92,7 +92,11 @@ export class DomVariant {
     }
   }
 
-  /** 变化原点 */
+  /**
+   * 变化原点
+   * @param domStyles DOM样式
+   * @param transformOrigin 变换原点样式，有传入时可以更加精准获取变化原点
+   */
   public setTransformOrigin(domStyles: CSSStyleDeclaration, transformOrigin?: string | string[]) {
     if (transformOrigin) {
       this.resolveTransformOrigin(transformOrigin);

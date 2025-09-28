@@ -1,4 +1,3 @@
-import type { Dir } from '../../typing';
 import type { DomResizeOptions } from '../types';
 import { DomSize, DomVariant } from '../../base';
 import { getPctValue, toNum } from '../../utils';
@@ -9,21 +8,12 @@ export class ResizeDomAttrs {
   /** 垂直偏移值 */
   offsetY: number = 0;
 
-  /** 鼠标位置 */
-  pointerDir: {
-    /** 水平方向，1: 前方，-1: 后方 */
-    x: Dir
-    /** 垂直方向，1: 前方，-1: 后方 */
-    y: Dir
-  } = { x: 1, y: 1 };
-
   public variant = new DomVariant();
   public size = new DomSize();
 
   constructor(private options: DomResizeOptions) {
     this.updateTargetAttrsInfo();
     this.updateOffsetInfo();
-    this.updatePointerDirection();
     this.customDomAttrs();
     this.updateSizeConstraints();
   }
@@ -39,30 +29,6 @@ export class ResizeDomAttrs {
 
   private updateSizeConstraints() {
     this.size.lockWidthHeightRatio(this.options.lockAspectRatio || false);
-  }
-
-  /** 初始化指针点击的位置 */
-  private updatePointerDirection() {
-    if (!this.options.target || !this.options.pointer) {
-      this.pointerDir.x = 1;
-      this.pointerDir.y = 1;
-      return;
-    }
-
-    const rect = this.options.target.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    // 鼠标相对于元素中心的坐标
-    const pointerX = this.options.pointer.clientX - centerX;
-    const pointerY = this.options.pointer.clientY - centerY;
-    // 旋转角度（转换为弧度）
-    const angleRad = -this.variant.rotate * Math.PI / 180;
-    // 应用逆时针旋转矩阵
-    const rotatedX = pointerX * Math.cos(angleRad) - pointerY * Math.sin(angleRad);
-    const rotatedY = pointerX * Math.sin(angleRad) + pointerY * Math.cos(angleRad);
-    // 根据旋转后的坐标判断方向
-    this.pointerDir.x = rotatedX > 0 ? 1 : -1;
-    this.pointerDir.y = rotatedY > 0 ? 1 : -1;
   }
 
   /** 更新偏移信息 */
