@@ -5,7 +5,8 @@ export function rotateByManual(rotateApplication: RotateApplication) {
     return;
   }
   const { rotateParams, rotateHandler, rotateAngle, rotateStyleUpdater } = rotateApplication;
-  const angle = rotateHandler.rotating(rotateParams.manualRotate);
+  const lastRotateAngle = rotateAngle.total;
+  const angle = rotateHandler.rotating(rotateParams.manualRotate + lastRotateAngle);
   if (!rotateAngle.angle) { return; }
   const rotateStyle = rotateStyleUpdater.setStyleRotate(angle);
   rotateApplication.updateRotate({ rotate: angle }, rotateStyle);

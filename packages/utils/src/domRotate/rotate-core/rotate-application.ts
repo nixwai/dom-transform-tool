@@ -17,9 +17,9 @@ export class RotateApplication {
     if (options) { this.options = options; }
     this.rotateDomAttrs = new RotateDomAttrs(this.options);
     this.rotateParams = new RotateParams(this.options, this.rotateDomAttrs);
-    this.rotateAngle = new RotateAngle(this.rotateParams, this.rotateDomAttrs);
+    this.rotateAngle = new RotateAngle(this.rotateDomAttrs);
     this.rotateStyleUpdater = new RotateStyleUpdater(this.options);
-    this.rotateHandler = new ResizeHandler(this.rotateParams, this.rotateAngle);
+    this.rotateHandler = new ResizeHandler(this.options, this.rotateParams, this.rotateAngle);
   }
 
   /** 清除配置的指针 */

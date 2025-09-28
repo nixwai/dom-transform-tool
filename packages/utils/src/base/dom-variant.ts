@@ -8,6 +8,8 @@ export class DomVariant {
   transformName = 'matrix';
   /** transform值 */
   transformValue = [1, 0, 0, 1, 0, 0];
+  /** 变形原点 */
+  originPosition = { x: 0, y: 0 };
   /** 横轴变形原点相对位置 */
   transformOriginX = 0.5;
   /** 纵轴变形原点相对位置 */
@@ -98,13 +100,15 @@ export class DomVariant {
    * @param transformOrigin 变换原点样式，有传入时可以更加精准获取变化原点
    */
   public setTransformOrigin(domStyles: CSSStyleDeclaration, transformOrigin?: string | string[]) {
+    const domTransformOriginList = domStyles.transformOrigin.split(/\s+/);
+    this.originPosition.x = toNum(domTransformOriginList[0]);
+    this.originPosition.y = toNum(domTransformOriginList[1]);
     if (transformOrigin) {
       this.resolveTransformOrigin(transformOrigin);
     }
     else {
-      const domTransformOriginList = domStyles.transformOrigin.split(' ');
-      this.transformOriginX = toNum(domTransformOriginList[0]) / toNum(domStyles.width);
-      this.transformOriginY = toNum(domTransformOriginList[1]) / toNum(domStyles.height);
+      this.transformOriginX = this.originPosition.x / toNum(domStyles.width);
+      this.transformOriginY = this.originPosition.y / toNum(domStyles.height);
     }
   }
 

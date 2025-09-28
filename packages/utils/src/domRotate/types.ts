@@ -1,4 +1,4 @@
-/** 调整旋转配置项 */
+/** DomRotate的配置项 */
 export interface DomRotateOptions {
   /** 调整元素 */
   target?: HTMLDivElement
@@ -11,8 +11,12 @@ export interface DomRotateOptions {
   }
   /** 指针控制事件 */
   pointer?: PointerEvent
+  /** 固定每次改变的度数，单位deg，需大于0 */
+  step?: number
   /** 自定义渲染 */
   customRender?: DomRotateCustomRender
+  /** 自定义样式，用于兼容一些无法通过当前节点获取的样式 */
+  customStyle?: DomRotateCustomStyle
   /** 关闭对target元素的更新，关闭后需通过callback方法手动给元素添加样式 */
   disableUpdate?: boolean
   /** 调整回调 */
@@ -25,18 +29,28 @@ export interface DomRotateOptions {
   onPointerEnd?: (content: DomRotateContent) => void
 }
 
-/** 调整的样式 */
+/** DomRotate的自定义渲染样式 */
 export interface DomRotateCustomRender {
   /** 旋转值 */
   rotate?: (value: number) => string
 }
 
-/** 旋转内容 */
+/** DomRotate的内容 */
 export interface DomRotateContent {
   rotate?: number
 }
 
-/** 调整的样式 */
+/** DomRotate的样式 */
 export interface DomRotateStyle {
   rotate?: string
+}
+
+/** DomRotate的自定义样式，用于兼容一些无法通过当前节点获取的样式 */
+export interface DomRotateCustomStyle {
+  /** 旋转值(仅支持deg单位) */
+  rotate?: number | string
+  /** 最小旋转值[-180~180](仅支持deg单位) */
+  minRotate?: number | string
+  /** 最大旋转值[-180~180](仅支持deg单位) */
+  maxRotate?: number | string
 }

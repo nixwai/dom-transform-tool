@@ -5,10 +5,12 @@ import { toNum } from '../../utils';
 export class RotateParams {
   /** 手动调整的角度 */
   public manualRotate = 0;
-  /** 原值 */
+  /** 原角度值 */
   public originValue = 0;
-  /** 最小值 */
+  /** 最小可调整的角度值 */
   public minValue = -Infinity;
+  /** 最大可调整的角度值 */
+  public maxValue = Infinity;
 
   constructor(private options: DomRotateOptions, private domRotateAttrs: RotateDomAttrs) {
     this.setManualDeg();
@@ -29,6 +31,16 @@ export class RotateParams {
   }
 
   private setParams() {
-    this.originValue = this.domRotateAttrs.variant.rotate;
+    const { variant, maxRotate, minRotate } = this.domRotateAttrs;
+    this.originValue = variant.rotate % 180;
+    const step = this.options.step;
+    if (step && step > 0) {
+      this.minValue = Math.ceil((minRotate - this.originValue) / step) * step;
+      this.maxValue = Math.floor((maxRotate - this.originValue) / step) * step;
+    }
+    else {
+      this.minValue = minRotate - this.originValue;
+      this.maxValue = maxRotate - this.originValue;
+    }
   }
 }
