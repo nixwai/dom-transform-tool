@@ -6,7 +6,7 @@ export function rotateByPointer(rotateApplication: RotateApplication) {
   }
   const pointerPosition = getPointerPosition(rotateApplication);
   const lastRotateAngle = rotateApplication.rotateAngle.total;
-  beginRotateContent(rotateApplication, ({ startX, endX, startY, endY }) => {
+  return beginRotateContent(rotateApplication, ({ startX, endX, startY, endY }) => {
     const { rotateHandler, rotateAngle, rotateStyleUpdater } = rotateApplication;
     const moveX = pointerPosition.x - (startX - endX);
     const moveY = pointerPosition.y - (startY - endY);
@@ -86,39 +86,45 @@ function beginRotateContent(
   rotateApplication: RotateApplication,
   moveFn: (coord: { startX: number, endX: number, startY: number, endY: number }) => void,
 ) {
-  const target = rotateApplication.options.target || document.body;
+  const { options } = rotateApplication;
+  if (!options.pointer) { return; }
+
+  const target = options.pointerTarget || options.target || document.body;
   const targetRef = new WeakRef(target);
-  if (!rotateApplication.options.pointer) { return; }
   // 开始
-  const pointerId = rotateApplication.options.pointer.pointerId;
+  const pointerId = options.pointer.pointerId;
   if (!rotatePointerIdSet.has(pointerId)) {
     rotatePointerIdSet.add(pointerId);
-    target.setPointerCapture(rotateApplication.options.pointer.pointerId);
+    target.setPointerCapture(options.pointer.pointerId);
   }
   rotateApplication.onPointerBegin();
 
   // 移动
-  const startX = rotateApplication.options.pointer.clientX;
-  const startY = rotateApplication.options.pointer.clientY;
+  const startX = options.pointer.clientX;
+  const startY = options.pointer.clientY;
   const moveHandler = (moveEvent: PointerEvent) => {
     const endX = moveEvent.clientX;
     const endY = moveEvent.clientY;
     moveFn({ startX, endX, startY, endY });
     rotateApplication.onPointerMove();
-  }; ;
+  };
   target.addEventListener('pointermove', moveHandler);
 
   // 结束
-  const upHandler = (overEvent: PointerEvent) => {
+  const endHandler = () => {
     const targetDeref = targetRef.deref();
-    targetDeref?.releasePointerCapture(overEvent.pointerId);
-    rotatePointerIdSet.delete(overEvent.pointerId);
+    targetDeref?.releasePointerCapture(pointerId);
+    rotatePointerIdSet.delete(pointerId);
     targetDeref?.removeEventListener('pointermove', moveHandler);
-    targetDeref?.removeEventListener('pointerup', upHandler);
-    targetDeref?.removeEventListener('pointercancel', upHandler);
+    targetDeref?.removeEventListener('pointerup', endHandler);
+    targetDeref?.removeEventListener('pointercancel', endHandler);
     rotateApplication.clearPointer();
     rotateApplication.onPointerEnd();
   };
-  target.addEventListener('pointerup', upHandler);
-  target.addEventListener('pointercancel', upHandler);
+  if (!options.disablePointerEnd) {
+    target.addEventListener('pointerup', endHandler);
+    target.addEventListener('pointercancel', endHandler);
+  }
+
+  return endHandler;
 }

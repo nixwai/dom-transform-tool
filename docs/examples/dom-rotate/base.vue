@@ -4,19 +4,13 @@ import { domRotate } from '../../../packages/utils/src/index';
 
 const rotateTarget1 = ref<HTMLDivElement>();
 
-const maxRotate = ref<string>();
-const minRotate = ref<string>();
 const step = ref<string>();
 
-function handleTargetResize(event: PointerEvent) {
+function handleTargetRotate(event: PointerEvent) {
   domRotate({
     target: rotateTarget1.value,
     pointer: event,
     step: Number(step.value) || undefined,
-    customStyle: {
-      maxRotate: maxRotate.value && Number(maxRotate.value),
-      minRotate: minRotate.value && Number(minRotate.value),
-    },
   });
 }
 
@@ -25,23 +19,11 @@ function changeTargetRotate(deg: number) {
     target: rotateTarget1.value,
     manual: { rotate: deg },
     step: Number(step.value) || undefined,
-    customStyle: {
-      maxRotate: maxRotate.value && Number(maxRotate.value),
-      minRotate: minRotate.value && Number(minRotate.value),
-    },
   });
 }
 </script>
 
 <template>
-  <div class="flex gap-1 mt-4">
-    maxRotate: <input v-model="maxRotate" class="b-1 b-gray b-solid px-1 b-rounded">
-  </div>
-
-  <div class="flex gap-1 mt-4">
-    minRotate: <input v-model="minRotate" class="b-1 b-gray b-solid px-1 b-rounded">
-  </div>
-
   <div class="flex gap-1 mt-4">
     step: <input v-model="step" class="b-1 b-gray b-solid px-1 b-rounded">
   </div>
@@ -62,7 +44,7 @@ function changeTargetRotate(deg: number) {
     <div
       ref="rotateTarget1"
       class="w-60 h-30 position-absolute bg-blue min-w-10 min-h-10 max-w-100 left-[200px] max-h-100 top-[200px]"
-      @pointerdown.stop.prevent="handleTargetResize"
+      @pointerdown.stop.prevent="handleTargetRotate"
     />
   </div>
 </template>

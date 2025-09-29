@@ -12,7 +12,7 @@ export function resizeByPointer(resizeApplication: ResizeApplication) {
   if (!resizeApplication.options.pointer) {
     return;
   }
-  resizeApplication.resizeByDirection(resizeHorizontal, resizeVertical, resizeHorizontalAndVertical);
+  return resizeApplication.resizeByDirection(resizeHorizontal, resizeVertical, resizeHorizontalAndVertical);
 }
 
 /** 调整水平方向 */
@@ -23,7 +23,7 @@ function resizeHorizontal(resizeApplication: ResizeApplication, resizingWidthFn:
   // 延续之前的移动距离
   const dir = resizeAxisParams.x.dir || 0.5 * pointerDir.x;
   const lastDistanceX = dir * resizeDistance.x.total;
-  beginResizeContent(resizeApplication, ({ startX, endX }) => {
+  return beginResizeContent(resizeApplication, ({ startX, endX }) => {
     const { value: width, offset: offsetX, otherOffset: otherOffsetY } = resizingWidthFn(startX, endX + lastDistanceX, 'x', pointerDir.x);
     if (!resizeDistance.x.distance) { return; }
     const offsetY = domOffsetY + otherOffsetY;
@@ -41,7 +41,7 @@ function resizeVertical(resizeApplication: ResizeApplication, resizingHeightFn: 
   // 延续之前的移动距离
   const dir = resizeAxisParams.y.dir || 0.5 * pointerDir.y;
   const lastDistanceY = dir * resizeDistance.y.total;
-  beginResizeContent(resizeApplication, ({ startY, endY }) => {
+  return beginResizeContent(resizeApplication, ({ startY, endY }) => {
     const { value: height, offset: offsetY, otherOffset: otherOffsetX } = resizingHeightFn(startY, endY + lastDistanceY, 'y', pointerDir.y);
     if (!resizeDistance.y.distance) { return; }
     const offsetX = domOffsetX - otherOffsetX;
@@ -98,7 +98,7 @@ function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resiz
       }
     }
 
-    beginResizeContent(resizeApplication, ({ startX, endX }) => {
+    return beginResizeContent(resizeApplication, ({ startX, endX }) => {
       const startY = (dir * startX) / aspectRatio;
       const endY = (dir * endX) / aspectRatio;
       updateDom({ startX, startY, endX, endY });
@@ -106,7 +106,7 @@ function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resiz
   }
   else {
     // 不固定比例时，宽高根据鼠标位置决定
-    beginResizeContent(resizeApplication, updateDom);
+    return beginResizeContent(resizeApplication, updateDom);
   }
 }
 
@@ -138,14 +138,16 @@ const resizePointerIdSet = new Set<number>();
 
 /** 使用指针调整大小 */
 function beginResizeContent(resizeApplication: ResizeApplication, moveFn: (coord: MoveCoord) => void) {
-  const target = resizeApplication.options.target || document.body;
+  const { options } = resizeApplication;
+  if (!options.pointer) { return; }
+
+  const target = options.pointerTarget || options.target || document.body;
   const targetRef = new WeakRef(target);
-  if (!resizeApplication.options.pointer) { return; }
   // 开始
-  const pointerId = resizeApplication.options.pointer.pointerId;
+  const pointerId = options.pointer.pointerId;
   if (!resizePointerIdSet.has(pointerId)) {
     resizePointerIdSet.add(pointerId);
-    target.setPointerCapture(resizeApplication.options.pointer.pointerId);
+    target.setPointerCapture(options.pointer.pointerId);
   }
   resizeApplication.onPointerBegin();
 
@@ -157,18 +159,21 @@ function beginResizeContent(resizeApplication: ResizeApplication, moveFn: (coord
   target.addEventListener('pointermove', moveHandler);
 
   // 结束
-  const upHandler = (overEvent: PointerEvent) => {
+  const endHandler = () => {
     const targetDeref = targetRef.deref();
-    targetDeref?.releasePointerCapture(overEvent.pointerId);
-    resizePointerIdSet.delete(overEvent.pointerId);
+    targetDeref?.releasePointerCapture(pointerId);
+    resizePointerIdSet.delete(pointerId);
     targetDeref?.removeEventListener('pointermove', moveHandler);
-    targetDeref?.removeEventListener('pointerup', upHandler);
-    targetDeref?.removeEventListener('pointercancel', upHandler);
+    targetDeref?.removeEventListener('pointerup', endHandler);
+    targetDeref?.removeEventListener('pointercancel', endHandler);
     resizeApplication.clearPointer();
     resizeApplication.onPointerEnd();
   };
-  target.addEventListener('pointerup', upHandler);
-  target.addEventListener('pointercancel', upHandler);
+  if (!options.disablePointerEnd) {
+    target.addEventListener('pointerup', endHandler);
+    target.addEventListener('pointercancel', endHandler);
+  }
+  return endHandler;
 }
 
 /** 转化指针移动坐标，兼容旋转条件 */

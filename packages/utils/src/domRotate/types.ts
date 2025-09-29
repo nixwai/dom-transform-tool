@@ -1,7 +1,7 @@
 /** DomRotate的配置项 */
 export interface DomRotateOptions {
   /** 调整元素 */
-  target?: HTMLDivElement
+  target?: HTMLElement
   /** 手动调整控制 */
   manual?: {
     /** 调整模式，默认为relative，relative: 相对当前角度调整，absolute: 调整到对应的角度 */
@@ -9,8 +9,10 @@ export interface DomRotateOptions {
     /** 角度(仅支持deg单位) */
     rotate?: number | string
   }
-  /** 指针控制事件 */
+  /** 指针的触发事件 */
   pointer?: PointerEvent
+  /** 指针触发元素，不传则使用target */
+  pointerTarget?: HTMLElement
   /** 固定每次改变的度数，单位deg，需大于0 */
   step?: number
   /** 自定义渲染 */
@@ -19,6 +21,12 @@ export interface DomRotateOptions {
   customStyle?: DomRotateCustomStyle
   /** 关闭对target元素的更新，关闭后需通过callback方法手动给元素添加样式 */
   disableUpdate?: boolean
+  /**
+   * 关闭指针的默认结束事件
+   * - 指针默认使用pointercancel、pointerup事件结束指针调整事件，关闭后则手动调用释放函数
+   * - 释放函数在方法的返回值中（endPointerHandler = domResize()）
+   */
+  disablePointerEnd?: boolean
   /** 调整回调 */
   callback?: (content: DomRotateContent, style: DomRotateStyle) => void
   /** 指针活动开始 */

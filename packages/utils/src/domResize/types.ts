@@ -15,6 +15,8 @@ export interface DomResizeOptions {
   }
   /** 指针控制事件 */
   pointer?: PointerEvent
+  /** 指针触发元素，不传则使用target */
+  pointerTarget?: HTMLElement
   /**
    * 使用position/translate/transform进行偏移
    * - 推荐使用position、translate，transform无法与CSS的rotate、scale同时使用
@@ -34,6 +36,12 @@ export interface DomResizeOptions {
   customStyle?: DomResizeCustomStyle
   /** 关闭对target元素的更新，关闭后需通过callback方法手动给元素添加样式 */
   disableUpdate?: boolean
+  /**
+   * 关闭指针的默认结束事件
+   * - 指针默认使用pointercancel、pointerup事件结束指针调整事件，关闭后则手动调用释放函数
+   * - 释放函数在方法的返回值中（endPointerHandler = domResize()）
+   */
+  disablePointerEnd?: boolean
   /** 调整回调 */
   callback?: (content: DomResizeContent, style: DomResizeStyle) => void
   /** 指针活动开始 */

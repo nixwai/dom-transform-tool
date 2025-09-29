@@ -7,5 +7,5 @@ export function domRotate(options?: DomRotateOptions) {
   const rotateApplication = new RotateApplication(options);
 
   rotateByManual(rotateApplication);
-  rotateByPointer(rotateApplication);
+  return rotateByPointer(rotateApplication);
 }

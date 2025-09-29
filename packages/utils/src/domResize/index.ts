@@ -10,7 +10,7 @@ import { ResizeApplication } from './resize-core/resize-application';
 export function domResize(options?: DomResizeOptions) {
   const resizeApplication = new ResizeApplication(options);
   resizeByManual(resizeApplication);
-  resizeByPointer(resizeApplication);
+  return resizeByPointer(resizeApplication);
 }
 
 export * from './helpers';
