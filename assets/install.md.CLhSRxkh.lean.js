@@ -1,0 +1,1 @@
+import{_ as s,c as i,o as e,ag as t}from"./chunks/framework.DraZOub8.js";const k=JSON.parse('{"title":"开始使用","description":"","frontmatter":{},"headers":[],"relativePath":"install.md","filePath":"zh/install.md"}'),l={name:"install.md"};function n(h,a,o,p,r,d){return e(),i("div",null,[...a[0]||(a[0]=[t("",9)])])}const m=s(l,[["render",n]]);export{k as __pageData,m as default};

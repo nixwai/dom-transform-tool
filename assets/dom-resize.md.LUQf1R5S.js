@@ -1,27 +1,281 @@
-<!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>domResize | Dom Transform Tool</title>
-    <meta name="description" content="A VitePress site">
-    <meta name="generator" content="VitePress v1.6.4">
-    <link rel="preload stylesheet" href="/dom-transform-tool/assets/style.BIH1tKBN.css" as="style">
-    <link rel="preload stylesheet" href="/dom-transform-tool/vp-icons.css" as="style">
-    
-    <script type="module" src="/dom-transform-tool/assets/app.SRwTq-Bx.js"></script>
-    <link rel="preload" href="/dom-transform-tool/assets/inter-roman-latin.Di8DUHzh.woff2" as="font" type="font/woff2" crossorigin="">
-    <link rel="modulepreload" href="/dom-transform-tool/assets/chunks/theme.B2JZUh3g.js">
-    <link rel="modulepreload" href="/dom-transform-tool/assets/chunks/framework.DraZOub8.js">
-    <link rel="modulepreload" href="/dom-transform-tool/assets/chunks/index.C_Ii9GWq.js">
-    <link rel="modulepreload" href="/dom-transform-tool/assets/chunks/direction.JThk97pA.js">
-    <link rel="modulepreload" href="/dom-transform-tool/assets/chunks/base.DJTTl37M.js">
-    <link rel="modulepreload" href="/dom-transform-tool/assets/dom-resize.md.LUQf1R5S.lean.js">
-    <script id="check-dark-mode">(()=>{const e=localStorage.getItem("vitepress-theme-appearance")||"auto",a=window.matchMedia("(prefers-color-scheme: dark)").matches;(!e||e==="auto"?a:e==="dark")&&document.documentElement.classList.add("dark")})();</script>
-    <script id="check-mac-os">document.documentElement.classList.toggle("mac",/Mac|iPhone|iPod|iPad/i.test(navigator.platform));</script>
-  </head>
-  <body>
-    <div id="app"><div class="Layout" data-v-6c9c5384><!--[--><!--]--><!--[--><span tabindex="-1" data-v-8bfe0f86></span><a href="#VPContent" class="VPSkipLink visually-hidden" data-v-8bfe0f86>Skip to content</a><!--]--><!----><header class="VPNav" data-v-6c9c5384 data-v-55dc4b7c><div class="VPNavBar" data-v-55dc4b7c data-v-24956edd><div class="wrapper" data-v-24956edd><div class="container" data-v-24956edd><div class="title" data-v-24956edd><div class="VPNavBarTitle has-sidebar" data-v-24956edd data-v-a4cb34f0><a class="title" href="/dom-transform-tool/" data-v-a4cb34f0><!--[--><!--]--><!----><span data-v-a4cb34f0>Dom Transform Tool</span><!--[--><!--]--></a></div></div><div class="content" data-v-24956edd><div class="content-body" data-v-24956edd><!--[--><!--]--><div class="VPNavBarSearch search" data-v-24956edd><!----></div><nav aria-labelledby="main-nav-aria-label" class="VPNavBarMenu menu" data-v-24956edd data-v-79f84d30><span id="main-nav-aria-label" class="visually-hidden" data-v-79f84d30> Main Navigation </span><!--[--><!--[--><a class="VPLink link VPNavBarMenuLink active" href="/dom-transform-tool/dom-resize.html" tabindex="0" data-v-79f84d30 data-v-67359ca4><!--[--><span data-v-67359ca4>API</span><!--]--></a><!--]--><!--]--></nav><!----><div class="VPNavBarAppearance appearance" data-v-24956edd data-v-c66cc652><button class="VPSwitch VPSwitchAppearance" type="button" role="switch" title aria-checked="false" data-v-c66cc652 data-v-a3ca9e2d data-v-e2ccbb7b><span class="check" data-v-e2ccbb7b><span class="icon" data-v-e2ccbb7b><!--[--><span class="vpi-sun sun" data-v-a3ca9e2d></span><span class="vpi-moon moon" data-v-a3ca9e2d></span><!--]--></span></span></button></div><div class="VPSocialLinks VPNavBarSocialLinks social-links" data-v-24956edd data-v-ca1dbf90 data-v-652766fb><!--[--><a class="VPSocialLink no-icon" href="https://github.com/nixwai/dom-transform-tool" aria-label="github" target="_blank" rel="noopener" data-v-652766fb data-v-a1f91779><span class="vpi-social-github"></span></a><!--]--></div><div class="VPFlyout VPNavBarExtra extra" data-v-24956edd data-v-d93bccf2 data-v-5cc11c5a><button type="button" class="button" aria-haspopup="true" aria-expanded="false" aria-label="extra navigation" data-v-5cc11c5a><span class="vpi-more-horizontal icon" data-v-5cc11c5a></span></button><div class="menu" data-v-5cc11c5a><div class="VPMenu" data-v-5cc11c5a data-v-1934cc01><!----><!--[--><!--[--><!----><div class="group" data-v-d93bccf2><div class="item appearance" data-v-d93bccf2><p class="label" data-v-d93bccf2>主题</p><div class="appearance-action" data-v-d93bccf2><button class="VPSwitch VPSwitchAppearance" type="button" role="switch" title aria-checked="false" data-v-d93bccf2 data-v-a3ca9e2d data-v-e2ccbb7b><span class="check" data-v-e2ccbb7b><span class="icon" data-v-e2ccbb7b><!--[--><span class="vpi-sun sun" data-v-a3ca9e2d></span><span class="vpi-moon moon" data-v-a3ca9e2d></span><!--]--></span></span></button></div></div></div><div class="group" data-v-d93bccf2><div class="item social-links" data-v-d93bccf2><div class="VPSocialLinks social-links-list" data-v-d93bccf2 data-v-652766fb><!--[--><a class="VPSocialLink no-icon" href="https://github.com/nixwai/dom-transform-tool" aria-label="github" target="_blank" rel="noopener" data-v-652766fb data-v-a1f91779><span class="vpi-social-github"></span></a><!--]--></div></div></div><!--]--><!--]--></div></div></div><!--[--><!--]--><button type="button" class="VPNavBarHamburger hamburger" aria-label="mobile navigation" aria-expanded="false" aria-controls="VPNavScreen" data-v-24956edd data-v-c74dc8bf><span class="container" data-v-c74dc8bf><span class="top" data-v-c74dc8bf></span><span class="middle" data-v-c74dc8bf></span><span class="bottom" data-v-c74dc8bf></span></span></button></div></div></div></div><div class="divider" data-v-24956edd><div class="divider-line" data-v-24956edd></div></div></div><!----></header><div class="VPLocalNav has-sidebar empty" data-v-6c9c5384 data-v-d9b01fe7><div class="container" data-v-d9b01fe7><button class="menu" aria-expanded="false" aria-controls="VPSidebarNav" data-v-d9b01fe7><span class="vpi-align-left menu-icon" data-v-d9b01fe7></span><span class="menu-text" data-v-d9b01fe7>菜单</span></button><div class="VPLocalNavOutlineDropdown" style="--vp-vh:0px;" data-v-d9b01fe7 data-v-a0a89fc0><button data-v-a0a89fc0>回到顶部</button><!----></div></div></div><aside class="VPSidebar" data-v-6c9c5384 data-v-f3ec0423><div class="curtain" data-v-f3ec0423></div><nav class="nav" id="VPSidebarNav" aria-labelledby="sidebar-aria-label" tabindex="-1" data-v-f3ec0423><span class="visually-hidden" id="sidebar-aria-label" data-v-f3ec0423> Sidebar Navigation </span><!--[--><!--]--><!--[--><div class="no-transition group" data-v-0ee347cb><section class="VPSidebarItem level-0" data-v-0ee347cb data-v-783b19c6><div class="item" role="button" tabindex="0" data-v-783b19c6><div class="indicator" data-v-783b19c6></div><h2 class="text" data-v-783b19c6>指南</h2><!----></div><div class="items" data-v-783b19c6><!--[--><div class="VPSidebarItem level-1 is-link" data-v-783b19c6 data-v-783b19c6><div class="item" data-v-783b19c6><div class="indicator" data-v-783b19c6></div><a class="VPLink link link" href="/dom-transform-tool/install.html" data-v-783b19c6><!--[--><p class="text" data-v-783b19c6>快速开始</p><!--]--></a><!----></div><!----></div><!--]--></div></section></div><div class="no-transition group" data-v-0ee347cb><section class="VPSidebarItem level-0 has-active" data-v-0ee347cb data-v-783b19c6><div class="item" role="button" tabindex="0" data-v-783b19c6><div class="indicator" data-v-783b19c6></div><h2 class="text" data-v-783b19c6>API</h2><!----></div><div class="items" data-v-783b19c6><!--[--><div class="VPSidebarItem level-1 is-link" data-v-783b19c6 data-v-783b19c6><div class="item" data-v-783b19c6><div class="indicator" data-v-783b19c6></div><a class="VPLink link link" href="/dom-transform-tool/dom-resize.html" data-v-783b19c6><!--[--><p class="text" data-v-783b19c6>调整大小</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-1 is-link" data-v-783b19c6 data-v-783b19c6><div class="item" data-v-783b19c6><div class="indicator" data-v-783b19c6></div><a class="VPLink link link" href="/dom-transform-tool/dom-rotate.html" data-v-783b19c6><!--[--><p class="text" data-v-783b19c6>调整旋转</p><!--]--></a><!----></div><!----></div><!--]--></div></section></div><!--]--><!--[--><!--]--></nav></aside><div class="VPContent has-sidebar" id="VPContent" data-v-6c9c5384 data-v-74261f13><div class="VPDoc has-sidebar has-aside" data-v-74261f13 data-v-5b55c626><!--[--><!--]--><div class="container" data-v-5b55c626><div class="aside" data-v-5b55c626><div class="aside-curtain" data-v-5b55c626></div><div class="aside-container" data-v-5b55c626><div class="aside-content" data-v-5b55c626><div class="VPDocAside" data-v-5b55c626 data-v-d6c90bcd><!--[--><!--]--><!--[--><!--]--><nav aria-labelledby="doc-outline-aria-label" class="VPDocAsideOutline" data-v-d6c90bcd data-v-9eed395c><div class="content" data-v-9eed395c><div class="outline-marker" data-v-9eed395c></div><div aria-level="2" class="outline-title" id="doc-outline-aria-label" role="heading" data-v-9eed395c>页面导航</div><ul class="VPDocOutlineItem root" data-v-9eed395c data-v-be6ac85d><!--[--><!--]--></ul></div></nav><!--[--><!--]--><div class="spacer" data-v-d6c90bcd></div><!--[--><!--]--><!----><!--[--><!--]--><!--[--><!--]--></div></div></div></div><div class="content" data-v-5b55c626><div class="content-container" data-v-5b55c626><!--[--><!--]--><main class="main" data-v-5b55c626><div style="position:relative;" class="vp-doc _dom-transform-tool_dom-resize" data-v-5b55c626><div><h1 id="domresize" tabindex="-1">domResize <a class="header-anchor" href="#domresize" aria-label="Permalink to &quot;domResize&quot;">​</a></h1><p>调整元素的大小</p><h2 id="基础用法" tabindex="-1">基础用法 <a class="header-anchor" href="#基础用法" aria-label="Permalink to &quot;基础用法&quot;">​</a></h2><div class="vitepress-demo-plugin-placeholder__container" style="" data-v-5eb3f8d4><div class="loader" data-v-5eb3f8d4></div><div class="loading-text" data-v-5eb3f8d4>loading</div></div><!----><h2 id="支持多种方向" tabindex="-1">支持多种方向 <a class="header-anchor" href="#支持多种方向" aria-label="Permalink to &quot;支持多种方向&quot;">​</a></h2><div class="vitepress-demo-plugin-placeholder__container" style="" data-v-5eb3f8d4><div class="loader" data-v-5eb3f8d4></div><div class="loading-text" data-v-5eb3f8d4>loading</div></div><!----><h2 id="参数类型" tabindex="-1">参数类型 <a class="header-anchor" href="#参数类型" aria-label="Permalink to &quot;参数类型&quot;">​</a></h2><div class="language-ts vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">ts</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">/** DomResize的配置项 */</span></span>
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/chunks/direction.JThk97pA.js","assets/chunks/framework.DraZOub8.js","assets/chunks/index.Cu63kNB5.js","assets/chunks/update-style.Csv_yF-P.js","assets/chunks/base.DJTTl37M.js"])))=>i.map(i=>d[i]);
+import{D as d,v as g,ae as o,p as D,C as m,c as C,o as u,j as n,af as y,G as i,ag as f,a as p,ah as F,k as a,w as e,ai as E}from"./chunks/framework.DraZOub8.js";import{L as c,N as A}from"./chunks/index.C_Ii9GWq.js";const B=`<script setup lang="ts">\r
+import { domResize } from 'dom-transform-tool';\r
+import { ref } from 'vue';\r
+\r
+const resizeTarget1 = ref<HTMLDivElement>();\r
+const resizeTarget2 = ref<HTMLDivElement>();\r
+const resizeTarget3 = ref<HTMLDivElement>();\r
+const resizeTarget4 = ref<HTMLDivElement>();\r
+\r
+function handleTarget1ResizeHeight(e: PointerEvent) {\r
+  domResize({\r
+    target: resizeTarget1.value,\r
+    pointer: e,\r
+    direction: 'bottom',\r
+  });\r
+}\r
+\r
+function handleTarget2Resize(e: PointerEvent) {\r
+  domResize({\r
+    target: resizeTarget2.value,\r
+    pointer: e,\r
+    direction: 'right',\r
+  });\r
+  handleTarget1ResizeHeight(e);\r
+}\r
+\r
+function handleTarget3Resize(e: PointerEvent) {\r
+  domResize({\r
+    target: resizeTarget3.value,\r
+    pointer: e,\r
+    direction: 'right',\r
+  });\r
+  handleTarget1ResizeHeight(e);\r
+}\r
+\r
+function handleTarget4Resize(e: PointerEvent) {\r
+  domResize({\r
+    target: resizeTarget4.value,\r
+    pointer: e,\r
+    direction: 'right',\r
+  });\r
+  handleTarget1ResizeHeight(e);\r
+}\r
+<\/script>\r
+\r
+<template>\r
+  <div ref="resizeTarget1" class="flex max-w-100% min-w-120 min-h-20 max-h-60">\r
+    <div\r
+      ref="resizeTarget2"\r
+      class="w-40 bg-green min-w-10% max-w-40%"\r
+      @pointerdown.stop.prevent="handleTarget2Resize"\r
+    />\r
+    <div\r
+      ref="resizeTarget3"\r
+      class="w-40 min-w-10% max-w-40% bg-yellow"\r
+      @pointerdown.stop.prevent="handleTarget3Resize"\r
+    />\r
+    <div\r
+      ref="resizeTarget4"\r
+      class="min-w-10% max-w-40% w-20 bg-red"\r
+      @pointerdown.stop.prevent="handleTarget4Resize"\r
+    />\r
+  </div>\r
+</template>\r
+`,b=`<script setup lang="ts">\r
+import { domResize, type DomResizeDirection } from 'dom-transform-tool';\r
+import { ref } from 'vue';\r
+\r
+const resizeTarget1 = ref<HTMLDivElement>();\r
+\r
+const directionList: DomResizeDirection[] = [\r
+  'all',\r
+  'left',\r
+  'right',\r
+  'top',\r
+  'bottom',\r
+  'left-top',\r
+  'left-bottom',\r
+  'right-top',\r
+  'right-bottom',\r
+  'left-right',\r
+  'top-bottom',\r
+  'left-top-right',\r
+  'left-bottom-right',\r
+  'top-left-bottom',\r
+  'top-right-bottom',\r
+];\r
+\r
+const direction = ref(directionList[0]);\r
+const lockAspectRatio = ref(false);\r
+const offset = ref<'position' | 'transform' | 'translate'>('position');\r
+const grid = ref([0.5, 0.5]);\r
+const crossAxis = ref(false);\r
+\r
+function handleTargetResize(event: PointerEvent) {\r
+  domResize({\r
+    target: resizeTarget1.value,\r
+    pointer: event,\r
+    offsetType: offset.value,\r
+    lockAspectRatio: lockAspectRatio.value,\r
+    direction: direction.value,\r
+    grid: grid.value,\r
+    crossAxis: crossAxis.value,\r
+    manual: undefined,\r
+  });\r
+}\r
+\r
+function changeTargetResize(dis: { x: number, y: number }) {\r
+  domResize({\r
+    target: resizeTarget1.value,\r
+    offsetType: offset.value,\r
+    lockAspectRatio: lockAspectRatio.value,\r
+    direction: direction.value,\r
+    grid: grid.value,\r
+    crossAxis: crossAxis.value,\r
+    manual: {\r
+      width: dis.x,\r
+      height: dis.y,\r
+    },\r
+  });\r
+}\r
+<\/script>\r
+\r
+<template>\r
+  <div class="flex flex-wrap gap-1">\r
+    <div v-for="(dir, index) in directionList" :key="dir">\r
+      <input\r
+        :id="\`dir\${index}\`"\r
+        v-model="direction"\r
+        type="radio"\r
+        name="direction"\r
+        :value="dir"\r
+        class="mb-[3px]"\r
+      >\r
+      <label :for="\`dir\${index}\`">{{ dir }}</label>\r
+    </div>\r
+  </div>\r
+\r
+  <div class="flex gap-1 mt-4">\r
+    <div>\r
+      <input\r
+        id="unlock"\r
+        v-model="lockAspectRatio"\r
+        type="radio"\r
+        name="lockAspectRatio"\r
+        :value="false"\r
+        class="mb-[3px]"\r
+      >\r
+      <label for="unlock">unlock</label>\r
+    </div>\r
+    <div>\r
+      <input\r
+        id="lock"\r
+        v-model="lockAspectRatio"\r
+        type="radio"\r
+        name="lockAspectRatio"\r
+        :value="true"\r
+        class="mb-[3px]"\r
+      >\r
+      <label for="lock">lock</label>\r
+    </div>\r
+  </div>\r
+\r
+  <div class="flex gap-1 mt-4">\r
+    <div>\r
+      <input\r
+        id="position"\r
+        v-model="offset"\r
+        type="radio"\r
+        name="offset"\r
+        value="position"\r
+        class="mb-[3px]"\r
+      >\r
+      <label for="position">position</label>\r
+    </div>\r
+    <div>\r
+      <input\r
+        id="transform"\r
+        v-model="offset"\r
+        type="radio"\r
+        name="offset"\r
+        value="transform"\r
+        class="mb-[3px]"\r
+      >\r
+      <label for="transform">transform</label>\r
+    </div>\r
+    <div>\r
+      <input\r
+        id="translate"\r
+        v-model="offset"\r
+        type="radio"\r
+        name="offset"\r
+        value="translate"\r
+        class="mb-[3px]"\r
+      >\r
+      <label for="translate">translate</label>\r
+    </div>\r
+    <div>\r
+      <input\r
+        id="none"\r
+        v-model="offset"\r
+        type="radio"\r
+        name="offset"\r
+        :value="undefined"\r
+        class="mb-[3px]"\r
+      >\r
+      <label for="none">none</label>\r
+    </div>\r
+  </div>\r
+\r
+  <div class="flex gap-1 mt-4">\r
+    <div>\r
+      <input\r
+        id="uncross"\r
+        v-model="crossAxis"\r
+        type="radio"\r
+        name="crossAxis"\r
+        :value="false"\r
+        class="mb-[3px]"\r
+      >\r
+      <label for="uncross">uncross</label>\r
+    </div>\r
+    <div>\r
+      <input\r
+        id="cross"\r
+        v-model="crossAxis"\r
+        type="radio"\r
+        name="crossAxis"\r
+        :value="true"\r
+        class="mb-[3px]"\r
+      >\r
+      <label for="cross">cross</label>\r
+    </div>\r
+  </div>\r
+\r
+  <div class="flex gap-1 mt-4">\r
+    gridX: <input v-model="grid[0]" class="b-1 b-gray b-solid px-1 b-rounded">\r
+    gridY: <input v-model="grid[1]" class="b-1 b-gray b-solid b-rounded px-1">\r
+  </div>\r
+\r
+  <div class="flex mt-4 items-center justify-center flex-col w-40">\r
+    <button class="ctxs-btn" @click="changeTargetResize({ x: 0, y: -5 })">\r
+      -5\r
+    </button>\r
+    <div class="flex gap-1 items-center justify-center">\r
+      <button class="ctxs-btn" @click="changeTargetResize({ x: -5, y: 0 })">\r
+        -5\r
+      </button>\r
+      调整\r
+      <button class="ctxs-btn" @click="changeTargetResize({ x: 5, y: 0 })">\r
+        +5\r
+      </button>\r
+    </div>\r
+    <button class="ctxs-btn" @click="changeTargetResize({ x: 0, y: 5 })">\r
+      +5\r
+    </button>\r
+  </div>\r
+\r
+  <div class="position-relative h-100">\r
+    <div\r
+      ref="resizeTarget1"\r
+      class="w-30 h-30 position-absolute bg-blue min-w-10 min-h-10 max-w-100 left-[200px] max-h-100 top-[200px]"\r
+      @pointerdown.stop.prevent="handleTargetResize"\r
+    />\r
+  </div>\r
+</template>\r
+\r
+<style lang="css" scoped>\r
+.ctxs-btn {\r
+  width: 40px;\r
+  padding: 0 10px;\r
+  margin: 5px;\r
+  border: 1px solid gray;\r
+  border-radius: 4px;\r
+}\r
+</style>\r
+`,T=JSON.parse('{"title":"domResize","description":"","frontmatter":{},"headers":[],"relativePath":"dom-resize.md","filePath":"zh/dom-resize.md"}'),v={name:"dom-resize.md"},w=Object.assign(v,{setup(x){const h=d();g(async()=>{h.value=(await o(async()=>{const{default:l}=await import("./chunks/direction.JThk97pA.js");return{default:l}},__vite__mapDeps([0,1,2,3]))).default});const t=D(!0),k=d();return g(async()=>{k.value=(await o(async()=>{const{default:l}=await import("./chunks/base.DJTTl37M.js");return{default:l}},__vite__mapDeps([4,1,2,3]))).default}),(l,s)=>{const r=m("ClientOnly");return u(),C("div",null,[s[2]||(s[2]=n("h1",{id:"domresize",tabindex:"-1"},[p("domResize "),n("a",{class:"header-anchor",href:"#domresize","aria-label":'Permalink to "domResize"'},"​")],-1)),s[3]||(s[3]=n("p",null,"调整元素的大小",-1)),s[4]||(s[4]=n("h2",{id:"基础用法",tabindex:"-1"},[p("基础用法 "),n("a",{class:"header-anchor",href:"#基础用法","aria-label":'Permalink to "基础用法"'},"​")],-1)),y(i(a(c),null,null,512),[[F,t.value]]),i(r,null,{default:e(()=>[i(a(A),{title:"",description:"",locale:"",select:"vue",order:"vue,react,html",github:"",gitlab:"",theme:"",lightTheme:"",darkTheme:"",stackblitz:"%7B%22show%22%3Afalse%7D",codesandbox:"%7B%22show%22%3Afalse%7D",codeplayer:"%7B%22show%22%3Afalse%7D",files:"%7B%22vue%22%3A%7B%7D%2C%22react%22%3A%7B%7D%2C%22html%22%3A%7B%7D%7D",scope:"",htmlWriteWay:"write",background:"undefined",visible:!0,onMount:s[0]||(s[0]=()=>{t.value=!1}),vueCode:a(b)},E({_:2},[k.value?{name:"vue",fn:e(()=>[i(a(k))]),key:"0"}:void 0]),1032,["vueCode"])]),_:1}),s[5]||(s[5]=n("h2",{id:"支持多种方向",tabindex:"-1"},[p("支持多种方向 "),n("a",{class:"header-anchor",href:"#支持多种方向","aria-label":'Permalink to "支持多种方向"'},"​")],-1)),y(i(a(c),null,null,512),[[F,t.value]]),i(r,null,{default:e(()=>[i(a(A),{title:"",description:"",locale:"",select:"vue",order:"vue,react,html",github:"",gitlab:"",theme:"",lightTheme:"",darkTheme:"",stackblitz:"%7B%22show%22%3Afalse%7D",codesandbox:"%7B%22show%22%3Afalse%7D",codeplayer:"%7B%22show%22%3Afalse%7D",files:"%7B%22vue%22%3A%7B%7D%2C%22react%22%3A%7B%7D%2C%22html%22%3A%7B%7D%7D",scope:"",htmlWriteWay:"write",background:"undefined",visible:!0,onMount:s[1]||(s[1]=()=>{t.value=!1}),vueCode:a(B)},E({_:2},[h.value?{name:"vue",fn:e(()=>[i(a(h))]),key:"0"}:void 0]),1032,["vueCode"])]),_:1}),s[6]||(s[6]=f(`<h2 id="参数类型" tabindex="-1">参数类型 <a class="header-anchor" href="#参数类型" aria-label="Permalink to &quot;参数类型&quot;">​</a></h2><div class="language-ts vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">ts</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">/** DomResize的配置项 */</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> interface</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> DomResizeOptions</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
 <span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    /** 调整元素 */</span></span>
 <span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">    target</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">?:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> HTMLElement</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
@@ -151,8 +405,4 @@
 <span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">    top</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">?:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
 <span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">    left</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">?:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {};</span></span></code></pre></div><h2 id="源码" tabindex="-1">源码 <a class="header-anchor" href="#源码" aria-label="Permalink to &quot;源码&quot;">​</a></h2><p><a href="https://github.com/nixwai/dom-transform-tool/blob/main/packages/utils/src/domResize/index.ts" target="_blank" rel="noreferrer">源代码</a></p></div></div></main><footer class="VPDocFooter" data-v-5b55c626 data-v-ce807410><!--[--><!--]--><!----><nav class="prev-next" aria-labelledby="doc-footer-aria-label" data-v-ce807410><span class="visually-hidden" id="doc-footer-aria-label" data-v-ce807410>Pager</span><div class="pager" data-v-ce807410><a class="VPLink link pager-link prev" href="/dom-transform-tool/install.html" data-v-ce807410><!--[--><span class="desc" data-v-ce807410>上一页</span><span class="title" data-v-ce807410>快速开始</span><!--]--></a></div><div class="pager" data-v-ce807410><a class="VPLink link pager-link next" href="/dom-transform-tool/dom-rotate.html" data-v-ce807410><!--[--><span class="desc" data-v-ce807410>下一页</span><span class="title" data-v-ce807410>调整旋转</span><!--]--></a></div></nav></footer><!--[--><!--]--></div></div></div><!--[--><!--]--></div></div><!----><!--[--><!--]--></div></div>
-    <script>window.__VP_HASH_MAP__=JSON.parse("{\"dom-resize.md\":\"LUQf1R5S\",\"dom-rotate.md\":\"gVln6jEM\",\"index.md\":\"BmpPZiep\",\"install.md\":\"CLhSRxkh\"}");window.__VP_SITE_DATA__=JSON.parse("{\"lang\":\"en-US\",\"dir\":\"ltr\",\"title\":\"Dom Transform Tool\",\"description\":\"A VitePress site\",\"base\":\"/dom-transform-tool/\",\"head\":[],\"router\":{\"prefetchLinks\":true},\"appearance\":true,\"themeConfig\":{\"socialLinks\":[{\"icon\":\"github\",\"link\":\"https://github.com/nixwai/dom-transform-tool\"}]},\"locales\":{\"root\":{\"label\":\"中文\",\"lang\":\"zh-CN\",\"themeConfig\":{\"nav\":[{\"text\":\"API\",\"link\":\"/dom-resize\"}],\"sidebar\":[{\"text\":\"指南\",\"items\":[{\"text\":\"快速开始\",\"link\":\"/install\"}]},{\"text\":\"API\",\"items\":[{\"text\":\"调整大小\",\"link\":\"/dom-resize\"},{\"text\":\"调整旋转\",\"link\":\"/dom-rotate\"}]}],\"docFooter\":{\"prev\":\"上一页\",\"next\":\"下一页\"},\"outline\":{\"label\":\"页面导航\"},\"lastUpdated\":{\"text\":\"最后更新于\",\"formatOptions\":{\"dateStyle\":\"short\",\"timeStyle\":\"medium\"}},\"langMenuLabel\":\"多语言\",\"returnToTopLabel\":\"回到顶部\",\"sidebarMenuLabel\":\"菜单\",\"darkModeSwitchLabel\":\"主题\",\"lightModeSwitchTitle\":\"切换到浅色模式\",\"darkModeSwitchTitle\":\"切换到深色模式\"}}},\"scrollOffset\":134,\"cleanUrls\":false}");</script>
-    
-  </body>
-</html>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {};</span></span></code></pre></div><h2 id="源码" tabindex="-1">源码 <a class="header-anchor" href="#源码" aria-label="Permalink to &quot;源码&quot;">​</a></h2><p><a href="https://github.com/nixwai/dom-transform-tool/blob/main/packages/utils/src/domResize/index.ts" target="_blank" rel="noreferrer">源代码</a></p>`,4))])}}});export{T as __pageData,w as default};
