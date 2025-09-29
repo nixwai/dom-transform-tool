@@ -9,3 +9,5 @@ export function domRotate(options?: DomRotateOptions) {
   rotateByManual(rotateApplication);
   return rotateByPointer(rotateApplication);
 }
+
+export * from './types';

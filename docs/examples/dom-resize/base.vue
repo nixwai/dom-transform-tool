@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { domResize, type DomResizeDirection } from 'dom-transform-tool';
 import { ref } from 'vue';
-import { domResize, type DomResizeDirection } from '../../../packages/utils/src/index';
 
 const resizeTarget1 = ref<HTMLDivElement>();
 

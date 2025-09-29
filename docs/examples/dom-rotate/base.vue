@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { DomRotateType } from 'dom-transform-tool/src/domRotate/types';
+import type { DomRotateType } from 'dom-transform-tool';
+import { domRotate } from 'dom-transform-tool';
 import { ref } from 'vue';
-import { domRotate } from '../../../packages/utils/src/index';
 
 const rotateTarget1 = ref<HTMLDivElement>();
 
