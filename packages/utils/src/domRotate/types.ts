@@ -39,6 +39,7 @@ export interface DomRotateOptions {
   onPointerEnd?: (content: DomRotateContent) => void
 }
 
+/** 元素旋转时的样式类型 */
 export type DomRotateType = 'rotate' | 'transform';
 
 /** DomRotate的自定义渲染样式 */
