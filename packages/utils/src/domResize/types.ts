@@ -1,7 +1,7 @@
 /** DomResize的配置项 */
 export interface DomResizeOptions {
   /** 调整元素 */
-  target?: HTMLDivElement
+  target?: HTMLElement
   /** 调整方向 */
   direction?: DomResizeDirection
   /** 手动调整控制 */
@@ -23,7 +23,7 @@ export interface DomResizeOptions {
    * - https://developer.mozilla.org/zh-CN/docs/Web/CSS/rotate
    * - https://developer.mozilla.org/zh-CN/docs/Web/CSS/scale
    */
-  offset?: DomResizeOffsetType
+  offsetType?: DomResizeOffsetType
   /** 是否可跨轴调整，需要配置offset才生效 */
   crossAxis?: boolean
   /** 网格对齐，固定每次调整的最小距离，默认[0.5,0.5]，单位px，使用小数注意精度问题，建议使用0.5的倍数 */

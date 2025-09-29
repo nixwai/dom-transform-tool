@@ -22,7 +22,7 @@ export class ResizeDomAttrs {
   private updateTargetAttrsInfo() {
     if (!this.options.target) { return; }
     const domStyles = window.getComputedStyle(this.options.target, null);
-    const parentStyles = window.getComputedStyle(this.options.target.parentNode as HTMLDivElement, null);
+    const parentStyles = window.getComputedStyle(this.options.target.parentNode as HTMLElement, null);
     this.size.setSizeInfo(domStyles, parentStyles);
     this.variant.setVariantInfo(domStyles, this.options.target?.style?.transformOrigin);
   }
@@ -33,11 +33,11 @@ export class ResizeDomAttrs {
 
   /** 更新偏移信息 */
   private updateOffsetInfo() {
-    if (this.options.offset === 'position') {
+    if (this.options.offsetType === 'position') {
       this.offsetX = this.variant.positionLeft;
       this.offsetY = this.variant.positionTop;
     }
-    else if (this.options.offset === 'translate') {
+    else if (this.options.offsetType === 'translate') {
       this.offsetX = this.variant.translateX;
       this.offsetY = this.variant.translateY;
     }

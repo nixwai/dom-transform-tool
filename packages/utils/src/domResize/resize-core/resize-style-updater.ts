@@ -8,7 +8,7 @@ export type SetStyleWidthOrHeightFn = (value: number, property: 'width' | 'heigh
 export type SetStyleOffset = (valueX: number, valueY: number) => DomResizeStyle;
 
 export class ResizeStyleUpdater {
-  private targetRef?: WeakRef<HTMLDivElement>;
+  private targetRef?: WeakRef<HTMLElement>;
 
   /** 设置宽或者高样式 */
   public setStyleWidthOrHeight: SetStyleWidthOrHeightFn = () => ({});
@@ -39,7 +39,7 @@ export class ResizeStyleUpdater {
 
   /** 设置位移样式更新方法 */
   private setStyleOffsetUpdater() {
-    if (this.options.offset) {
+    if (this.options.offsetType) {
       this.setStyleOffset = createDomStyleUpdateMethod<SetStyleOffset, DomResizeStyle>(
         this.createOffsetHandler(),
         this.targetRef,
@@ -71,15 +71,15 @@ export class ResizeStyleUpdater {
     const getOffsetX = this.changeByCustomRender('offsetX');
     const getOffsetY = this.changeByCustomRender('offsetY');
     // 使用position
-    if (this.options.offset === 'position') {
+    if (this.options.offsetType === 'position') {
       return (valueX, valueY) => ({ left: getOffsetX(valueX), top: getOffsetY(valueY) });
     }
     // 使用translate
-    if (this.options.offset === 'translate') {
+    if (this.options.offsetType === 'translate') {
       return (valueX, valueY) => ({ translate: `${getOffsetX(valueX)} ${getOffsetY(valueY)}` });
     }
     // 使用transform
-    if (this.options.offset === 'transform') {
+    if (this.options.offsetType === 'transform') {
       const { transformName, transformValue } = this.resizeDomAttrs.variant;
       let beforeTransformValueStr = '';
       let afterTransformValueStr = '';

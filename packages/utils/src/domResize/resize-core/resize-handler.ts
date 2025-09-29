@@ -19,7 +19,7 @@ export class ResizeHandler {
   }
 
   private createResizeValueMethod() {
-    this.getResizeValue = this.options.offset
+    this.getResizeValue = this.options.offsetType
       ? (value: number) => value
       : (value: number, minValue: number) => value > minValue ? value : minValue;
   }

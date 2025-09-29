@@ -3,7 +3,7 @@
  * @param targetRef 目标元素
  * @param styles 样式
  */
-export function updateDomStyle<S>(targetRef: WeakRef<HTMLDivElement>, styles: S) {
+export function updateDomStyle<S>(targetRef: WeakRef<HTMLElement>, styles: S) {
   const target = targetRef.deref();
   if (!target) { return; } // 获取不到实例直接返回样式
   for (const key in styles) {
@@ -20,7 +20,7 @@ export function updateDomStyle<S>(targetRef: WeakRef<HTMLDivElement>, styles: S)
  */
 export function createDomStyleUpdateMethod<T extends (...params: any[]) => S, S>(
   getStyleFn: T,
-  targetRef?: WeakRef<HTMLDivElement>,
+  targetRef?: WeakRef<HTMLElement>,
   disableUpdate?: boolean,
 ): T {
   // 获取不到实例或者关闭更新下，不进行样式设置

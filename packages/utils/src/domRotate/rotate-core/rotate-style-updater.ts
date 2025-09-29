@@ -4,7 +4,7 @@ import { createDomStyleUpdateMethod } from '../../utils';
 type SetStyleRotate = (value: number) => DomRotateStyle;
 
 export class RotateStyleUpdater {
-  private targetRef?: WeakRef<HTMLDivElement>;
+  private targetRef?: WeakRef<HTMLElement>;
 
   public setStyleRotate: SetStyleRotate = () => ({});
 
