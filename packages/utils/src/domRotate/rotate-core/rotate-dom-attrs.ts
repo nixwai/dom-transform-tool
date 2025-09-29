@@ -26,6 +26,7 @@ export class RotateDomAttrs {
     const domStyles = window.getComputedStyle(this.options.target, null);
     this.variant.setTransform(domStyles);
     this.variant.setRotate(domStyles);
+    this.variant.setScale(domStyles);
     this.variant.setTransformOrigin(domStyles);
     this.domHeight = toNum(domStyles.height);
   }
