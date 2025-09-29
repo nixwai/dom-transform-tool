@@ -118,7 +118,7 @@ export class ResizeAxisParams {
     // 获取手动调整的偏移量
     if (manualValue) {
       distance = getPctValue(manualValue, parentValue);
-      if (this.options.manual?.type === 'size') {
+      if (this.options.manual?.mode === 'absolute') {
         // 调整到固定的大小
         distance = distance - originValue;
       }

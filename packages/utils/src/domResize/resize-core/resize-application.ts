@@ -1,5 +1,5 @@
+import type { Axis, Dir } from '../../typing';
 import type { DomResizeContent, DomResizeOptions, DomResizeStyle } from '../types';
-import type { Axis, Dir } from '../typing';
 import { ResizeAxisParams } from './resize-axis-params';
 import { ResizeDistance } from './resize-distance';
 import { ResizeDistanceCounter } from './resize-distance-counter';
@@ -18,7 +18,7 @@ import { ResizeStyleUpdater } from './resize-style-updater';
 export type ResizingFn =
   (startLocation: number, endLocation: number, axis: Axis, pointerDir?: Dir) => { value: number, offset: number, otherOffset: number };
 
-type ResizeDirectionFn = (resizeData: ResizeApplication, ...resizingFns: ResizingFn[]) => void;
+type ResizeDirectionFn = (resizeData: ResizeApplication, ...resizingFns: ResizingFn[]) => ((overEvent: PointerEvent) => void) | void;
 
 export class ResizeApplication {
   public options: DomResizeOptions = {};
@@ -92,50 +92,49 @@ export class ResizeApplication {
 
     switch (this.options.direction) {
       case 'left':
-        resizeHorizontal(this, resizingBackward);
-        break;
+        return resizeHorizontal(this, resizingBackward);
+
       case 'right':
-        resizeHorizontal(this, resizingForward);
-        break;
+        return resizeHorizontal(this, resizingForward);
+
       case 'left-right':
-        resizeHorizontal(this, resizingBoth);
-        break;
+        return resizeHorizontal(this, resizingBoth);
+
       case 'top':
-        resizeVertical(this, resizingBackward);
-        break;
+        return resizeVertical(this, resizingBackward);
+
       case 'bottom':
-        resizeVertical(this, resizingForward);
-        break;
+        return resizeVertical(this, resizingForward);
+
       case 'top-bottom':
-        resizeVertical(this, resizingBoth);
-        break;
+        return resizeVertical(this, resizingBoth);
+
       case 'left-top':
-        resizeHorizontalAndVertical(this, resizingBackward, resizingBackward);
-        break;
+        return resizeHorizontalAndVertical(this, resizingBackward, resizingBackward);
+
       case 'right-top':
-        resizeHorizontalAndVertical(this, resizingForward, resizingBackward);
-        break;
+        return resizeHorizontalAndVertical(this, resizingForward, resizingBackward);
+
       case 'left-bottom':
-        resizeHorizontalAndVertical(this, resizingBackward, resizingForward);
-        break;
+        return resizeHorizontalAndVertical(this, resizingBackward, resizingForward);
+
       case 'right-bottom':
-        resizeHorizontalAndVertical(this, resizingForward, resizingForward);
-        break;
+        return resizeHorizontalAndVertical(this, resizingForward, resizingForward);
+
       case 'left-bottom-right':
-        resizeHorizontalAndVertical(this, resizingBoth, resizingForward);
-        break;
+        return resizeHorizontalAndVertical(this, resizingBoth, resizingForward);
+
       case 'left-top-right':
-        resizeHorizontalAndVertical(this, resizingBoth, resizingBackward);
-        break;
+        return resizeHorizontalAndVertical(this, resizingBoth, resizingBackward);
+
       case 'top-left-bottom':
-        resizeHorizontalAndVertical(this, resizingBackward, resizingBoth);
-        break;
+        return resizeHorizontalAndVertical(this, resizingBackward, resizingBoth);
+
       case 'top-right-bottom':
-        resizeHorizontalAndVertical(this, resizingForward, resizingBoth);
-        break;
+        return resizeHorizontalAndVertical(this, resizingForward, resizingBoth);
+
       case 'all':
-        resizeHorizontalAndVertical(this, resizingBoth, resizingBoth);
-        break;
+        return resizeHorizontalAndVertical(this, resizingBoth, resizingBoth);
     }
   }
 }

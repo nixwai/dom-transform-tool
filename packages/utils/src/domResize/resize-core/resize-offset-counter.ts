@@ -1,5 +1,5 @@
+import type { Axis } from '../../typing';
 import type { DomResizeOptions } from '../types';
-import type { Axis } from '../typing';
 import type { ResizeDomAttrs } from './resize-dom-attrs';
 
 type GetOffsetFn = (distance: number, axis: Axis, dir: 1 | -1, value: number) => { offsetCurrentAxis: number, offsetAnotherAxis: number };
@@ -60,7 +60,7 @@ export class ResizeOffsetCounter {
   public getBothOffset: GetOffsetFn = zeroOffset;
 
   constructor(private options: DomResizeOptions, private resizeDomAttrs: ResizeDomAttrs) {
-    if (!this.options.offset) { return; }
+    if (!this.options.offsetType) { return; }
     this.setVariantParams();
     this.setOffsetParams();
     this.setOffsetFunctions();

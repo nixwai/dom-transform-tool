@@ -1,19 +1,9 @@
 import type { DomResizeOptions } from '../types';
-import type { Axis, Dir } from '../typing';
+import type { ResizingFn } from './resize-application';
 import type { ResizeAxisParams } from './resize-axis-params';
 import type { ResizeDistance } from './resize-distance';
 import type { ResizeDistanceCounter } from './resize-distance-counter';
 import type { ResizeOffsetCounter } from './resize-offset-counter';
-
-/**
- * 调节函数
- * @param startLocation 开始的坐标
- * @param endLocation 结束的坐标
- * @param axis 坐标
- * @param pointerDir 鼠标点击的方向
- */
-export type ResizingFn =
-  (startLocation: number, endLocation: number, axis: Axis, pointerDir?: Dir) => { value: number, offset: number, otherOffset: number };
 
 export class ResizeHandler {
   private getResizeValue: (value: number, minValue: number) => number = () => 0;
@@ -29,7 +19,7 @@ export class ResizeHandler {
   }
 
   private createResizeValueMethod() {
-    this.getResizeValue = this.options.offset
+    this.getResizeValue = this.options.offsetType
       ? (value: number) => value
       : (value: number, minValue: number) => value > minValue ? value : minValue;
   }
