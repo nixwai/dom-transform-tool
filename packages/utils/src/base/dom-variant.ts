@@ -22,11 +22,23 @@ export class DomVariant {
   translateX = 0;
   /** Y轴位移 */
   translateY = 0;
-  /** 横轴缩放值 */
+  /** transform的横轴缩放值 */
+  transformScaleX = 1;
+  /** transform的纵轴缩放值 */
+  transformScaleY = 1;
+  /** 来自独立的scale样式横轴缩放值 */
+  styleScaleX = 1;
+  /** 来自独立的scale样式纵轴缩放值 */
+  styleScaleY = 1;
+  /** 横轴总缩放值（transformScaleX * styleScaleX） */
   scaleX = 1;
-  /** 纵轴缩放值 */
+  /** 纵轴总缩放值（transformScaleY * styleScaleY） */
   scaleY = 1;
-  /** 旋转值 */
+  /** transform的旋转值 */
+  transformRotate = 0;
+  /** 来自独立的rotate样式旋转值 */
+  styleRotate = 0;
+  /** 总旋转值（transformRotate + styleRotate） */
   rotate = 0;
 
   /** 获取所有变形信息 */
@@ -66,32 +78,46 @@ export class DomVariant {
       const b = this.transformValue[1];
       const c = this.transformValue[4];
       const d = this.transformValue[5];
-      this.scaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
-      this.scaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
+      this.transformScaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
+      this.transformScaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
     }
     else {
       const a = this.transformValue[0];
       const b = this.transformValue[1];
       const c = this.transformValue[2];
       const d = this.transformValue[3];
-      this.scaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
-      this.scaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
+      this.transformScaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
+      this.transformScaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
     }
+
     if (domStyles.scale && domStyles.scale !== 'none') {
       const scaleList = domStyles.scale.split(/\s+/);
-      this.scaleX *= toNum(scaleList[0]);
-      this.scaleY *= toNum(scaleList[1] || scaleList[0]);
+      this.styleScaleX = toNum(scaleList[0]);
+      this.styleScaleY = toNum(scaleList[1] ?? scaleList[0]);
     }
+    else {
+      this.styleScaleX = 1;
+      this.styleScaleY = 1;
+    }
+
+    this.scaleX = this.transformScaleX * this.styleScaleX;
+    this.scaleY = this.transformScaleY * this.styleScaleY;
   }
 
   /** 获取旋转值 */
   public setRotate(domStyles: CSSStyleDeclaration) {
     const a = this.transformValue[0];
     const b = this.transformValue[1];
-    this.rotate = transformValuePrecision((Math.atan2(b, a) * 180 / Math.PI + 360) % 360);
+    this.transformRotate = transformValuePrecision((Math.atan2(b, a) * 180 / Math.PI + 360) % 360);
+
     if (domStyles.rotate && domStyles.rotate !== 'none') {
-      this.rotate += toNum(domStyles.rotate);
+      this.styleRotate = toNum(domStyles.rotate);
     }
+    else {
+      this.styleRotate = 0;
+    }
+
+    this.rotate = this.transformRotate + this.styleRotate;
   }
 
   /**

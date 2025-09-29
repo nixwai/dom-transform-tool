@@ -18,7 +18,7 @@ export class RotateApplication {
     this.rotateDomAttrs = new RotateDomAttrs(this.options);
     this.rotateParams = new RotateParams(this.options, this.rotateDomAttrs);
     this.rotateAngle = new RotateAngle(this.rotateDomAttrs);
-    this.rotateStyleUpdater = new RotateStyleUpdater(this.options);
+    this.rotateStyleUpdater = new RotateStyleUpdater(this.options, this.rotateDomAttrs);
     this.rotateHandler = new ResizeHandler(this.options, this.rotateParams, this.rotateAngle);
   }
 
@@ -36,7 +36,7 @@ export class RotateApplication {
 
   /** 指针活动开始 */
   public onPointerBegin() {
-    this.cacheResizeContent = { rotate: this.rotateDomAttrs.variant.rotate };
+    this.cacheResizeContent = { rotate: this.rotateDomAttrs.originRotate };
     this.options.onPointerBegin?.(this.cacheResizeContent);
   }
 

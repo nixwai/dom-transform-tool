@@ -31,16 +31,20 @@ export class RotateParams {
   }
 
   private setParams() {
-    const { variant, maxRotate, minRotate } = this.domRotateAttrs;
-    this.originValue = variant.rotate % 180;
+    const { variant, maxRotate, minRotate, originRotate } = this.domRotateAttrs;
+    this.originValue = originRotate % 360;
+    let nowRotate = variant.rotate % 360;
+    if (Math.abs(nowRotate) > 180) {
+      nowRotate = nowRotate < 0 ? 360 - nowRotate : nowRotate - 360;
+    }
     const step = this.options.step;
     if (step && step > 0) {
-      this.minValue = Math.ceil((minRotate - this.originValue) / step) * step;
-      this.maxValue = Math.floor((maxRotate - this.originValue) / step) * step;
+      this.minValue = Math.ceil((minRotate - nowRotate) / step) * step;
+      this.maxValue = Math.floor((maxRotate - nowRotate) / step) * step;
     }
     else {
-      this.minValue = minRotate - this.originValue;
-      this.maxValue = maxRotate - this.originValue;
+      this.minValue = minRotate - nowRotate;
+      this.maxValue = maxRotate - nowRotate;
     }
   }
 }

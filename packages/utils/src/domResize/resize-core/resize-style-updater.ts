@@ -86,7 +86,7 @@ export class ResizeStyleUpdater {
       if (transformValue.length > 6) {
         // matrix3d(https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function/matrix3d)
         beforeTransformValueStr = `${transformValue.slice(0, 12).join(',')},`;
-        afterTransformValueStr = `,${transformValue.slice(15).join(',')}`;
+        afterTransformValueStr = `,${transformValue.slice(14).join(',')}`;
       }
       else {
         // matrix(https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function/matrix)

@@ -11,10 +11,10 @@ export interface DomRotateOptions {
   }
   /** 指针的触发事件 */
   pointer?: PointerEvent
-  /** 指针触发元素，不传则使用target */
+  /** 指针操作的触发元素，默认使用target */
   pointerTarget?: HTMLElement
   /** 使用rotate/transform进行旋转，默认使用rotate */
-  rotateType?: DomRotateRotateType
+  rotateType?: DomRotateType
   /** 固定每次改变的度数，单位deg，需大于0 */
   step?: number
   /** 自定义渲染 */
@@ -39,7 +39,7 @@ export interface DomRotateOptions {
   onPointerEnd?: (content: DomRotateContent) => void
 }
 
-export type DomRotateRotateType = 'rotate' | 'transform';
+export type DomRotateType = 'rotate' | 'transform';
 
 /** DomRotate的自定义渲染样式 */
 export interface DomRotateCustomRender {
@@ -55,6 +55,7 @@ export interface DomRotateContent {
 /** DomRotate的样式 */
 export interface DomRotateStyle {
   rotate?: string
+  transform?: string
 }
 
 /** DomRotate的自定义样式，用于兼容一些无法通过当前节点获取的样式 */

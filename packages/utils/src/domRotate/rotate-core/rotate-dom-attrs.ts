@@ -7,6 +7,8 @@ export class RotateDomAttrs {
   public variant = new DomVariant();
   /** 元素的高 */
   public domHeight = 0;
+  /** 原旋转值 */
+  public originRotate = 0;
   /** 最小旋转值 */
   public minRotate = -Infinity;
   /** 最大旋转值 */
@@ -14,6 +16,7 @@ export class RotateDomAttrs {
 
   constructor(private options: DomRotateOptions) {
     this.updateTargetAttrsInfo();
+    this.updateRotateInfo();
     this.customDomAttrs();
   }
 
@@ -27,13 +30,23 @@ export class RotateDomAttrs {
     this.domHeight = toNum(domStyles.height);
   }
 
+  /** 更新旋转信息 */
+  private updateRotateInfo() {
+    if (this.options.rotateType === 'transform') {
+      this.originRotate = this.variant.transformRotate;
+    }
+    else {
+      this.originRotate = this.variant.styleRotate;
+    }
+  }
+
   /** 自定义信息 */
   private customDomAttrs() {
     if (!this.options.customStyle) { return; }
 
     const { rotate, maxRotate, minRotate } = this.options.customStyle;
     if (rotate !== undefined) {
-      this.variant.rotate = toNum(String(rotate));
+      this.originRotate = toNum(String(rotate));
     }
 
     if (minRotate !== undefined) {

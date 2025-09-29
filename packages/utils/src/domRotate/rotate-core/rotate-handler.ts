@@ -20,7 +20,7 @@ export class ResizeHandler {
   }
 
   public rotating(angle: number) {
-    const { originValue, minValue, maxValue } = this.rotateParams;
+    const { minValue, maxValue, originValue } = this.rotateParams;
     let rotateValue = this.getRotateValue(angle);
     // 限制角度
     if (rotateValue < minValue) { rotateValue = minValue; }

@@ -15,7 +15,7 @@ export interface DomResizeOptions {
   }
   /** 指针控制事件 */
   pointer?: PointerEvent
-  /** 指针触发元素，不传则使用target */
+  /** 指针操作的触发元素，默认使用target */
   pointerTarget?: HTMLElement
   /**
    * 使用position/translate/transform进行偏移
@@ -76,9 +76,9 @@ export interface DomResizeCustomRender {
   width?: DomResizeCustomRenderMethod
   /** 高度 */
   height?: DomResizeCustomRenderMethod
-  /** 横轴的偏移，offset为transform时仅px可用 */
+  /** 横轴的偏移，无法在offset为transform时使用 */
   offsetX?: DomResizeCustomRenderMethod
-  /** 纵轴的偏移，offset为transform时仅px可用 */
+  /** 纵轴的偏移，无法在offset为transform时使用 */
   offsetY?: DomResizeCustomRenderMethod
 }
 
