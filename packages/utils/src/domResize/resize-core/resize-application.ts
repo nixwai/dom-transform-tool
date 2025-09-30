@@ -1,10 +1,10 @@
 import type { Axis, Dir } from '../../typing';
 import type { DomResizeContent, DomResizeOptions, DomResizeStyle } from '../types';
 import { ResizeAxisParams } from './resize-axis-params';
-import { ResizeDistance } from './resize-distance';
 import { ResizeDistanceCounter } from './resize-distance-counter';
 import { ResizeDomAttrs } from './resize-dom-attrs';
 import { ResizeHandler } from './resize-handler';
+import { ResizeLogger } from './resize-logger';
 import { ResizeOffsetCounter } from './resize-offset-counter';
 import { ResizeStyleUpdater } from './resize-style-updater';
 
@@ -23,7 +23,7 @@ type ResizeDirectionFn = (resizeData: ResizeApplication, ...resizingFns: Resizin
 export class ResizeApplication {
   public options: DomResizeOptions = {};
   public resizeDomAttrs: ResizeDomAttrs;
-  public resizeDistance: ResizeDistance;
+  public resizeLogger: ResizeLogger;
   public resizeAxisParams: ResizeAxisParams;
   private resizeDistanceCounter: ResizeDistanceCounter;
   public resizeOffsetCounter: ResizeOffsetCounter;
@@ -36,10 +36,10 @@ export class ResizeApplication {
     }
     this.resizeDomAttrs = new ResizeDomAttrs(this.options);
     this.resizeAxisParams = new ResizeAxisParams(this.options, this.resizeDomAttrs);
-    this.resizeDistance = new ResizeDistance(this.resizeAxisParams, this.resizeDomAttrs);
+    this.resizeLogger = new ResizeLogger(this.resizeAxisParams, this.resizeDomAttrs);
     this.resizeDistanceCounter = new ResizeDistanceCounter(this.options, this.resizeAxisParams);
     this.resizeOffsetCounter = new ResizeOffsetCounter(this.options, this.resizeDomAttrs);
-    this.resizeHandler = new ResizeHandler(this.options, this.resizeAxisParams, this.resizeDistanceCounter, this.resizeOffsetCounter, this.resizeDistance);
+    this.resizeHandler = new ResizeHandler(this.options, this.resizeAxisParams, this.resizeDistanceCounter, this.resizeOffsetCounter, this.resizeLogger);
     this.resizeStyleUpdater = new ResizeStyleUpdater(this.options, this.resizeDomAttrs);
   }
 

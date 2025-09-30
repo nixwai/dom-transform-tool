@@ -11,7 +11,7 @@ interface AxisDistance {
   distance: number
 };
 
-export class ResizeDistance {
+export class ResizeLogger {
   x: AxisDistance = {
     value: 0,
     total: 0,

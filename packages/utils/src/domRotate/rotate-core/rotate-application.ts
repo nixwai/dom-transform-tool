@@ -1,7 +1,7 @@
 import type { DomRotateContent, DomRotateOptions, DomRotateStyle } from '../types';
-import { RotateAngle } from './rotate-angle';
 import { RotateDomAttrs } from './rotate-dom-attrs';
 import { ResizeHandler } from './rotate-handler';
+import { RotateLogger } from './rotate-logger';
 import { RotateParams } from './rotate-params';
 import { RotateStyleUpdater } from './rotate-style-updater';
 
@@ -9,7 +9,7 @@ export class RotateApplication {
   public options: DomRotateOptions = {};
   public rotateDomAttrs: RotateDomAttrs;
   public rotateParams: RotateParams;
-  public rotateAngle: RotateAngle;
+  public rotateLogger: RotateLogger;
   public rotateStyleUpdater: RotateStyleUpdater;
   public rotateHandler: ResizeHandler;
 
@@ -17,9 +17,9 @@ export class RotateApplication {
     if (options) { this.options = options; }
     this.rotateDomAttrs = new RotateDomAttrs(this.options);
     this.rotateParams = new RotateParams(this.options, this.rotateDomAttrs);
-    this.rotateAngle = new RotateAngle(this.rotateDomAttrs);
+    this.rotateLogger = new RotateLogger(this.rotateDomAttrs);
     this.rotateStyleUpdater = new RotateStyleUpdater(this.options, this.rotateDomAttrs);
-    this.rotateHandler = new ResizeHandler(this.options, this.rotateParams, this.rotateAngle);
+    this.rotateHandler = new ResizeHandler(this.options, this.rotateParams, this.rotateLogger);
   }
 
   /** 清除配置的指针 */

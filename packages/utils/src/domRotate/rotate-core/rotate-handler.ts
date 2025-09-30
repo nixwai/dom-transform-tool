@@ -1,5 +1,5 @@
 import type { DomRotateOptions } from '../types';
-import type { RotateAngle } from './rotate-angle';
+import type { RotateLogger } from './rotate-logger';
 import type { RotateParams } from './rotate-params';
 
 export class ResizeHandler {
@@ -8,7 +8,7 @@ export class ResizeHandler {
   constructor(
     private options: DomRotateOptions,
     private rotateParams: RotateParams,
-    private rotateAngle: RotateAngle,
+    private rotateLogger: RotateLogger,
   ) {
     this.createRotateValueMethod();
   }
@@ -27,7 +27,7 @@ export class ResizeHandler {
     else if (rotateValue > maxValue) { rotateValue = maxValue; }
     // 加上原角度
     rotateValue += originValue;
-    this.rotateAngle.logAngle(rotateValue);
+    this.rotateLogger.logAngle(rotateValue);
     return rotateValue;
   }
 }

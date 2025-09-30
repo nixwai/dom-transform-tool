@@ -1,6 +1,6 @@
 import type { RotateDomAttrs } from './rotate-dom-attrs';
 
-export class RotateAngle {
+export class RotateLogger {
   /** 调整后的值 */
   value: number = 0;
   /** 总共调整的角度 */

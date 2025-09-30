@@ -1,8 +1,8 @@
 import type { DomResizeOptions } from '../types';
 import type { ResizingFn } from './resize-application';
 import type { ResizeAxisParams } from './resize-axis-params';
-import type { ResizeDistance } from './resize-distance';
 import type { ResizeDistanceCounter } from './resize-distance-counter';
+import type { ResizeLogger } from './resize-logger';
 import type { ResizeOffsetCounter } from './resize-offset-counter';
 
 export class ResizeHandler {
@@ -13,7 +13,7 @@ export class ResizeHandler {
     private resizeAxisParams: ResizeAxisParams,
     private resizeDistanceCounter: ResizeDistanceCounter,
     private resizeOffsetCounter: ResizeOffsetCounter,
-    private resizeDistance: ResizeDistance,
+    private resizeLogger: ResizeLogger,
   ) {
     this.createResizeValueMethod();
   }
@@ -31,7 +31,7 @@ export class ResizeHandler {
     const value = originValue + distance;
     const { offsetCurrentAxis, offsetAnotherAxis } = this.resizeOffsetCounter.getForwardOffset(distance, axis, 1, value);
     const resizeValue = this.getResizeValue(value, minValue);
-    this.resizeDistance.logDistance(resizeValue, axis);
+    this.resizeLogger.logDistance(resizeValue, axis);
     return {
       value: Math.abs(resizeValue),
       offset: offsetCurrentAxis,
@@ -46,7 +46,7 @@ export class ResizeHandler {
     const value = originValue - distance;
     const { offsetCurrentAxis, offsetAnotherAxis } = this.resizeOffsetCounter.getBackwardOffset(distance, axis, -1, value);
     const resizeValue = this.getResizeValue(value, minValue);
-    this.resizeDistance.logDistance(resizeValue, axis);
+    this.resizeLogger.logDistance(resizeValue, axis);
     return {
       value: Math.abs(resizeValue),
       offset: offsetCurrentAxis,
@@ -62,7 +62,7 @@ export class ResizeHandler {
     const value = originValue + pointerDir * distance;
     const { offsetCurrentAxis, offsetAnotherAxis } = this.resizeOffsetCounter.getBothOffset(distance, axis, pointerDir, value);
     const resizeValue = this.getResizeValue(value, minValue);
-    this.resizeDistance.logDistance(resizeValue, axis);
+    this.resizeLogger.logDistance(resizeValue, axis);
     return {
       value: Math.abs(resizeValue),
       offset: offsetCurrentAxis,

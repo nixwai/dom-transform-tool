@@ -5,14 +5,14 @@ export function rotateByPointer(rotateApplication: RotateApplication) {
     return;
   }
   const pointerPosition = getPointerPosition(rotateApplication);
-  const lastRotateAngle = rotateApplication.rotateAngle.total;
+  const lastRotateAngle = rotateApplication.rotateLogger.total;
   return beginRotateContent(rotateApplication, ({ startX, endX, startY, endY }) => {
-    const { rotateHandler, rotateAngle, rotateStyleUpdater } = rotateApplication;
+    const { rotateHandler, rotateLogger, rotateStyleUpdater } = rotateApplication;
     const moveX = pointerPosition.x - (startX - endX);
     const moveY = pointerPosition.y - (startY - endY);
     const moveDeg = Math.atan2(moveY, moveX) * (180 / Math.PI); // 得出当前指针位置与变化原点之间的角度
     const angle = rotateHandler.rotating(moveDeg - pointerPosition.deg + lastRotateAngle); // 将当前角度减去初始的角度，得到旋转角度
-    if (!rotateAngle.angle) { return; }
+    if (!rotateLogger.angle) { return; }
     const rotateStyle = rotateStyleUpdater.setStyleRotate(angle);
     rotateApplication.updateRotate({ rotate: angle }, rotateStyle);
   });
