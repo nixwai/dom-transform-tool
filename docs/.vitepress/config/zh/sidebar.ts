@@ -10,8 +10,8 @@ export const sidebar: DefaultTheme.SidebarItem[] = [
   {
     text: 'API',
     items: [
-      { text: '调整大小', link: '/dom-resize' },
-      { text: '调整旋转', link: '/dom-rotate' },
+      { text: 'domResize', link: '/dom-resize' },
+      { text: 'domRotate', link: '/dom-rotate' },
     ],
   },
 ];
