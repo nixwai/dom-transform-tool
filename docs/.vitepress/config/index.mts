@@ -13,6 +13,7 @@ export default defineConfig({
     plugins: [UnoCSS() as any],
     css: { preprocessorOptions: { scss: { api: 'modern-compiler' } } },
   },
+  head: [['link', { rel: 'icon', type: 'image/svg+xml', href: '/dom-transform-tool/transform-logo.svg' }]],
   themeConfig: {
     logo: '/transform-logo.svg',
     socialLinks: [{ icon: 'github', link: 'https://github.com/nixwai/dom-transform-tool' }],
