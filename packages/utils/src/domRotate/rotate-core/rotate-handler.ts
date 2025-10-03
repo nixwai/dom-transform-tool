@@ -1,6 +1,7 @@
 import type { DomRotateOptions } from '../types';
 import type { RotateLogger } from './rotate-logger';
 import type { RotateParams } from './rotate-params';
+import { getPrecisionValue } from '../../utils';
 
 export class ResizeHandler {
   private getRotateValue = (value: number) => value;
@@ -19,14 +20,14 @@ export class ResizeHandler {
       : (value: number) => value;
   }
 
-  public rotating(angle: number) {
+  public rotating(value: number) {
     const { minValue, maxValue, originValue } = this.rotateParams;
-    let rotateValue = this.getRotateValue(angle);
+    let rotateValue = this.getRotateValue(value);
     // 限制角度
     if (rotateValue < minValue) { rotateValue = minValue; }
     else if (rotateValue > maxValue) { rotateValue = maxValue; }
     // 加上原角度
-    rotateValue += originValue;
+    rotateValue = getPrecisionValue(rotateValue + originValue);
     this.rotateLogger.logAngle(rotateValue);
     return rotateValue;
   }

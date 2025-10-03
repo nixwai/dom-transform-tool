@@ -17,7 +17,7 @@ export class RotateApplication {
     if (options) { this.options = options; }
     this.rotateDomAttrs = new RotateDomAttrs(this.options);
     this.rotateParams = new RotateParams(this.options, this.rotateDomAttrs);
-    this.rotateLogger = new RotateLogger(this.rotateDomAttrs);
+    this.rotateLogger = new RotateLogger(this.rotateParams);
     this.rotateStyleUpdater = new RotateStyleUpdater(this.options, this.rotateDomAttrs);
     this.rotateHandler = new ResizeHandler(this.options, this.rotateParams, this.rotateLogger);
   }

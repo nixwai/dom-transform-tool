@@ -36,7 +36,7 @@ export class ResizeApplication {
     }
     this.resizeDomAttrs = new ResizeDomAttrs(this.options);
     this.resizeAxisParams = new ResizeAxisParams(this.options, this.resizeDomAttrs);
-    this.resizeLogger = new ResizeLogger(this.resizeAxisParams, this.resizeDomAttrs);
+    this.resizeLogger = new ResizeLogger(this.resizeAxisParams);
     this.resizeDistanceCounter = new ResizeDistanceCounter(this.options, this.resizeAxisParams);
     this.resizeOffsetCounter = new ResizeOffsetCounter(this.options, this.resizeDomAttrs);
     this.resizeHandler = new ResizeHandler(this.options, this.resizeAxisParams, this.resizeDistanceCounter, this.resizeOffsetCounter, this.resizeLogger);

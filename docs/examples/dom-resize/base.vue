@@ -58,7 +58,9 @@ function changeTargetResize(dis: { x: number, y: number }) {
 </script>
 
 <template>
-  <div class="flex flex-wrap gap-1">
+  使用指针拖拖动调整尺寸
+
+  <div class="flex flex-wrap gap-1 mt-4">
     <div v-for="(dir, index) in directionList" :key="dir">
       <input
         :id="`dir${index}`"

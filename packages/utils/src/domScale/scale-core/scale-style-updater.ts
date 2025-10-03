@@ -1,15 +1,15 @@
-import type { DomRotateCustomRender, DomRotateOptions, DomRotateStyle } from '../types';
-import type { RotateDomAttrs } from './rotate-dom-attrs';
+import type { DomScaleCustomRender, DomScaleOptions, DomScaleStyle } from '../types';
+import type { ScaleDomAttrs } from './scale-dom-attrs';
 import { createDomStyleUpdateMethod } from '../../utils';
 
-type SetStyleRotate = (value: number) => DomRotateStyle;
+type SetStyleRotate = (scaleX: number, scaleY: number) => DomScaleStyle;
 
-export class RotateStyleUpdater {
+export class ScaleStyleUpdater {
   private targetRef?: WeakRef<HTMLElement>;
 
   public setStyleRotate: SetStyleRotate = () => ({});
 
-  constructor(private options: DomRotateOptions, private rotateDomAttrs: RotateDomAttrs) {
+  constructor(private options: DomScaleOptions, private scaleDomAttrs: ScaleDomAttrs) {
     if (options.target) {
       this.targetRef = new WeakRef(options.target);
     }
@@ -18,28 +18,28 @@ export class RotateStyleUpdater {
 
   /** 设置样式更新方法 */
   private setStyleRotateUpdater() {
-    this.setStyleRotate = createDomStyleUpdateMethod<SetStyleRotate, DomRotateStyle>(
-      this.createGetRotateStyle(),
+    this.setStyleRotate = createDomStyleUpdateMethod<SetStyleRotate, DomScaleStyle>(
+      this.createGetScaleStyle(),
       this.targetRef,
       this.options.disableUpdate,
     );
   }
 
   /** 创建改变target元素的值方法 */
-  private changeByCustomRender(key: keyof DomRotateCustomRender) {
-    return (value: number) => {
+  private changeByCustomRender(key: keyof DomScaleCustomRender) {
+    return (scaleX: number, scaleY: number) => {
       const customRender = this.options.customRender?.[key];
-      const customValue = customRender?.(value);
-      return customValue ?? `${value}deg`;
+      const customValue = customRender?.(scaleX, scaleY);
+      return customValue ?? `${scaleX} ${scaleY}`;
     };
   }
 
   /** 获取位移修改函数 */
-  private createGetRotateStyle(): SetStyleRotate {
-    const getRotate = this.changeByCustomRender('rotate');
+  private createGetScaleStyle(): SetStyleRotate {
+    const getScale = this.changeByCustomRender('scale');
     // 使用transform
-    if (this.options.rotateType === 'transform') {
-      const { transformName, transformValue, transformScaleX, transformScaleY } = this.rotateDomAttrs.variant;
+    if (this.options.scaleType === 'transform') {
+      const { transformName, transformValue, transformRotate } = this.scaleDomAttrs.variant;
       let afterTransformValueStr = '';
       const is3DTransform = transformValue.length > 6;
       if (is3DTransform) {
@@ -51,23 +51,24 @@ export class RotateStyleUpdater {
         afterTransformValueStr = transformValue.slice(4).join(',');
       }
       // transform 不兼容customStyle自定义
-      return (value) => {
+      const cos = Math.cos(transformRotate * Math.PI / 180);
+      const sin = Math.sin(transformRotate * Math.PI / 180);
+      return (scaleX, scaleY) => {
         // 变换矩阵计算
-        const cos = Math.cos(value * Math.PI / 180);
-        const sin = Math.sin(value * Math.PI / 180);
-        const a = cos * transformScaleX;
-        const b = sin * transformScaleX;
-        const c = -sin * transformScaleY;
-        const d = cos * transformScaleY;
+        const a = cos * scaleX;
+        const b = sin * scaleX;
+        const c = -sin * scaleY;
+        const d = cos * scaleY;
         const beforeTransformValueStr = is3DTransform
           ? `${a},${b},${transformValue[2]},${transformValue[3]},${c},${d}`
           : `${a},${b},${c},${d}`;
+
         return { transform: `${transformName}(${beforeTransformValueStr},${afterTransformValueStr})` };
       };
     }
     else {
-      // 使用rotate
-      return value => ({ rotate: getRotate(value) });
+      // 使用scale
+      return (scaleX, scaleY) => ({ scale: getScale(scaleX, scaleY) });
     }
   }
 }

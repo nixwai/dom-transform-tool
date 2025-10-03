@@ -1,4 +1,4 @@
-import { toNum } from '../utils';
+import { getPrecisionValue, toNum } from '../utils';
 
 const MatrixValueReg = /(matrix3?d?)\((.+)\)/;
 
@@ -78,16 +78,16 @@ export class DomVariant {
       const b = this.transformValue[1];
       const c = this.transformValue[4];
       const d = this.transformValue[5];
-      this.transformScaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
-      this.transformScaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
+      this.transformScaleX = getPrecisionValue(Math.sqrt(a * a + b * b));
+      this.transformScaleY = getPrecisionValue(Math.sqrt(c * c + d * d));
     }
     else {
       const a = this.transformValue[0];
       const b = this.transformValue[1];
       const c = this.transformValue[2];
       const d = this.transformValue[3];
-      this.transformScaleX = transformValuePrecision(Math.sqrt(a * a + b * b));
-      this.transformScaleY = transformValuePrecision(Math.sqrt(c * c + d * d));
+      this.transformScaleX = getPrecisionValue(Math.sqrt(a * a + b * b));
+      this.transformScaleY = getPrecisionValue(Math.sqrt(c * c + d * d));
     }
 
     if (domStyles.scale && domStyles.scale !== 'none') {
@@ -108,7 +108,7 @@ export class DomVariant {
   public setRotate(domStyles: CSSStyleDeclaration) {
     const a = this.transformValue[0];
     const b = this.transformValue[1];
-    this.transformRotate = transformValuePrecision((Math.atan2(b, a) * 180 / Math.PI + 360) % 360);
+    this.transformRotate = getPrecisionValue((Math.atan2(b, a) * 180 / Math.PI + 360) % 360);
 
     if (domStyles.rotate && domStyles.rotate !== 'none') {
       this.styleRotate = toNum(domStyles.rotate);
@@ -178,9 +178,4 @@ export class DomVariant {
       }
     }
   }
-}
-
-/** transform精度处理函数 */
-function transformValuePrecision(value: number): number {
-  return Math.round(value * 100) / 100;
 }
