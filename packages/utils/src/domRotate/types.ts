@@ -26,7 +26,7 @@ export interface DomRotateOptions {
   /**
    * 关闭指针的默认结束事件
    * - 指针默认使用pointercancel、pointerup事件结束指针调整事件，关闭后则手动调用释放函数
-   * - 释放函数在方法的返回值中（endPointerHandler = domResize()）
+   * - 释放函数为方法的返回值
    */
   disablePointerEnd?: boolean
   /** 调整回调 */

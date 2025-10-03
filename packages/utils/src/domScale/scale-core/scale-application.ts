@@ -22,7 +22,7 @@ export class ScaleApplication {
     this.scaleHandler = new ScaleHandler(this.scaleAxisParams, this.scaleLogger);
   }
 
-  public updateRotate(content: DomScaleContent, styles: DomScaleStyle) {
+  public updateScale(content: DomScaleContent, styles: DomScaleStyle) {
     this.options.callback?.(content, styles);
   }
 }

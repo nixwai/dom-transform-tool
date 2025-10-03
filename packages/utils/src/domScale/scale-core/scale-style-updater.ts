@@ -2,23 +2,23 @@ import type { DomScaleCustomRender, DomScaleOptions, DomScaleStyle } from '../ty
 import type { ScaleDomAttrs } from './scale-dom-attrs';
 import { createDomStyleUpdateMethod } from '../../utils';
 
-type SetStyleRotate = (scaleX: number, scaleY: number) => DomScaleStyle;
+type SetStyleScale = (scaleX: number, scaleY: number) => DomScaleStyle;
 
 export class ScaleStyleUpdater {
   private targetRef?: WeakRef<HTMLElement>;
 
-  public setStyleRotate: SetStyleRotate = () => ({});
+  public setStyleScale: SetStyleScale = () => ({});
 
   constructor(private options: DomScaleOptions, private scaleDomAttrs: ScaleDomAttrs) {
     if (options.target) {
       this.targetRef = new WeakRef(options.target);
     }
-    this.setStyleRotateUpdater();
+    this.setStyleScaleUpdater();
   }
 
   /** 设置样式更新方法 */
-  private setStyleRotateUpdater() {
-    this.setStyleRotate = createDomStyleUpdateMethod<SetStyleRotate, DomScaleStyle>(
+  private setStyleScaleUpdater() {
+    this.setStyleScale = createDomStyleUpdateMethod<SetStyleScale, DomScaleStyle>(
       this.createGetScaleStyle(),
       this.targetRef,
       this.options.disableUpdate,
@@ -35,7 +35,7 @@ export class ScaleStyleUpdater {
   }
 
   /** 获取位移修改函数 */
-  private createGetScaleStyle(): SetStyleRotate {
+  private createGetScaleStyle(): SetStyleScale {
     const getScale = this.changeByCustomRender('scale');
     // 使用transform
     if (this.options.scaleType === 'transform') {

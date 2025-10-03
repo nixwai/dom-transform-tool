@@ -7,9 +7,9 @@ import { ScaleApplication } from './scale-core/scale-application';
  * @param options 配置项 - {@link DomScaleOptions}
  */
 export function domScale(options?: DomScaleOptions) {
-  const rotateApplication = new ScaleApplication(options);
+  const scaleApplication = new ScaleApplication(options);
 
-  scaleByManual(rotateApplication);
+  scaleByManual(scaleApplication);
 }
 
 export * from './types';

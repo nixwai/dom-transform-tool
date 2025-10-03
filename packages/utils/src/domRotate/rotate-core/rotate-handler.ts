@@ -3,7 +3,7 @@ import type { RotateLogger } from './rotate-logger';
 import type { RotateParams } from './rotate-params';
 import { getPrecisionValue } from '../../utils';
 
-export class ResizeHandler {
+export class RotateHandler {
   private getRotateValue = (value: number) => value;
 
   constructor(
