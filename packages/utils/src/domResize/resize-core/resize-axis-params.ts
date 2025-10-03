@@ -113,7 +113,10 @@ export class ResizeAxisParams {
 
   /** 手动调整距离 */
   private resolveManualDistance(originValue: number, parentValue: number, optionManual?: number | string) {
-    const manualValue = optionManual?.toString();
+    if (optionManual === undefined) {
+      return 0;
+    }
+    const manualValue = optionManual.toString();
     let distance = 0;
     // 获取手动调整的偏移量
     if (manualValue) {

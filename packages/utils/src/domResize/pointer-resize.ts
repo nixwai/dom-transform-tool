@@ -17,15 +17,15 @@ export function resizeByPointer(resizeApplication: ResizeApplication) {
 
 /** 调整水平方向 */
 function resizeHorizontal(resizeApplication: ResizeApplication, resizingWidthFn: ResizingFn) {
-  const { resizeDistance, resizeStyleUpdater, resizeDomAttrs, resizeAxisParams } = resizeApplication;
+  const { resizeLogger, resizeStyleUpdater, resizeDomAttrs, resizeAxisParams } = resizeApplication;
   const { offsetY: domOffsetY } = resizeDomAttrs;
   const pointerDir = getPointerDirection(resizeApplication);
   // 延续之前的移动距离
   const dir = resizeAxisParams.x.dir || 0.5 * pointerDir.x;
-  const lastDistanceX = dir * resizeDistance.x.total;
+  const lastDistanceX = dir * resizeLogger.x.total;
   return beginResizeContent(resizeApplication, ({ startX, endX }) => {
     const { value: width, offset: offsetX, otherOffset: otherOffsetY } = resizingWidthFn(startX, endX + lastDistanceX, 'x', pointerDir.x);
-    if (!resizeDistance.x.distance) { return; }
+    if (!resizeLogger.x.distance) { return; }
     const offsetY = domOffsetY + otherOffsetY;
     const widthStyle = resizeStyleUpdater.setStyleWidthOrHeight(width, 'width');
     const offsetStyle = resizeStyleUpdater.setStyleOffset(offsetX, offsetY);
@@ -35,15 +35,15 @@ function resizeHorizontal(resizeApplication: ResizeApplication, resizingWidthFn:
 
 /** 调整垂直方向 */
 function resizeVertical(resizeApplication: ResizeApplication, resizingHeightFn: ResizingFn) {
-  const { resizeDistance, resizeStyleUpdater, resizeDomAttrs, resizeAxisParams } = resizeApplication;
+  const { resizeLogger, resizeStyleUpdater, resizeDomAttrs, resizeAxisParams } = resizeApplication;
   const { offsetX: domOffsetX } = resizeDomAttrs;
   const pointerDir = getPointerDirection(resizeApplication);
   // 延续之前的移动距离
   const dir = resizeAxisParams.y.dir || 0.5 * pointerDir.y;
-  const lastDistanceY = dir * resizeDistance.y.total;
+  const lastDistanceY = dir * resizeLogger.y.total;
   return beginResizeContent(resizeApplication, ({ startY, endY }) => {
     const { value: height, offset: offsetY, otherOffset: otherOffsetX } = resizingHeightFn(startY, endY + lastDistanceY, 'y', pointerDir.y);
-    if (!resizeDistance.y.distance) { return; }
+    if (!resizeLogger.y.distance) { return; }
     const offsetX = domOffsetX - otherOffsetX;
     const heightStyle = resizeStyleUpdater.setStyleWidthOrHeight(height, 'height');
     const offsetStyle = resizeStyleUpdater.setStyleOffset(offsetX, offsetY);
@@ -53,20 +53,20 @@ function resizeVertical(resizeApplication: ResizeApplication, resizingHeightFn: 
 
 /** 调整水平与垂直方向 */
 function resizeHorizontalAndVertical(resizeApplication: ResizeApplication, resizingWidthFn: ResizingFn, resizingHeightFn: ResizingFn) {
-  const { options, resizeDistance, resizeStyleUpdater, resizeDomAttrs, resizeAxisParams } = resizeApplication;
+  const { options, resizeLogger, resizeStyleUpdater, resizeDomAttrs, resizeAxisParams } = resizeApplication;
   const { size: { aspectRatio } } = resizeDomAttrs;
   const { lockAspectRatio } = options;
   const pointerDir = getPointerDirection(resizeApplication);
   // 延续之前的移动距离
   const dirX = resizeAxisParams.x.dir || 0.5 * pointerDir.x;
   const dirY = resizeAxisParams.y.dir || 0.5 * pointerDir.y;
-  const lastDistanceX = dirX * resizeDistance.x.total;
-  const lastDistanceY = dirY * resizeDistance.y.total;
+  const lastDistanceX = dirX * resizeLogger.x.total;
+  const lastDistanceY = dirY * resizeLogger.y.total;
   const updateDom = (coord: MoveCoord) => {
     const { value: width, offset: resizeOffsetX, otherOffset: otherOffsetY } = resizingWidthFn(coord.startX, coord.endX + lastDistanceX, 'x', pointerDir.x);
     const { value: height, offset: resizeOffsetY, otherOffset: otherOffsetX } = resizingHeightFn(coord.startY, coord.endY + lastDistanceY, 'y', pointerDir.y);
-    if ((!resizeDistance.x.distance && !resizeDistance.y.distance) // 移动距离为0时，不更新dom
-      || (lockAspectRatio && (!resizeDistance.x.distance || !resizeDistance.y.distance))) { // 锁定比例时，任意一个方向的移动距离为0时，不更新dom
+    if ((!resizeLogger.x.distance && !resizeLogger.y.distance) // 移动距离为0时，不更新dom
+      || (lockAspectRatio && (!resizeLogger.x.distance || !resizeLogger.y.distance))) { // 锁定比例时，任意一个方向的移动距离为0时，不更新dom
       return;
     }
     const offsetX = resizeOffsetX - otherOffsetX;

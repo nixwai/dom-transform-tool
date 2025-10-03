@@ -18,16 +18,17 @@ export class RotateParams {
   }
 
   private setManualDeg() {
-    const manualValue = this.options.manual?.rotate?.toString();
-    let rotateDeg = 0;
-    if (manualValue) {
-      rotateDeg = toNum(manualValue);
+    if (this.options.manual?.rotate !== undefined) {
+      let rotateDeg = toNum(this.options.manual.rotate.toString());
       if (this.options.manual?.mode === 'absolute') {
-        // 调整到固定的角度
+        // 调整到固定的比例
         rotateDeg = rotateDeg - this.domRotateAttrs.variant.rotate;
       }
+      this.manualRotate = rotateDeg;
     }
-    this.manualRotate = rotateDeg;
+    else {
+      this.manualRotate = 0;
+    }
   }
 
   private setParams() {
