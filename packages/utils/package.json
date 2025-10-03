@@ -1,7 +1,7 @@
 {
   "name": "dom-transform-tool",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Provides rich APIs to implement element resizing, rotation, scaling and other operations",
   "author": "nixwai <https://github.com/nixwai>",
   "license": "MIT",
