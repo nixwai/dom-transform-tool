@@ -131,7 +131,7 @@ export interface DomResizeContent {
   height?: number
   offsetX?: number
   offsetY?: number
-};
+}
 
 /** DomResize的样式 */
 export interface DomResizeStyle {
