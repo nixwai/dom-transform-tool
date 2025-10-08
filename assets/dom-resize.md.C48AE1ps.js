@@ -1,69 +1,5 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/chunks/direction.Bb4lp2h4.js","assets/chunks/framework.DraZOub8.js","assets/chunks/index.B1g2gllY.js","assets/chunks/update-style.Di614ZlN.js","assets/chunks/base.DDamCjKn.js"])))=>i.map(i=>d[i]);
-import{D as d,v as g,ae as o,p as D,C as m,c as C,o as u,j as n,af as y,G as i,ag as f,a as p,ah as F,k as a,w as e,ai as E}from"./chunks/framework.DraZOub8.js";import{L as c,N as A}from"./chunks/index.C_Ii9GWq.js";const B=`<script setup lang="ts">\r
-import { domResize } from 'dom-transform-tool';\r
-import { ref } from 'vue';\r
-\r
-const resizeTarget1 = ref<HTMLDivElement>();\r
-const resizeTarget2 = ref<HTMLDivElement>();\r
-const resizeTarget3 = ref<HTMLDivElement>();\r
-const resizeTarget4 = ref<HTMLDivElement>();\r
-\r
-function handleTarget1ResizeHeight(e: PointerEvent) {\r
-  domResize({\r
-    target: resizeTarget1.value,\r
-    pointer: e,\r
-    direction: 'bottom',\r
-  });\r
-}\r
-\r
-function handleTarget2Resize(e: PointerEvent) {\r
-  domResize({\r
-    target: resizeTarget2.value,\r
-    pointer: e,\r
-    direction: 'right',\r
-  });\r
-  handleTarget1ResizeHeight(e);\r
-}\r
-\r
-function handleTarget3Resize(e: PointerEvent) {\r
-  domResize({\r
-    target: resizeTarget3.value,\r
-    pointer: e,\r
-    direction: 'right',\r
-  });\r
-  handleTarget1ResizeHeight(e);\r
-}\r
-\r
-function handleTarget4Resize(e: PointerEvent) {\r
-  domResize({\r
-    target: resizeTarget4.value,\r
-    pointer: e,\r
-    direction: 'right',\r
-  });\r
-  handleTarget1ResizeHeight(e);\r
-}\r
-<\/script>\r
-\r
-<template>\r
-  <div ref="resizeTarget1" class="flex max-w-100% min-w-120 min-h-20 max-h-60">\r
-    <div\r
-      ref="resizeTarget2"\r
-      class="w-40 bg-green min-w-10% max-w-40%"\r
-      @pointerdown.stop.prevent="handleTarget2Resize"\r
-    />\r
-    <div\r
-      ref="resizeTarget3"\r
-      class="w-40 min-w-10% max-w-40% bg-yellow"\r
-      @pointerdown.stop.prevent="handleTarget3Resize"\r
-    />\r
-    <div\r
-      ref="resizeTarget4"\r
-      class="min-w-10% max-w-40% w-20 bg-red"\r
-      @pointerdown.stop.prevent="handleTarget4Resize"\r
-    />\r
-  </div>\r
-</template>\r
-`,b=`<script setup lang="ts">\r
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/chunks/base.BsuNvm5X.js","assets/chunks/framework.DraZOub8.js","assets/chunks/update-style.Di614ZlN.js","assets/chunks/dom-size.DsQGIV4V.js"])))=>i.map(i=>d[i]);
+import{p as r,D as d,v as g,ae as y,C as F,c as o,o as E,j as i,af as A,G as a,ag as c,a as k,ah as D,k as n,w as p,ai as m}from"./chunks/framework.DraZOub8.js";import{L as C,N as B}from"./chunks/index.C_Ii9GWq.js";const f=`<script setup lang="ts">\r
 import { domResize, type DomResizeDirection } from 'dom-transform-tool';\r
 import { ref } from 'vue';\r
 \r
@@ -123,7 +59,7 @@ function changeTargetResize(dis: { x: number, y: number }) {\r
 <\/script>\r
 \r
 <template>\r
-  使用指针拖拖动调整尺寸\r
+  使用指针拖动调整尺寸\r
 \r
   <div class="flex flex-wrap gap-1 mt-4">\r
     <div v-for="(dir, index) in directionList" :key="dir">\r
@@ -277,7 +213,7 @@ function changeTargetResize(dis: { x: number, y: number }) {\r
   border-radius: 4px;\r
 }\r
 </style>\r
-`,T=JSON.parse('{"title":"domResize","description":"","frontmatter":{},"headers":[],"relativePath":"dom-resize.md","filePath":"zh/dom-resize.md"}'),v={name:"dom-resize.md"},w=Object.assign(v,{setup(x){const h=d();g(async()=>{h.value=(await o(async()=>{const{default:l}=await import("./chunks/direction.Bb4lp2h4.js");return{default:l}},__vite__mapDeps([0,1,2,3]))).default});const t=D(!0),k=d();return g(async()=>{k.value=(await o(async()=>{const{default:l}=await import("./chunks/base.DDamCjKn.js");return{default:l}},__vite__mapDeps([4,1,2,3]))).default}),(l,s)=>{const r=m("ClientOnly");return u(),C("div",null,[s[2]||(s[2]=n("h1",{id:"domresize",tabindex:"-1"},[p("domResize "),n("a",{class:"header-anchor",href:"#domresize","aria-label":'Permalink to "domResize"'},"​")],-1)),s[3]||(s[3]=n("p",null,"调整元素的大小",-1)),s[4]||(s[4]=n("h2",{id:"基础用法",tabindex:"-1"},[p("基础用法 "),n("a",{class:"header-anchor",href:"#基础用法","aria-label":'Permalink to "基础用法"'},"​")],-1)),y(i(a(c),null,null,512),[[F,t.value]]),i(r,null,{default:e(()=>[i(a(A),{title:"",description:"",locale:"",select:"vue",order:"vue,react,html",github:"",gitlab:"",theme:"",lightTheme:"",darkTheme:"",stackblitz:"%7B%22show%22%3Afalse%7D",codesandbox:"%7B%22show%22%3Afalse%7D",codeplayer:"%7B%22show%22%3Afalse%7D",files:"%7B%22vue%22%3A%7B%7D%2C%22react%22%3A%7B%7D%2C%22html%22%3A%7B%7D%7D",scope:"",htmlWriteWay:"write",background:"undefined",visible:!0,onMount:s[0]||(s[0]=()=>{t.value=!1}),vueCode:a(b)},E({_:2},[k.value?{name:"vue",fn:e(()=>[i(a(k))]),key:"0"}:void 0]),1032,["vueCode"])]),_:1}),s[5]||(s[5]=n("h2",{id:"支持多种方向",tabindex:"-1"},[p("支持多种方向 "),n("a",{class:"header-anchor",href:"#支持多种方向","aria-label":'Permalink to "支持多种方向"'},"​")],-1)),y(i(a(c),null,null,512),[[F,t.value]]),i(r,null,{default:e(()=>[i(a(A),{title:"",description:"",locale:"",select:"vue",order:"vue,react,html",github:"",gitlab:"",theme:"",lightTheme:"",darkTheme:"",stackblitz:"%7B%22show%22%3Afalse%7D",codesandbox:"%7B%22show%22%3Afalse%7D",codeplayer:"%7B%22show%22%3Afalse%7D",files:"%7B%22vue%22%3A%7B%7D%2C%22react%22%3A%7B%7D%2C%22html%22%3A%7B%7D%7D",scope:"",htmlWriteWay:"write",background:"undefined",visible:!0,onMount:s[1]||(s[1]=()=>{t.value=!1}),vueCode:a(B)},E({_:2},[h.value?{name:"vue",fn:e(()=>[i(a(h))]),key:"0"}:void 0]),1032,["vueCode"])]),_:1}),s[6]||(s[6]=f(`<h2 id="参数类型" tabindex="-1">参数类型 <a class="header-anchor" href="#参数类型" aria-label="Permalink to &quot;参数类型&quot;">​</a></h2><div class="language-ts vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">ts</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">/** DomResize的配置项 */</span></span>
+`,R=JSON.parse('{"title":"domResize","description":"","frontmatter":{},"headers":[],"relativePath":"dom-resize.md","filePath":"zh/dom-resize.md"}'),u={name:"dom-resize.md"},z=Object.assign(u,{setup(b){const l=r(!0),t=d();return g(async()=>{t.value=(await y(async()=>{const{default:h}=await import("./chunks/base.BsuNvm5X.js");return{default:h}},__vite__mapDeps([0,1,2,3]))).default}),(h,s)=>{const e=F("ClientOnly");return E(),o("div",null,[s[1]||(s[1]=i("h1",{id:"domresize",tabindex:"-1"},[k("domResize "),i("a",{class:"header-anchor",href:"#domresize","aria-label":'Permalink to "domResize"'},"​")],-1)),s[2]||(s[2]=i("p",null,"调整元素的大小",-1)),s[3]||(s[3]=i("h2",{id:"基础用法",tabindex:"-1"},[k("基础用法 "),i("a",{class:"header-anchor",href:"#基础用法","aria-label":'Permalink to "基础用法"'},"​")],-1)),A(a(n(C),null,null,512),[[D,l.value]]),a(e,null,{default:p(()=>[a(n(B),{title:"",description:"",locale:"",select:"vue",order:"vue,react,html",github:"",gitlab:"",theme:"",lightTheme:"",darkTheme:"",stackblitz:"%7B%22show%22%3Afalse%7D",codesandbox:"%7B%22show%22%3Afalse%7D",codeplayer:"%7B%22show%22%3Afalse%7D",files:"%7B%22vue%22%3A%7B%7D%2C%22react%22%3A%7B%7D%2C%22html%22%3A%7B%7D%7D",scope:"",htmlWriteWay:"write",background:"undefined",visible:!0,onMount:s[0]||(s[0]=()=>{l.value=!1}),vueCode:n(f)},m({_:2},[t.value?{name:"vue",fn:p(()=>[a(n(t))]),key:"0"}:void 0]),1032,["vueCode"])]),_:1}),s[4]||(s[4]=c(`<h2 id="参数类型" tabindex="-1">参数类型 <a class="header-anchor" href="#参数类型" aria-label="Permalink to &quot;参数类型&quot;">​</a></h2><div class="language-ts vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">ts</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">/** DomResize的配置项 */</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> interface</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> DomResizeOptions</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
 <span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    /** 调整元素 */</span></span>
 <span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">    target</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">?:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> HTMLElement</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
@@ -407,4 +343,4 @@ function changeTargetResize(dis: { x: number, y: number }) {\r
 <span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">    top</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">?:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
 <span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">    left</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">?:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {};</span></span></code></pre></div><h2 id="源码" tabindex="-1">源码 <a class="header-anchor" href="#源码" aria-label="Permalink to &quot;源码&quot;">​</a></h2><p><a href="https://github.com/nixwai/dom-transform-tool/blob/main/packages/utils/src/domResize/index.ts" target="_blank" rel="noreferrer">源代码</a></p>`,4))])}}});export{T as __pageData,w as default};
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {};</span></span></code></pre></div><h2 id="源码" tabindex="-1">源码 <a class="header-anchor" href="#源码" aria-label="Permalink to &quot;源码&quot;">​</a></h2><p><a href="https://github.com/nixwai/dom-transform-tool/blob/main/packages/utils/src/domResize/index.ts" target="_blank" rel="noreferrer">源代码</a></p>`,4))])}}});export{R as __pageData,z as default};
