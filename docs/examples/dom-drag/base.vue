@@ -1,64 +1,43 @@
 <script setup lang="ts">
-import { domResize, type DomResizeDirection } from 'dom-transform-tool';
+import type { DomDragDirection } from 'dom-transform-tool';
+import { domDrag } from 'dom-transform-tool';
 import { ref } from 'vue';
 
 const resizeTarget1 = ref<HTMLDivElement>();
 
-const directionList: DomResizeDirection[] = [
-  'all',
-  'left',
-  'right',
-  'top',
-  'bottom',
-  'left-top',
-  'left-bottom',
-  'right-top',
-  'right-bottom',
-  'left-right',
-  'top-bottom',
-  'left-top-right',
-  'left-bottom-right',
-  'top-left-bottom',
-  'top-right-bottom',
-];
+const directionList: DomDragDirection[] = ['all', 'x', 'y'];
 
 const direction = ref(directionList[0]);
-const lockAspectRatio = ref(false);
 const offset = ref<'position' | 'transform' | 'translate'>('position');
 const grid = ref([0.5, 0.5]);
-const crossAxis = ref(false);
 
 function handleTargetResize(event: PointerEvent) {
-  domResize({
+  domDrag({
     target: resizeTarget1.value,
     pointer: event,
     offsetType: offset.value,
-    lockAspectRatio: lockAspectRatio.value,
     direction: direction.value,
     grid: grid.value,
-    crossAxis: crossAxis.value,
     manual: undefined,
   });
 }
 
 function changeTargetResize(dis: { x: number, y: number }) {
-  domResize({
+  domDrag({
     target: resizeTarget1.value,
     offsetType: offset.value,
-    lockAspectRatio: lockAspectRatio.value,
     direction: direction.value,
     grid: grid.value,
-    crossAxis: crossAxis.value,
     manual: {
-      width: dis.x,
-      height: dis.y,
+      offsetX: dis.x,
+      offsetY: dis.y,
     },
   });
 }
 </script>
 
 <template>
-  使用指针拖动调整尺寸
+  使用指针拖动调整位置
 
   <div class="flex flex-wrap gap-1 mt-4">
     <div v-for="(dir, index) in directionList" :key="dir">
@@ -71,31 +50,6 @@ function changeTargetResize(dis: { x: number, y: number }) {
         class="mb-[3px]"
       >
       <label :for="`dir${index}`">{{ dir }}</label>
-    </div>
-  </div>
-
-  <div class="flex gap-1 mt-4">
-    <div>
-      <input
-        id="unlock"
-        v-model="lockAspectRatio"
-        type="radio"
-        name="lockAspectRatio"
-        :value="false"
-        class="mb-[3px]"
-      >
-      <label for="unlock">unlock</label>
-    </div>
-    <div>
-      <input
-        id="lock"
-        v-model="lockAspectRatio"
-        type="radio"
-        name="lockAspectRatio"
-        :value="true"
-        class="mb-[3px]"
-      >
-      <label for="lock">lock</label>
     </div>
   </div>
 
@@ -132,42 +86,6 @@ function changeTargetResize(dis: { x: number, y: number }) {
         class="mb-[3px]"
       >
       <label for="translate">translate</label>
-    </div>
-    <div>
-      <input
-        id="none"
-        v-model="offset"
-        type="radio"
-        name="offset"
-        :value="undefined"
-        class="mb-[3px]"
-      >
-      <label for="none">none</label>
-    </div>
-  </div>
-
-  <div class="flex gap-1 mt-4">
-    <div>
-      <input
-        id="uncross"
-        v-model="crossAxis"
-        type="radio"
-        name="crossAxis"
-        :value="false"
-        class="mb-[3px]"
-      >
-      <label for="uncross">uncross</label>
-    </div>
-    <div>
-      <input
-        id="cross"
-        v-model="crossAxis"
-        type="radio"
-        name="crossAxis"
-        :value="true"
-        class="mb-[3px]"
-      >
-      <label for="cross">cross</label>
     </div>
   </div>
 

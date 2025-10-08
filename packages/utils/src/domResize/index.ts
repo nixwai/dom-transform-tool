@@ -14,6 +14,4 @@ export function domResize(options?: DomResizeOptions) {
   return resizeByPointer(resizeApplication);
 }
 
-export * from './helpers';
-
 export * from './types';

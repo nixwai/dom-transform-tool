@@ -10,6 +10,7 @@ export const sidebar: DefaultTheme.SidebarItem[] = [
   {
     text: 'API',
     items: [
+      { text: 'domDrag', link: '/dom-drag' },
       { text: 'domResize', link: '/dom-resize' },
       { text: 'domRotate', link: '/dom-rotate' },
       { text: 'domScale', link: '/dom-scale' },
