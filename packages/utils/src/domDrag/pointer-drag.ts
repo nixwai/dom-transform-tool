@@ -14,22 +14,31 @@ export function dragByPointer(dragApplication: DragApplication) {
   if (!dragApplication.options.pointer) {
     return;
   }
+  const { options, dragDomAttrs, dragHandler, dragLogger, dragStyleUpdater } = dragApplication;
+  if (options.direction === 'x') {
+    return beginDragContent(dragApplication, ({ startX, endX }) => {
+      const offsetX = dragHandler.dragging(startX, endX, 'x');
+      const offsetY = dragDomAttrs.offsetY;
+      if (!dragLogger.x.distance && !dragLogger.y.distance) { return; }
+      const offsetStyle = dragStyleUpdater.setStyleOffset(offsetX, offsetY);
+      dragApplication.updateDrag({ offsetX, offsetY }, offsetStyle);
+    });
+  }
+
+  if (options.direction === 'y') {
+    return beginDragContent(dragApplication, ({ startY, endY }) => {
+      const offsetX = dragDomAttrs.offsetX;
+      const offsetY = dragHandler.dragging(startY, endY, 'y');
+      if (!dragLogger.x.distance && !dragLogger.y.distance) { return; }
+      const offsetStyle = dragStyleUpdater.setStyleOffset(offsetX, offsetY);
+      dragApplication.updateDrag({ offsetX, offsetY }, offsetStyle);
+    });
+  }
+
   return beginDragContent(dragApplication, ({ startX, endX, startY, endY }) => {
-    const { dragHandler, dragLogger, dragStyleUpdater } = dragApplication;
-
-    let offsetX = dragHandler.dragging(startX, endX, 'x');
-    let offsetY = dragHandler.dragging(startY, endY, 'y');
-
-    // 根据方向限制
-    if (dragApplication.dragParams.direction === 'x') {
-      offsetY = dragApplication.dragDomAttrs.offsetY;
-    }
-    else if (dragApplication.dragParams.direction === 'y') {
-      offsetX = dragApplication.dragDomAttrs.offsetX;
-    }
-
+    const offsetX = dragHandler.dragging(startX, endX, 'x');
+    const offsetY = dragHandler.dragging(startY, endY, 'y');
     if (!dragLogger.x.distance && !dragLogger.y.distance) { return; }
-
     const offsetStyle = dragStyleUpdater.setStyleOffset(offsetX, offsetY);
     dragApplication.updateDrag({ offsetX, offsetY }, offsetStyle);
   });

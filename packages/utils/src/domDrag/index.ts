@@ -15,5 +15,4 @@ export function domDrag(options?: DomDragOptions) {
   return dragByPointer(dragApplication);
 }
 
-export * from './helpers';
 export * from './types';

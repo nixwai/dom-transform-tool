@@ -1,6 +1,6 @@
 import type { DomDragOptions } from '../types';
 import { DomSize, DomVariant } from '../../base';
-import { getPctValue, toNum } from '../../utils';
+import { getPctValue } from '../../utils';
 
 export class DragDomAttrs {
   /** 水平偏移值 */
@@ -23,7 +23,9 @@ export class DragDomAttrs {
     const domStyles = window.getComputedStyle(this.options.target, null);
     const parentStyles = window.getComputedStyle(this.options.target.parentNode as HTMLElement, null);
     this.size.setSizeInfo(domStyles, parentStyles);
-    this.variant.setVariantInfo(domStyles, this.options.target?.style?.transformOrigin);
+    this.variant.setTransform(domStyles);
+    this.variant.setPosition(domStyles);
+    this.variant.setTranslate(domStyles);
   }
 
   /** 更新偏移信息 */
@@ -52,7 +54,7 @@ export class DragDomAttrs {
   private customDomAttrs() {
     if (!this.options.customStyle) { return; }
 
-    const { parentWidth, parentHeight, width, height, offsetX, offsetY, rotate, scale, transformOrigin } = this.options.customStyle;
+    const { parentWidth, parentHeight, width, height, offsetX, offsetY } = this.options.customStyle;
 
     if (parentWidth !== undefined) {
       this.size.parentWidth = parentWidth;
@@ -65,17 +67,6 @@ export class DragDomAttrs {
     }
     if (height !== undefined) {
       this.size.height = getPctValue(String(height), this.size.parentHeight);
-    }
-    if (rotate !== undefined) {
-      this.variant.rotate = toNum(String(rotate));
-    }
-    if (scale !== undefined) {
-      const scaleList = new Array<string | number>().concat(scale).join(' ').split(/\s+/);
-      this.variant.scaleX = toNum(scaleList[0]);
-      this.variant.scaleY = toNum(scaleList[1] || scaleList[0]);
-    }
-    if (transformOrigin !== undefined) {
-      this.variant.resolveTransformOrigin(transformOrigin);
     }
     if (offsetX !== undefined) {
       this.offsetX = getPctValue(String(offsetX), this.size.width);

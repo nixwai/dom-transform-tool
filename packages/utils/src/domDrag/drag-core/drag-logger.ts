@@ -1,4 +1,4 @@
-import type { DragParams } from './drag-params';
+import type { DragAxisParams } from './drag-axis-params';
 
 interface DragDistance {
   /** 拖动后的偏移值 */
@@ -22,13 +22,13 @@ export class DragLogger {
     distance: 0,
   };
 
-  constructor(private dragParams: DragParams) {
+  constructor(private dragAxisParams: DragAxisParams) {
     this.setDistance();
   };
 
   private setDistance() {
-    this.x.value = this.dragParams.originOffsetX;
-    this.y.value = this.dragParams.originOffsetY;
+    this.x.value = this.dragAxisParams.x.originValue;
+    this.y.value = this.dragAxisParams.y.originValue;
     this.x.total = 0;
     this.y.total = 0;
     this.x.distance = 0;
@@ -39,6 +39,6 @@ export class DragLogger {
   public logDistance(value: number, axis: 'x' | 'y') {
     this[axis].distance = value - this[axis].value; // 减去上次的偏移值，获取拖动距离
     this[axis].value = value;
-    // this[axis].total = value - this.dragParams[`originOffset${axis.toUpperCase()}`]; // 总共拖动的距离
+    this[axis].total = value - this.dragAxisParams[axis].originValue; // 总共拖动的距离
   };
 }

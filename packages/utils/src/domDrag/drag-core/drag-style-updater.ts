@@ -20,16 +20,11 @@ export class DragStyleUpdater {
 
   /** 设置位移样式更新方法 */
   private setStyleOffsetUpdater() {
-    if (this.options.offsetType) {
-      this.setStyleOffset = createDomStyleUpdateMethod<SetStyleOffset, DomDragStyle>(
-        this.createGetOffsetStyle(),
-        this.targetRef,
-        this.options.disableUpdate,
-      );
-    }
-    else {
-      this.setStyleOffset = () => ({});
-    }
+    this.setStyleOffset = createDomStyleUpdateMethod<SetStyleOffset, DomDragStyle>(
+      this.createGetOffsetStyle(),
+      this.targetRef,
+      this.options.disableUpdate,
+    );
   }
 
   /** 创建改变target元素的值方法 */
@@ -49,16 +44,6 @@ export class DragStyleUpdater {
 
   /** 获取位移修改函数 */
   private createGetOffsetStyle(): SetStyleOffset {
-    const getOffsetX = this.changeByCustomRender('offsetX');
-    const getOffsetY = this.changeByCustomRender('offsetY');
-    // 使用position
-    if (this.options.offsetType === 'position') {
-      return (valueX, valueY) => ({ left: getOffsetX(valueX), top: getOffsetY(valueY) });
-    }
-    // 使用translate
-    if (this.options.offsetType === 'translate') {
-      return (valueX, valueY) => ({ translate: `${getOffsetX(valueX)} ${getOffsetY(valueY)}` });
-    }
     // 使用transform
     if (this.options.offsetType === 'transform') {
       const { transformName, transformValue } = this.dragDomAttrs.variant;
@@ -79,6 +64,13 @@ export class DragStyleUpdater {
         return { transform: `${transformName}(${beforeTransformValueStr},${valueX},${valueY},${afterTransformValueStr})` };
       };
     }
-    return () => ({});
+    const getOffsetX = this.changeByCustomRender('offsetX');
+    const getOffsetY = this.changeByCustomRender('offsetY');
+    // 使用position
+    if (this.options.offsetType === 'position') {
+      return (valueX, valueY) => ({ left: getOffsetX(valueX), top: getOffsetY(valueY) });
+    }
+    // 使用translate
+    return (valueX, valueY) => ({ translate: `${getOffsetX(valueX)} ${getOffsetY(valueY)}` });
   }
 }

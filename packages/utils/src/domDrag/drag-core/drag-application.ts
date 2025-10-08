@@ -1,14 +1,14 @@
 import type { DomDragContent, DomDragOptions, DomDragStyle } from '../types';
+import { DragAxisParams } from './drag-axis-params';
 import { DragDomAttrs } from './drag-dom-attrs';
 import { DragHandler } from './drag-handler';
 import { DragLogger } from './drag-logger';
-import { DragParams } from './drag-params';
 import { DragStyleUpdater } from './drag-style-updater';
 
 export class DragApplication {
   public options: DomDragOptions = {};
   public dragDomAttrs: DragDomAttrs;
-  public dragParams: DragParams;
+  public dragAxisParams: DragAxisParams;
   public dragLogger: DragLogger;
   public dragStyleUpdater: DragStyleUpdater;
   public dragHandler: DragHandler;
@@ -18,10 +18,10 @@ export class DragApplication {
       this.options = options;
     }
     this.dragDomAttrs = new DragDomAttrs(this.options);
-    this.dragParams = new DragParams(this.options, this.dragDomAttrs);
-    this.dragLogger = new DragLogger(this.dragParams);
+    this.dragAxisParams = new DragAxisParams(this.options, this.dragDomAttrs);
+    this.dragLogger = new DragLogger(this.dragAxisParams);
     this.dragStyleUpdater = new DragStyleUpdater(this.options, this.dragDomAttrs);
-    this.dragHandler = new DragHandler(this.options, this.dragParams, this.dragLogger);
+    this.dragHandler = new DragHandler(this.dragAxisParams, this.dragLogger);
   }
 
   /** 清除配置的手动拖动 */

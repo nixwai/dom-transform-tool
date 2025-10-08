@@ -18,7 +18,7 @@ export interface DomDragOptions {
   /** 指针操作的触发元素，默认使用target */
   pointerTarget?: HTMLElement
   /**
-   * 使用position/translate/transform进行偏移
+   * 使用position/translate/transform进行偏移，默认使用translate
    * - 推荐使用position、translate，transform无法与CSS的rotate、scale同时使用
    * - https://developer.mozilla.org/zh-CN/docs/Web/CSS/rotate
    * - https://developer.mozilla.org/zh-CN/docs/Web/CSS/scale
@@ -75,16 +75,6 @@ export type DomDragCustomRenderMethod = (
 
 /** 拖动的自定义样式，用于兼容一些无法通过当前节点获取的样式 */
 export interface DomDragCustomStyle {
-  /**
-   * transform的变化原点，使用数组可以分别指定横轴和纵轴，默认根据内联样式决定
-   * - https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-origin
-   * - 当前功能仅会识别target的内联样式transform-origin类型，其他情况需要通过配置，确保不会有异常的偏移
-   */
-  transformOrigin?: string | string[]
-  /** 旋转度数(仅支持deg单位) */
-  rotate?: number | string
-  /** 缩放值，使用数组可以分别指定横轴和纵轴 */
-  scale?: number | string | (number | string)[]
   /** 横轴位移(仅支持px/百分比) */
   offsetX?: number | string
   /** 纵轴位移(仅支持px/百分比) */
@@ -97,14 +87,6 @@ export interface DomDragCustomStyle {
   parentWidth?: number
   /** 父级高度(仅支持px) */
   parentHeight?: number
-  /** 最大宽度(仅支持px/百分比) */
-  maxWidth?: number | string
-  /** 最大高度(仅支持px/百分比) */
-  maxHeight?: number | string
-  /** 最小宽度(仅支持px/百分比) */
-  minWidth?: number | string
-  /** 最小高度(仅支持px/百分比) */
-  minHeight?: number | string
 }
 
 /** DomDrag的内容，单位px */

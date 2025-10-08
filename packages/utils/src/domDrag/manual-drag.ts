@@ -1,23 +1,21 @@
 import type { DragApplication } from './drag-core/drag-application';
 
 export function dragByManual(dragApplication: DragApplication) {
-  if (!dragApplication.dragParams.manualOffsetX && !dragApplication.dragParams.manualOffsetY) {
+  if (!dragApplication.dragAxisParams.x.manualDistance && !dragApplication.dragAxisParams.y.manualDistance) {
     return;
   }
 
-  const { dragParams, dragHandler, dragLogger, dragStyleUpdater } = dragApplication;
+  const { options, dragDomAttrs, dragAxisParams, dragHandler, dragLogger, dragStyleUpdater } = dragApplication;
   const lastOffsetX = dragLogger.x.total;
   const lastOffsetY = dragLogger.y.total;
 
-  let offsetX = dragHandler.dragging(0, dragParams.manualOffsetX + lastOffsetX, 'x');
-  let offsetY = dragHandler.dragging(0, dragParams.manualOffsetY + lastOffsetY, 'y');
-
-  // 根据方向限制
-  if (dragParams.direction === 'x') {
-    offsetY = dragApplication.dragDomAttrs.offsetY;
+  let offsetX = dragDomAttrs.offsetX;
+  if (options.direction !== 'y') {
+    offsetX = dragHandler.dragging(0, dragAxisParams.x.manualDistance + lastOffsetX, 'x');
   }
-  else if (dragParams.direction === 'y') {
-    offsetX = dragApplication.dragDomAttrs.offsetX;
+  let offsetY = dragDomAttrs.offsetY;
+  if (options.direction !== 'x') {
+    offsetY = dragHandler.dragging(0, dragAxisParams.y.manualDistance + lastOffsetY, 'y');
   }
 
   if (!dragLogger.x.distance && !dragLogger.y.distance) { return; }
