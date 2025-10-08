@@ -6,10 +6,6 @@
 
 <demo vue="dom-resize/base.vue"/>
 
-## 支持多种方向
-
-<demo vue="dom-resize/direction.vue"/>
-
 ## 参数类型
 
 <<< @/../packages/utils/dist/types/domResize/types.d.ts

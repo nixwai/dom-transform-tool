@@ -30,15 +30,7 @@ export class DragDomAttrs {
 
   /** 更新偏移信息 */
   private updateOffsetInfo() {
-    if (this.options.offsetType === 'position') {
-      this.offsetX = this.variant.positionLeft;
-      this.offsetY = this.variant.positionTop;
-    }
-    else if (this.options.offsetType === 'translate') {
-      this.offsetX = this.variant.translateX;
-      this.offsetY = this.variant.translateY;
-    }
-    else {
+    if (this.options.offsetType === 'transform') {
       if (this.variant.transformValue.length > 6) {
         this.offsetX = this.variant.transformValue[12];
         this.offsetY = this.variant.transformValue[13];
@@ -47,6 +39,14 @@ export class DragDomAttrs {
         this.offsetX = this.variant.transformValue[4];
         this.offsetY = this.variant.transformValue[5];
       }
+    }
+    else if (this.options.offsetType === 'translate') {
+      this.offsetX = this.variant.translateX;
+      this.offsetY = this.variant.translateY;
+    }
+    else {
+      this.offsetX = this.variant.positionLeft;
+      this.offsetY = this.variant.positionTop;
     }
   }
 

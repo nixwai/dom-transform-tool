@@ -85,17 +85,17 @@ export class ResizeStyleUpdater {
       let afterTransformValueStr = '';
       if (transformValue.length > 6) {
         // matrix3d(https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function/matrix3d)
-        beforeTransformValueStr = transformValue.slice(0, 12).join(',');
-        afterTransformValueStr = transformValue.slice(14).join(',');
+        beforeTransformValueStr = `${transformValue.slice(0, 12).join(',')},`;
+        afterTransformValueStr = `,${transformValue.slice(14).join(',')}`;
       }
       else {
         // matrix(https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function/matrix)
-        beforeTransformValueStr = transformValue.slice(0, 4).join(',');
+        beforeTransformValueStr = `${transformValue.slice(0, 4).join(',')},`;
         afterTransformValueStr = '';
       }
       // transform 不兼容customStyle自定义，无法通过getOffsetX设置，固定px类型
       return (valueX, valueY) => {
-        return { transform: `${transformName}(${beforeTransformValueStr},${valueX},${valueY},${afterTransformValueStr})` };
+        return { transform: `${transformName}(${beforeTransformValueStr}${valueX},${valueY}${afterTransformValueStr})` };
       };
     }
     return () => ({});

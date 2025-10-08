@@ -24,8 +24,6 @@ export interface DomDragOptions {
    * - https://developer.mozilla.org/zh-CN/docs/Web/CSS/scale
    */
   offsetType?: DomDragOffsetType
-  /** 是否可跨轴拖动，需要配置offset才生效 */
-  crossAxis?: boolean
   /** 网格对齐，固定每次拖动的最小距离，默认[0.5,0.5]，单位px，使用小数注意精度问题，建议使用0.5的倍数 */
   grid?: number[]
   /** 自定义渲染 */

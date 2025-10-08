@@ -28,7 +28,7 @@ function changeTargetRotate(deg: number) {
 </script>
 
 <template>
-  使用指针拖拖动旋转
+  使用指针拖动旋转
 
   <div class="flex gap-1 mt-4">
     <div>
