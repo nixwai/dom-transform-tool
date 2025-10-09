@@ -40,13 +40,13 @@ export class DragDomAttrs {
         this.offsetY = this.variant.transformValue[5];
       }
     }
-    else if (this.options.offsetType === 'translate') {
-      this.offsetX = this.variant.translateX;
-      this.offsetY = this.variant.translateY;
-    }
-    else {
+    else if (this.options.offsetType === 'position') {
       this.offsetX = this.variant.positionLeft;
       this.offsetY = this.variant.positionTop;
+    }
+    else {
+      this.offsetX = this.variant.translateX;
+      this.offsetY = this.variant.translateY;
     }
   }
 
