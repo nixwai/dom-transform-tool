@@ -14,7 +14,7 @@ function createResizingOffset(
     // 通过传入的createFn创建获取偏移值的函数
     const { getOffsetNegative, getOffsetPositive } = offsetFns(dis, axis, dir);
     // value大于0时使用正向偏移值，小于0时使用负向偏移值
-    return value > 0 ? getOffsetPositive(dis, axis, dir) : getOffsetNegative(dis, axis, dir);
+    return value >= 0 ? getOffsetPositive(dis, axis, dir) : getOffsetNegative(dis, axis, dir);
   };
 }
 

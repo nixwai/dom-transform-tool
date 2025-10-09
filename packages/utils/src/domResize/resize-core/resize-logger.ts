@@ -40,7 +40,7 @@ export class ResizeLogger {
   public logDistance(value: number, axis: Axis) {
     this[axis].distance = value - this[axis].value; // 减去上次的宽高，获取调整距离
     this[axis].value = value;
-    this[axis].total = value > 0
+    this[axis].total = value >= 0
       ? value - this.axiosParams[axis].originValue
       : value - this.axiosParams[axis].minValue; // 总共调整的距离
   };
