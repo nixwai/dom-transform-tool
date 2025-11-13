@@ -15,8 +15,8 @@ import { ResizeStyleUpdater } from './resize-style-updater';
  * @param axis 坐标
  * @param pointerDir 鼠标点击的方向
  */
-export type ResizingFn =
-  (startLocation: number, endLocation: number, axis: Axis, pointerDir?: Dir) => { value: number, offset: number, otherOffset: number };
+export type ResizingFn
+  = (startLocation: number, endLocation: number, axis: Axis, pointerDir?: Dir) => { value: number, offset: number, otherOffset: number };
 
 type ResizeDirectionFn = (resizeData: ResizeApplication, ...resizingFns: ResizingFn[]) => ((overEvent: PointerEvent) => void) | void;
 

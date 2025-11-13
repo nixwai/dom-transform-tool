@@ -11,7 +11,7 @@ const direction = ref(directionList[0]);
 const offset = ref<'position' | 'transform' | 'translate'>('position');
 const grid = ref([0.5, 0.5]);
 
-function handleTargetResize(event: PointerEvent) {
+function handleTargetDrag(event: PointerEvent) {
   domDrag({
     target: resizeTarget1.value,
     pointer: event,
@@ -22,7 +22,7 @@ function handleTargetResize(event: PointerEvent) {
   });
 }
 
-function changeTargetResize(dis: { x: number, y: number }) {
+function changeTargetDrag(dis: { x: number, y: number }) {
   domDrag({
     target: resizeTarget1.value,
     offsetType: offset.value,
@@ -95,19 +95,19 @@ function changeTargetResize(dis: { x: number, y: number }) {
   </div>
 
   <div class="flex mt-4 items-center justify-center flex-col w-40">
-    <button class="ctxs-btn" @click="changeTargetResize({ x: 0, y: -5 })">
+    <button class="ctxs-btn" @click="changeTargetDrag({ x: 0, y: -5 })">
       -5
     </button>
     <div class="flex gap-1 items-center justify-center">
-      <button class="ctxs-btn" @click="changeTargetResize({ x: -5, y: 0 })">
+      <button class="ctxs-btn" @click="changeTargetDrag({ x: -5, y: 0 })">
         -5
       </button>
       调整
-      <button class="ctxs-btn" @click="changeTargetResize({ x: 5, y: 0 })">
+      <button class="ctxs-btn" @click="changeTargetDrag({ x: 5, y: 0 })">
         +5
       </button>
     </div>
-    <button class="ctxs-btn" @click="changeTargetResize({ x: 0, y: 5 })">
+    <button class="ctxs-btn" @click="changeTargetDrag({ x: 0, y: 5 })">
       +5
     </button>
   </div>
@@ -116,7 +116,7 @@ function changeTargetResize(dis: { x: number, y: number }) {
     <div
       ref="resizeTarget1"
       class="w-30 h-30 position-absolute bg-blue min-w-10 min-h-10 max-w-100 left-[200px] max-h-100 top-[200px]"
-      @pointerdown.stop.prevent="handleTargetResize"
+      @pointerdown.stop.prevent="handleTargetDrag"
     />
   </div>
 </template>

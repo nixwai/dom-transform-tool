@@ -1,0 +1,17 @@
+{
+  "name": "@dom-transform-tool/build-system",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "tool:release": "gulp release -f build-utils/index.ts",
+    "tool:build": "gulp build -f build-utils/index.ts",
+    "tool:publish": "gulp publish -f build-utils/index.ts"
+  },
+  "devDependencies": {
+    "@types/gulp": "^4.0.18",
+    "gulp": "^5.0.1",
+    "gulp-cli": "^3.1.0",
+    "sucrase": "^3.35.0",
+    "vite-plugin-dts": "^4.5.4"
+  }
+}

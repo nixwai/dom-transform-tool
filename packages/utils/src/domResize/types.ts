@@ -88,7 +88,7 @@ export type DomResizeCustomRenderMethod = (
   options: {
     parentWidth: number
     parentHeight: number
-  }
+  },
 ) => string;
 
 /** DomResize的自定义样式，用于兼容一些无法通过当前节点获取的样式 */

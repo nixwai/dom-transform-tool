@@ -1,15 +1,15 @@
 {
-  "name": "examples",
+  "name": "playground",
   "type": "module",
   "version": "0.0.1",
   "private": true,
-  "description": "examples",
+  "description": "playground",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@unocss/reset": "^66.5.2"
+    "@unocss/reset": "^66.5.6"
   }
 }

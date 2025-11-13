@@ -6,7 +6,7 @@ export default antfu(
     unocss: true,
     typescript: true,
     vue: true,
-    ignores: ['.husky'],
+    ignores: ['.husky', '**/*.md'],
   },
   {
     files: ['**/*.vue'],
@@ -18,10 +18,6 @@ export default antfu(
         math: 'always',
       }],
     },
-  },
-  {
-    files: ['**/*.md'],
-    rules: { 'format/prettier': ['off'] },
   },
   {
     rules: {

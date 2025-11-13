@@ -68,7 +68,7 @@ export type DomDragCustomRenderMethod = (
   options: {
     parentWidth: number
     parentHeight: number
-  }
+  },
 ) => string;
 
 /** 拖动的自定义样式，用于兼容一些无法通过当前节点获取的样式 */
