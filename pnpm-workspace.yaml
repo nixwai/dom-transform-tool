@@ -1,5 +1,18 @@
+shellEmulator: true
+
+trustPolicy: no-downgrade
+
+trustPolicyIgnoreAfter: 1440
+
 packages:
   - packages/*
   - packages/*/**
   - playground
   - docs
+allowBuilds:
+  '@parcel/watcher': false
+  esbuild: false
+
+overrides:
+  glob@10.5.0: ^13.0.6
+  glob@^7.2.3: ^13.0.6
