@@ -1,0 +1,1 @@
+import{_ as s,o as i,c as e,ai as t}from"./chunks/framework.CAZ2cQSD.js";const k=JSON.parse('{"title":"开始使用","description":"","frontmatter":{},"headers":[],"relativePath":"install.md","filePath":"zh/install.md"}'),l={name:"install.md"};function n(h,a,o,p,r,d){return i(),e("div",null,[...a[0]||(a[0]=[t("",9)])])}const m=s(l,[["render",n]]);export{k as __pageData,m as default};
