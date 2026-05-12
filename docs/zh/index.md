@@ -7,7 +7,7 @@ hero:
   tagline: "提供了丰富的 API 来实现元素调整位置、尺寸、旋转、缩放等功能"
   actions:
     - theme: brand
-      text: 开始
+      text: 快速开始
       link: /install
   image:
       src: /transform-logo.svg
