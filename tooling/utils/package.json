@@ -1,5 +1,5 @@
 {
-  "name": "@dom-transform-tool/build-utils",
+  "name": "@monorepo/build-utils",
   "type": "module",
   "version": "0.0.1"
 }
