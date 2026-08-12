@@ -14,6 +14,7 @@ export const sidebar: DefaultTheme.SidebarItem[] = [
       { text: 'domResize', link: '/dom-resize' },
       { text: 'domRotate', link: '/dom-rotate' },
       { text: 'domScale', link: '/dom-scale' },
+      { text: '综合', link: '/composite' },
     ],
   },
 ];
